@@ -1,0 +1,12 @@
+/*
+Package ttLibGoFfmpeg
+ffmpegのライブラリを利用した動作
+
+ライセンスはLGPLv3としておきます。(ffmpegの基本状態のライセンスがLGPLだったと思うから、それに合わせておく)
+libavcodecによるdecode動作
+swscaleによる拡大縮小動作とbgr yuv変換
+swresampleによるsampleRate、channelNum変換とpcmF32とpcmS16の相互変換
+等を実施する予定
+*/
+package ttLibGoFfmpeg
+
