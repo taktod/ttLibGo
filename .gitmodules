@@ -1,0 +1,3 @@
+[submodule "ttLibC"]
+	path = ttLibC
+	url = git@github.com:taktod/ttLibC
