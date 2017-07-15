@@ -51,7 +51,7 @@ static uint32_t SwresampleResampler_getSubType(
 	}
 	return 99;
 }
-ttLibC_SwresampleResampler *SwresampleResampler_make(
+static ttLibC_SwresampleResampler *SwresampleResampler_make(
 		const char *inCodecType,
 		const char *inSubType,
 		uint32_t inSampleRate,
