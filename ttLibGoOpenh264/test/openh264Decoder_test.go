@@ -6,12 +6,12 @@ import (
 	"testing"
 
 	"github.com/taktod/ttLibGo/ttLibGo"
-	"github.com/taktod/ttLibGo/ttLibGoJpeg"
+	"github.com/taktod/ttLibGo/ttLibGoOpenh264"
 )
 
-func TestJpegDecoder(t *testing.T) {
+func TestOpenh264Decoder(t *testing.T) {
 	{
-		in, err := os.Open(os.Getenv("HOME") + "/tools/data/source/test.mjpeg.adpcmimawav.mkv")
+		in, err := os.Open(os.Getenv("HOME") + "/tools/data/source/test.h264.aac.mkv")
 		if err != nil {
 			panic(err)
 		}
@@ -21,7 +21,7 @@ func TestJpegDecoder(t *testing.T) {
 			t.Errorf("reader初期化失敗")
 		}
 		defer reader.Close()
-		var decoder ttLibGoJpeg.JpegDecoder
+		var decoder ttLibGoOpenh264.Openh264Decoder
 		defer decoder.Close()
 
 		for {
@@ -34,7 +34,7 @@ func TestJpegDecoder(t *testing.T) {
 				buffer,
 				uint64(length),
 				func(frame *ttLibGo.Frame) bool {
-					if frame.CodecType == "jpeg" {
+					if frame.CodecType == "h264" {
 						decoder.Init()
 						return decoder.Decode(
 							frame,

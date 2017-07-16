@@ -11,7 +11,6 @@ import (
 
 func TestJpegEncoder(t *testing.T) {
 	{
-		t.Log("jpegDecode")
 		in, err := os.Open(os.Getenv("HOME") + "/tools/data/source/test.mjpeg.adpcmimawav.mkv")
 		if err != nil {
 			panic(err)
