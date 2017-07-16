@@ -8,7 +8,15 @@ import (
 	"github.com/taktod/ttLibGo/ttLibGoJpeg"
 	"github.com/taktod/ttLibGo/ttLibGoLibyuv"
 	"github.com/taktod/ttLibGo/ttLibGoMp3lame"
+	"github.com/taktod/ttLibGo/ttLibGoOpenh264"
 	"github.com/taktod/ttLibGo/ttLibGoOpus"
+	"github.com/taktod/ttLibGo/ttLibGoSoundtouch"
+	"github.com/taktod/ttLibGo/ttLibGoSpeex"
+	"github.com/taktod/ttLibGo/ttLibGoSpeexdsp"
+	"github.com/taktod/ttLibGo/ttLibGoTheora"
+	"github.com/taktod/ttLibGo/ttLibGoVorbis"
+	"github.com/taktod/ttLibGo/ttLibGoX264"
+	"github.com/taktod/ttLibGo/ttLibGoX265"
 )
 
 func install() {
@@ -26,6 +34,22 @@ func install() {
 	defer libyuvRotateResampler.Close()
 	var mp3lameDecoder ttLibGoMp3lame.Mp3lameDecoder
 	defer mp3lameDecoder.Close()
+	var openh264Decoder ttLibGoOpenh264.Openh264Decoder
+	defer openh264Decoder.Close()
 	var opusDecoder ttLibGoOpus.OpusDecoder
 	defer opusDecoder.Close()
+	var soundtouchResampler ttLibGoSoundtouch.SoundtouchResampler
+	defer soundtouchResampler.Close()
+	var speexDecoder ttLibGoSpeex.SpeexDecoder
+	defer speexDecoder.Close()
+	var speexdspResampler ttLibGoSpeexdsp.SpeexdspResampler
+	defer speexdspResampler.Close()
+	var theoraDecoder ttLibGoTheora.TheoraDecoder
+	defer theoraDecoder.Close()
+	var vorbisDecoder ttLibGoVorbis.VorbisDecoder
+	defer vorbisDecoder.Close()
+	var x264Encoder ttLibGoX264.X264Encoder
+	defer x264Encoder.Close()
+	var x265Encoder ttLibGoX265.X265Encoder
+	defer x265Encoder.Close()
 }
