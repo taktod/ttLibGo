@@ -8,7 +8,7 @@ import (
 	"github.com/taktod/ttLibGo/ttLibGoFfmpeg"
 )
 
-func TestAvcodecVideoDecode(t *testing.T) {
+func TestAvcodecVideoDecoder(t *testing.T) {
 	{
 		targetCodec := "h264"
 		t.Log(targetCodec)
@@ -62,7 +62,7 @@ func TestAvcodecVideoDecode(t *testing.T) {
 	}
 }
 
-func TestAvcodecAudioDecode(t *testing.T) {
+func TestAvcodecAudioDecoder(t *testing.T) {
 	{
 		targetCodec := "aac"
 		t.Log(targetCodec)
