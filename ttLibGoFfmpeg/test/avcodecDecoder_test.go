@@ -12,13 +12,13 @@ func TestAvcodecVideoDecode(t *testing.T) {
 	{
 		targetCodec := "h264"
 		t.Log(targetCodec)
-		in, err := os.Open(os.Getenv("HOME") + "/tools/data/source/test.h264.aac.mkv")
+		in, err := os.Open(os.Getenv("HOME") + "/tools/data/source/test.h264.aac.flv")
 		if err != nil {
 			panic(err)
 		}
 		var count uint32
 		var reader ttLibGo.Reader
-		if !reader.Init("mkv") {
+		if !reader.Init("flv") {
 			t.Errorf("reader初期化失敗")
 		}
 		defer reader.Close()

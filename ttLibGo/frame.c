@@ -1,4 +1,5 @@
 #include <ttLibC/frame/frame.h>
+#include "log.h"
 #include <string.h>
 
 ttLibC_Frame_Type __attribute__ ((visibility("hidden")))Frame_getFrameType(const char *type) {
@@ -74,5 +75,6 @@ ttLibC_Frame_Type __attribute__ ((visibility("hidden")))Frame_getFrameType(const
 	else if(strcmp(type, "adpcmImaWav") == 0) {
 		return frameType_adpcm_ima_wav;
 	}
+	ERR_PRINT("フレームのtypeが不正でした");
 	return frameType_unknown;
 }

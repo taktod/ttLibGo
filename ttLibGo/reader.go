@@ -81,7 +81,9 @@ static bool ContainerReader_read(
 }
 */
 import "C"
-import "unsafe"
+import (
+	"unsafe"
+)
 
 // Reader ttLibCを利用したコンテナReaderの実装
 type Reader struct {

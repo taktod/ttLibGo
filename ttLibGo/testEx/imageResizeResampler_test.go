@@ -1,37 +1,32 @@
-package test
+package testEx
 
 import (
+	"fmt"
 	"os"
 	"testing"
-
-	"fmt"
 
 	"github.com/taktod/ttLibGo/ttLibGo"
 	"github.com/taktod/ttLibGo/ttLibGoFfmpeg"
 )
 
-func TestSwscaleResampler(t *testing.T) {
+func TestImageResizeResampler(t *testing.T) {
 	{
-		t.Log("swscale")
-		in, err := os.Open(os.Getenv("HOME") + "/tools/data/source/test.h264.aac.flv")
+		in, err := os.Open(os.Getenv("HOME") + "/tools/data/source/test.h264.aac.mkv")
 		if err != nil {
 			panic(err)
 		}
 		var count uint32
 		var reader ttLibGo.Reader
-		if !reader.Init("flv") {
+		if !reader.Init("mkv") {
 			t.Errorf("reader初期化失敗")
+			return
 		}
 		defer reader.Close()
 
 		var decoder ttLibGoFfmpeg.AvcodecDecoder
 		defer decoder.Close()
-
-		var resampler ttLibGoFfmpeg.SwscaleResampler
+		var resampler ttLibGo.ImageResizeResampler
 		defer resampler.Close()
-
-		cloned := new(ttLibGo.Frame)
-		defer cloned.Close()
 
 		for {
 			buffer := make([]byte, 65536)
@@ -44,20 +39,18 @@ func TestSwscaleResampler(t *testing.T) {
 				uint64(length),
 				func(frame *ttLibGo.Frame) bool {
 					if frame.CodecType == "h264" {
-						decoder.InitVideo(frame.CodecType, frame.Width, frame.Height)
+						decoder.InitAudio(frame.CodecType, frame.Width, frame.Height)
 						return decoder.Decode(
 							frame,
 							func(frame *ttLibGo.Frame) bool {
-								resampler.Init(frame.CodecType, frame.SubType, frame.Width, frame.Height,
-									"yuv", "planar", 320, 240, "Bilinear")
-								resampler.Resample(
+								resampler.Init("yuv", "planar", 320, 240, false)
+								return resampler.Resample(
 									frame,
 									func(frame *ttLibGo.Frame) bool {
 										fmt.Println(frame)
 										count++
 										return true
 									})
-								return true
 							})
 					}
 					return true

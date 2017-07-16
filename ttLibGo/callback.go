@@ -4,7 +4,9 @@ package ttLibGo
 #include <ttLibC/frame/frame.h>
 */
 import "C"
-import "unsafe"
+import (
+	"unsafe"
+)
 
 /*
  callback絡みの処理はここにまとめておく
