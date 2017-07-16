@@ -5,6 +5,7 @@ import (
 	"github.com/taktod/ttLibGo/ttLibGoFaac"
 	"github.com/taktod/ttLibGo/ttLibGoFdkaac"
 	"github.com/taktod/ttLibGo/ttLibGoFfmpeg"
+	"github.com/taktod/ttLibGo/ttLibGoJpeg"
 )
 
 func install() {
@@ -16,4 +17,6 @@ func install() {
 	defer fdkaacEncoder.Close()
 	var avcodecDecoder ttLibGoFfmpeg.AvcodecDecoder
 	defer avcodecDecoder.Close()
+	var jpegEncoder ttLibGoJpeg.JpegEncoder
+	defer jpegEncoder.Close()
 }
