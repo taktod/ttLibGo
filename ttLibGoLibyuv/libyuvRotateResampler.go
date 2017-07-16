@@ -105,7 +105,7 @@ type LibyuvRotateResampler struct {
 	cResampler *C.libyuvRotateResampler_t
 }
 
-// Init 初期化
+// Init 初期化 degreeは90 180 270 0を設定できます
 func (libyuvRotate *LibyuvRotateResampler) Init(
 	degree uint32) bool {
 	if libyuvRotate.cResampler == nil {
