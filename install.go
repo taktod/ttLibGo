@@ -8,6 +8,7 @@ import (
 	"github.com/taktod/ttLibGo/ttLibGoJpeg"
 	"github.com/taktod/ttLibGo/ttLibGoLibyuv"
 	"github.com/taktod/ttLibGo/ttLibGoMp3lame"
+	"github.com/taktod/ttLibGo/ttLibGoOpus"
 )
 
 func install() {
@@ -25,4 +26,6 @@ func install() {
 	defer libyuvRotateResampler.Close()
 	var mp3lameDecoder ttLibGoMp3lame.Mp3lameDecoder
 	defer mp3lameDecoder.Close()
+	var opusDecoder ttLibGoOpus.OpusDecoder
+	defer opusDecoder.Close()
 }
