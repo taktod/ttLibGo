@@ -740,7 +740,11 @@ ttLibC_Frame *Frame_fromBinary(
 		uint32_t sample_num,
 		uint32_t channel_num,
 		void  *data, // このデータはunsafePointerとして、go側からやってくるので、参照として保持しておけばよいと思う。
-		size_t data_size) {
+		size_t data_size,
+		uint32_t stride,
+		uint32_t y_stride,
+		uint32_t u_stride,
+		uint32_t v_stride) {
 	if(data == NULL || data_size == 0) {
 		// 復元するフレームのbinaryデータがそもそもないので、動作しない。
 		return NULL;
@@ -1003,16 +1007,25 @@ ttLibC_Frame *Frame_fromBinary(
 			if(width == 0 || height == 0) {
 				return NULL;
 			}
-			uint32_t stride = 0;
+//			uint32_t stride = 0;
 			ttLibC_Bgr_Type bgr_type = BgrType_abgr;
 			if(strcmp(sub_type, "bgr") == 0) {
-				stride = width * 3;
+				bgr_type = BgrType_bgr;
+				if(stride == 0) {
+					stride = width * 3;
+				}
 			}
 			else if(strcmp(sub_type, "abgr") == 0) {
-				stride = width * 4;
+				bgr_type = BgrType_abgr;
+				if(stride == 0) {
+					stride = width * 4;
+				}
 			}
 			else if(strcmp(sub_type, "bgra") == 0) {
-				stride = width * 4;
+				bgr_type = BgrType_bgra;
+				if(stride == 0) {
+					stride = width * 4;
+				}
 			}
 			else {
 				return NULL;
@@ -1128,9 +1141,15 @@ ttLibC_Frame *Frame_fromBinary(
 			if(width == 0 || height == 0) {
 				return NULL;
 			}
-			uint32_t y_stride = width;
-			uint32_t u_stride = (width >> 1);
-			uint32_t v_stride = (width >> 1);
+			if(y_stride == 0) {
+				y_stride = width;
+			}
+			if(u_stride == 0) {
+				u_stride = width >> 1;
+			}
+			if(v_stride == 0) {
+				v_stride = width >> 1;
+			}
 			uint8_t *y_data;
 			uint8_t *u_data;
 			uint8_t *v_data;
@@ -1360,7 +1379,11 @@ func (frame *Frame) Restore() {
 			C.uint32_t(frame.SampleNum),
 			C.uint32_t(frame.ChannelNum),
 			binaryPointer,
-			C.size_t(binarySize))
+			C.size_t(binarySize),
+			C.uint32_t(frame.Stride),
+			C.uint32_t(frame.YStride),
+			C.uint32_t(frame.UStride),
+			C.uint32_t(frame.VStride))
 
 		if cFrame != nil {
 			frame.CFrame = CttLibCFrame(cFrame)
