@@ -490,6 +490,36 @@ void Frame_getH26xType(void *frame, char *buffer, size_t buffer_size) {
 	}
 }
 
+bool Frame_isDisposable(void *frame) {
+	if(frame == NULL) {
+		return false;
+	}
+	ttLibC_Frame *f = (ttLibC_Frame *)frame;
+	switch(f->type) {
+	case frameType_flv1:
+		{
+			ttLibC_Flv1 *flv1 = (ttLibC_Flv1 *)f;
+			return flv1->type == Flv1Type_disposableInner;
+		}
+		break;
+	case frameType_h264:
+		{
+			ttLibC_H264 *h264 = (ttLibC_H264 *)f;
+			return h264->is_disposable;
+		}
+		break;
+	case frameType_h265:
+		{
+			ttLibC_H265 *h265 = (ttLibC_H265 *)f;
+			return h265->is_disposable;
+		}
+		break;
+	default:
+		break;
+	}
+	return false;
+}
+
 uint32_t Frame_getSampleRate(void *frame) {
 	if(frame == NULL) {
 		return 0;
@@ -1273,33 +1303,34 @@ type CttLibCFrame unsafe.Pointer
 // encoder・decoder・readerで生成されたデータについては、生成したオブジェクトが管理するので
 // closeする必要はない
 type Frame struct {
-	CFrame     CttLibCFrame
-	CodecType  string
-	SubType    string
-	Pts        uint64
-	Timebase   uint32
-	ID         uint32
-	Width      uint32
-	Height     uint32
-	VideoType  string
-	H26xType   string // これ・・・あれかh264のやつか
-	SampleRate uint32
-	SampleNum  uint32
-	ChannelNum uint32
-	Data       uintptr // bgrのデータのズレ分
-	LData      uintptr // pcmS16 F32のleft側音声のデータのズレ分
-	RData      uintptr // right側
-	YData      uintptr // yuvのy要素のデータのズレ分
-	UData      uintptr // yuvのu要素のデータのズレ分
-	VData      uintptr // yuvのv要素のデータのズレ分
-	Stride     uint32
-	YStride    uint32
-	UStride    uint32
-	VStride    uint32
-	ptrArray   [3]uintptr
-	Binary     []byte // データをbinaryから復元するときに利用する
-	binary     []byte // binaryから復元したときに、元のbinaryをkeepする場所
-	hasBody    bool   // このデータがあとで解放すべきであるかを指定している
+	CFrame       CttLibCFrame
+	CodecType    string
+	SubType      string
+	Pts          uint64
+	Timebase     uint32
+	ID           uint32
+	Width        uint32
+	Height       uint32
+	VideoType    string
+	H26xType     string // これ・・・あれかh264のやつか
+	IsDisposable bool
+	SampleRate   uint32
+	SampleNum    uint32
+	ChannelNum   uint32
+	Data         uintptr // bgrのデータのズレ分
+	LData        uintptr // pcmS16 F32のleft側音声のデータのズレ分
+	RData        uintptr // right側
+	YData        uintptr // yuvのy要素のデータのズレ分
+	UData        uintptr // yuvのu要素のデータのズレ分
+	VData        uintptr // yuvのv要素のデータのズレ分
+	Stride       uint32
+	YStride      uint32
+	UStride      uint32
+	VStride      uint32
+	ptrArray     [3]uintptr
+	Binary       []byte // データをbinaryから復元するときに利用する
+	binary       []byte // binaryから復元したときに、元のbinaryをkeepする場所
+	hasBody      bool   // このデータがあとで解放すべきであるかを指定している
 }
 
 // Init データによって、フレームを初期化します。
