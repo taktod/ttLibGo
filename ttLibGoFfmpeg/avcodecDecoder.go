@@ -13,27 +13,6 @@ static ttLibC_AvcodecDecoder *AvcodecDecoder_make(
 		uint32_t channel_num) {
 	ttLibC_Frame_Type type = Frame_getFrameType(codec_type);
 	switch(type) {
-	case frameType_aac:
-	case frameType_adpcm_ima_wav:
-	case frameType_mp3:
-	case frameType_nellymoser:
-	case frameType_opus:
-	case frameType_pcm_alaw:
-	case frameType_pcm_mulaw:
-	case frameType_speex:
-	case frameType_vorbis:
-		return ttLibC_AvcodecAudioDecoder_make(type, sample_rate, channel_num);
-	case frameType_flv1:
-	case frameType_h264:
-	case frameType_h265:
-	case frameType_jpeg:
-	case frameType_theora:
-	case frameType_vp6:
-	case frameType_vp8:
-	case frameType_vp9:
-	case frameType_wmv1:
-	case frameType_wmv2:
-		return ttLibC_AvcodecVideoDecoder_make(type, width, height);
 	case frameType_pcmF32:
 	case frameType_pcmS16:
 	case frameType_bgr:
@@ -41,9 +20,15 @@ static ttLibC_AvcodecDecoder *AvcodecDecoder_make(
 		puts("rawデータはdecodeできません");
 		return NULL;
 	default:
-		puts("不明なコーデックでした");
-		return NULL;
+		break;
 	}
+	if(ttLibC_isAudio(type)) {
+		return ttLibC_AvcodecAudioDecoder_make(type, sample_rate, channel_num);
+	}
+	if(ttLibC_isVideo(type)) {
+		return ttLibC_AvcodecVideoDecoder_make(type, width, height);
+	}
+	return NULL;
 }
 
 static bool AvcodecDecoder_decode(ttLibC_AvcodecDecoder *decoder, void *frame, uintptr_t ptr) {
