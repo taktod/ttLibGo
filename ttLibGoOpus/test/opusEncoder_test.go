@@ -25,6 +25,7 @@ func TestOpusEncoder(t *testing.T) {
 		defer decoder.Close()
 		var encoder ttLibGoOpus.OpusEncoder
 		defer encoder.Close()
+		isFirst := true
 		for {
 			buffer := make([]byte, 65536)
 			length, err := in.Read(buffer)
@@ -41,10 +42,16 @@ func TestOpusEncoder(t *testing.T) {
 							frame,
 							func(frame *ttLibGo.Frame) bool {
 								encoder.Init(frame.SampleRate, frame.ChannelNum, 480)
+								if isFirst {
+									fmt.Println(encoder.GetCodecControl("OPUS_GET_BITRATE"))
+									encoder.SetCodecControl("OPUS_SET_BITRATE", 96000)
+									fmt.Println(encoder.GetCodecControl("OPUS_GET_BITRATE"))
+									isFirst = false
+								}
 								return encoder.Encode(
 									frame,
 									func(frame *ttLibGo.Frame) bool {
-										fmt.Println(frame)
+										//										fmt.Println(frame)
 										count++
 										return true
 									})
