@@ -281,6 +281,15 @@ void Frame_getSubType(void *frame, char *buffer, size_t buffer_size) {
 			case BgrType_bgra:
 				strcpy(buffer, "bgra");
 				break;
+			case BgrType_argb:
+				strcpy(buffer, "argb");
+				break;
+			case BgrType_rgb:
+				strcpy(buffer, "rgb");
+				break;
+			case BgrType_rgba:
+				strcpy(buffer, "rgba");
+				break;
 			default:
 				break;
 			}
@@ -1045,14 +1054,32 @@ ttLibC_Frame *Frame_fromBinary(
 					stride = width * 3;
 				}
 			}
+			else if(strcmp(sub_type, "rgb") == 0) {
+				bgr_type = BgrType_rgb;
+				if(stride == 0) {
+					stride = width * 3;
+				}
+			}
+			else if(strcmp(sub_type, "bgra") == 0) {
+				bgr_type = BgrType_bgra;
+				if(stride == 0) {
+					stride = width * 4;
+				}
+			}
 			else if(strcmp(sub_type, "abgr") == 0) {
 				bgr_type = BgrType_abgr;
 				if(stride == 0) {
 					stride = width * 4;
 				}
 			}
-			else if(strcmp(sub_type, "bgra") == 0) {
-				bgr_type = BgrType_bgra;
+			else if(strcmp(sub_type, "argb") == 0) {
+				bgr_type = BgrType_argb;
+				if(stride == 0) {
+					stride = width * 4;
+				}
+			}
+			else if(strcmp(sub_type, "rgba") == 0) {
+				bgr_type = BgrType_rgba;
 				if(stride == 0) {
 					stride = width * 4;
 				}

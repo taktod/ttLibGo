@@ -35,11 +35,20 @@ static uint32_t SwscaleResampler_getSubType(ttLibC_Frame_Type type, const char *
 			if(strcmp(subType, "bgr") == 0) {
 				return BgrType_bgr;
 			}
-			else if(strcmp(subType, "bgra") == 0) {
-				return BgrType_bgra;
+			else if(strcmp(subType, "rgb") == 0) {
+				return BgrType_rgb;
 			}
 			else if(strcmp(subType, "abgr") == 0) {
 				return BgrType_abgr;
+			}
+			else if(strcmp(subType, "bgra") == 0) {
+				return BgrType_bgra;
+			}
+			else if(strcmp(subType, "rgba") == 0) {
+				return BgrType_rgba;
+			}
+			else if(strcmp(subType, "argb") == 0) {
+				return BgrType_argb;
 			}
 		}
 		break;

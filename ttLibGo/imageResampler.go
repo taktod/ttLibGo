@@ -41,11 +41,20 @@ imageResampler_t *ImageResampler_make(
 			if(strcmp(sub_type, "bgr") == 0) {
 				resampler->sub_type = BgrType_bgr;
 			}
-			else if(strcmp(sub_type, "abgr") == 0) {
-				resampler->sub_type = BgrType_abgr;
+			else if(strcmp(sub_type, "rgb") == 0) {
+				resampler->sub_type = BgrType_rgb;
 			}
 			else if(strcmp(sub_type, "bgra") == 0) {
 				resampler->sub_type = BgrType_bgra;
+			}
+			else if(strcmp(sub_type, "abgr") == 0) {
+				resampler->sub_type = BgrType_abgr;
+			}
+			else if(strcmp(sub_type, "argb") == 0) {
+				resampler->sub_type = BgrType_argb;
+			}
+			else if(strcmp(sub_type, "rgba") == 0) {
+				resampler->sub_type = BgrType_rgba;
 			}
 			else {
 				puts("subTypeが不正です。");
