@@ -20,6 +20,7 @@ package ttLibGo
 #include <ttLibC/frame/video/h264.h>
 #include <ttLibC/frame/video/h265.h>
 #include <ttLibC/frame/video/jpeg.h>
+#include <ttLibC/frame/video/png.h>
 #include <ttLibC/frame/video/theora.h>
 #include <ttLibC/frame/video/vp6.h>
 #include <ttLibC/frame/video/vp8.h>
@@ -73,6 +74,9 @@ void Frame_getCodecType(void *frame, char *buffer, size_t buffer_size) {
 		break;
 	case frameType_jpeg:
 		strcpy(buffer, "jpeg");
+		break;
+	case frameType_png:
+		strcpy(buffer, "png");
 		break;
 	case frameType_theora:
 		strcpy(buffer, "theora");
@@ -1147,6 +1151,17 @@ ttLibC_Frame *Frame_fromBinary(
 				timebase);
 		}
 		break;
+	case frameType_png:
+		{
+			new_frame = (ttLibC_Frame *)ttLibC_Png_getFrame(
+				(ttLibC_Png *)prev_frame,
+				data,
+				data_size,
+				true,
+				pts,
+				timebase);
+		}
+		break;
 	case frameType_theora:
 		{
 			new_frame = (ttLibC_Frame *)ttLibC_Theora_getFrame(
@@ -1518,38 +1533,39 @@ func (frame *Frame) GetBinaryBuffer() []byte {
 	}
 	// 保持しているframeをttLibC_Frameとしてcastしておく
 	cFrame := C.Frame_refFrame(unsafe.Pointer(frame.CFrame))
-	if cFrame.data == nil { // 実体がない場合
-		switch frame.CodecType {
-		case "bgr":
-			fallthrough
-		case "yuv":
-			fallthrough
-		case "pcmF32":
-			fallthrough
-		case "pcmS16":
-			cloned := C.ttLibC_Frame_clone(nil, cFrame)
-			bufferSize := cloned.buffer_size
-			if bufferSize == 0 {
-				// c言語でcloneしても保持しているbuffer_sizeが0だったら応答できるものがないので、0を応答
-				return nil
-			}
-			// bufferを作る
-			buf := make([]byte, bufferSize)
-			// データをコピーしてgoの世界にもってくる
-			C.Frame_copyData(cloned, unsafe.Pointer(&buf[0]), bufferSize)
-			// cloneしたフレームはいらないので、解放する
-			C.ttLibC_Frame_close(&cloned)
-			// bufferを応答しておわり。
-			return buf
-		default:
+	switch frame.CodecType {
+	case "bgr":
+		fallthrough
+	case "yuv":
+		fallthrough
+	case "pcmF32":
+		fallthrough
+	case "pcmS16":
+		cloned := C.ttLibC_Frame_clone(nil, cFrame)
+		bufferSize := cloned.buffer_size
+		if bufferSize == 0 {
+			// c言語でcloneしても保持しているbuffer_sizeが0だったら応答できるものがないので、0を応答
 			return nil
 		}
+		// bufferを作る
+		buf := make([]byte, bufferSize)
+		// データをコピーしてgoの世界にもってくる
+		C.Frame_copyData(cloned, unsafe.Pointer(&buf[0]), bufferSize)
+		// cloneしたフレームはいらないので、解放する
+		C.ttLibC_Frame_close(&cloned)
+		// bufferを応答しておわり。
+		return buf
+	default:
+		if cFrame.data == nil {
+			return nil
+		} else {
+			bufferSize := cFrame.buffer_size
+			if bufferSize == 0 {
+				return nil
+			}
+			buf := make([]byte, bufferSize)
+			C.Frame_copyData(cFrame, unsafe.Pointer(&buf[0]), bufferSize)
+			return buf
+		}
 	}
-	bufferSize := cFrame.buffer_size
-	if bufferSize == 0 {
-		return nil
-	}
-	buf := make([]byte, bufferSize)
-	C.Frame_copyData(cFrame, unsafe.Pointer(&buf[0]), bufferSize)
-	return buf
 }

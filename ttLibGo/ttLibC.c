@@ -67,6 +67,7 @@ C++がうまく動作できないため(goに書くとC言語扱いになる)別
 #include "../ttLibC/ttLibC/frame/video/h264.c"
 #include "../ttLibC/ttLibC/frame/video/h265.c"
 #include "../ttLibC/ttLibC/frame/video/jpeg.c"
+#include "../ttLibC/ttLibC/frame/video/png.c"
 #include "../ttLibC/ttLibC/frame/video/theora.c"
 #include "../ttLibC/ttLibC/frame/video/video.c"
 #include "../ttLibC/ttLibC/frame/video/vp6.c"

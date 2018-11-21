@@ -15,6 +15,9 @@ ttLibC_Frame_Type __attribute__ ((visibility("hidden")))Frame_getFrameType(const
 	else if(strcmp(type, "mp3") == 0) {
 		return frameType_mp3;
 	}
+	else if(strcmp(type, "png") == 0) {
+		return frameType_png;
+	}
 	else if(strcmp(type, "vp6") == 0) {
 		return frameType_vp6;
 	}
