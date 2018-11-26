@@ -10,6 +10,7 @@ import (
 	"github.com/taktod/ttLibGo/ttLibGoMp3lame"
 	"github.com/taktod/ttLibGo/ttLibGoOpenh264"
 	"github.com/taktod/ttLibGo/ttLibGoOpus"
+	"github.com/taktod/ttLibGo/ttLibGoPng"
 	"github.com/taktod/ttLibGo/ttLibGoSoundtouch"
 	"github.com/taktod/ttLibGo/ttLibGoSpeex"
 	"github.com/taktod/ttLibGo/ttLibGoSpeexdsp"
@@ -38,6 +39,8 @@ func install() {
 	defer openh264Decoder.Close()
 	var opusDecoder ttLibGoOpus.OpusDecoder
 	defer opusDecoder.Close()
+	var pngDecoder ttLibGoPng.PngDecoder
+	defer pngDecoder.Close()
 	var soundtouchResampler ttLibGoSoundtouch.SoundtouchResampler
 	defer soundtouchResampler.Close()
 	var speexDecoder ttLibGoSpeex.SpeexDecoder
