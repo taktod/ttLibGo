@@ -89,6 +89,9 @@ func TestOpusDecoder(t *testing.T) {
 		op := ttLibGo.Decoders.Opus(48000, 2)
 		op.SetCodecControl(ttLibGo.OpusDecoderControls.SetPhaseInversionDisabled, true)
 		sampleRate := op.GetCodecControl(ttLibGo.OpusDecoderControls.GetSampleRate)
+		if sampleRate != 48000 {
+			t.Error("failed to ref sampleRate")
+		}
 		fmt.Println(sampleRate)
 		return op
 	}())

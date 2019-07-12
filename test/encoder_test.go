@@ -102,11 +102,12 @@ func TestOpenh264Encoder(t *testing.T) {
 func TestOpusEncoder(t *testing.T) {
 	encodeBody(t, os.Getenv("HOME")+"/tools/data/source/test.opus.mkv", ttLibGo.Readers.Mkv(), ttLibGo.FrameTypes.Opus, ttLibGo.Decoders.Opus(48000, 2), func() ttLibGo.IEncoder {
 		o := ttLibGo.Encoders.Opus(48000, 2, 480)
-		bitrate := o.GetCodecControl(ttLibGo.OpusEncoderControls.GetBitrate)
-		fmt.Println(bitrate)
+		first_bitrate := o.GetCodecControl(ttLibGo.OpusEncoderControls.GetBitrate)
 		o.SetCodecControl(ttLibGo.OpusEncoderControls.SetBitrate, 96000)
-		bitrate = o.GetCodecControl(ttLibGo.OpusEncoderControls.GetBitrate)
-		fmt.Println(bitrate)
+		bitrate := o.GetCodecControl(ttLibGo.OpusEncoderControls.GetBitrate)
+		if first_bitrate == bitrate || bitrate != 96000 {
+			t.Error(fmt.Sprintf("first_bitrate:%d bitrate:%d", first_bitrate, bitrate))
+		}
 		return o
 	}())
 }
