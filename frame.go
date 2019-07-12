@@ -109,8 +109,7 @@ type Frame struct {
 	ID       uint32
 
 	cFrame  cttLibCFrame
-	hasBody bool   // このデータが解放する時に、closeすべきかのフラグ
-	data    []byte // 外部から指定されるメモリーデータ
+	hasBody bool // このデータが解放する時に、closeすべきかのフラグ
 }
 
 // init データを使って初期化します。

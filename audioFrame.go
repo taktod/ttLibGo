@@ -2,6 +2,7 @@ package ttLibGo
 
 /*
 #include <stdint.h>
+#include <stdlib.h>
 extern uint32_t AudioFrame_getSampleRate(void *frame);
 extern uint32_t AudioFrame_getSampleNum(void *frame);
 extern uint32_t AudioFrame_getChannelNum(void *frame);
@@ -29,10 +30,45 @@ extern void *newGoFrame(uint64_t pts, uint64_t dts, uint32_t timebase, uint32_t 
     uint64_t uDataPos, uint32_t uStride,
     uint64_t vDataPos, uint32_t vStride);
 extern void deleteGoFrame(void *frame);
+
+extern void *AacFrame_fromBinary(void *data, size_t data_size,
+  uint32_t id, uint64_t pts, uint32_t timebase,
+  void *dsiFrame);
+extern void *AdpcmImaWavFrame_fromBinary(void *data, size_t data_size,
+  uint32_t id, uint64_t pts, uint32_t timebase,
+  uint32_t sample_rate, uint32_t sample_num, uint32_t channel_num);
+extern void *Mp3Frame_fromBinary(void *data, size_t data_size,
+  uint32_t id, uint64_t pts, uint32_t timebase);
+extern void *NellymoserFrame_fromBinary(void *data, size_t data_size,
+  uint32_t id, uint64_t pts, uint32_t timebase,
+  uint32_t sample_rate, uint32_t sample_num, uint32_t channel_num);
+extern void *OpusFrame_fromBinary(void *data, size_t data_size,
+  uint32_t id, uint64_t pts, uint32_t timebase);
+extern void *PcmAlawsFrame_fromBinary(void *data, size_t data_size,
+  uint32_t id, uint64_t pts, uint32_t timebase,
+  uint32_t sample_rate, uint32_t sample_num, uint32_t channel_num);
+extern void *PcmF32Frame_fromBinary(void *data, size_t data_size,
+  uint32_t id, uint64_t pts, uint32_t timebase,
+  const char *pcmF32_type, uint32_t sample_rate, uint32_t sample_num, uint32_t channel_num,
+  uint32_t l_index, uint32_t r_index);
+extern void *PcmMulawsFrame_fromBinary(void *data, size_t data_size,
+  uint32_t id, uint64_t pts, uint32_t timebase,
+  uint32_t sample_rate, uint32_t sample_num, uint32_t channel_num);
+extern void *PcmS16Frame_fromBinary(void *data, size_t data_size,
+  uint32_t id, uint64_t pts, uint32_t timebase,
+  const char *pcmS16_type, uint32_t sample_rate, uint32_t sample_num, uint32_t channel_num,
+  uint32_t l_index, uint32_t r_index);
+extern void *SpeexFrame_fromBinary(void *data, size_t data_size,
+  uint32_t id, uint64_t pts, uint32_t timebase,
+  uint32_t sample_rate, uint32_t sample_num, uint32_t channel_num);
+extern void *VorbisFrame_fromBinary(void *data, size_t data_size,
+  uint32_t id, uint64_t pts, uint32_t timebase,
+  uint32_t sample_rate, uint32_t sample_num, uint32_t channel_num);
 */
 import "C"
 import (
 	"bytes"
+	"reflect"
 	"unsafe"
 )
 
@@ -199,7 +235,7 @@ func (aac *AacFrame) GetBinaryBuffer(callback DataCallback) bool {
 // Aac aac処理
 var Aac = struct {
 	Cast       func(frame *Frame) *AacFrame
-	FromBinary func(binary []byte, id uint32, pts uint64, timebase uint32) *Frame
+	FromBinary func(binary []byte, length uint64, id uint32, pts uint64, timebase uint32, dsiFrame IFrame) *Frame
 }{
 	Cast: func(frame *Frame) *AacFrame {
 		audioFrame := Audio.Cast(frame)
@@ -224,8 +260,17 @@ var Aac = struct {
 		aacFrame.AacType = subType{name}
 		return aacFrame
 	},
-	FromBinary: func(binary []byte, id uint32, pts uint64, timebase uint32) *Frame {
-		return nil
+	FromBinary: func(binary []byte, length uint64, id uint32, pts uint64, timebase uint32, dsiFrame IFrame) *Frame {
+		var ptr unsafe.Pointer = nil
+		if !reflect.ValueOf(dsiFrame).IsNil() {
+			ptr = unsafe.Pointer(dsiFrame.refCFrame())
+		}
+		cFrame := C.AacFrame_fromBinary(unsafe.Pointer(&binary[0]), C.size_t(length),
+			C.uint32_t(id), C.uint64_t(pts), C.uint32_t(timebase), ptr)
+		frame := new(Frame)
+		frame.init(cttLibCFrame(cFrame))
+		frame.hasBody = true
+		return frame
 	},
 }
 
@@ -275,7 +320,8 @@ func (adpcmImaWav *AdpcmImaWavFrame) GetBinaryBuffer(callback DataCallback) bool
 // AdpcmImaWav AdpcmImaWav処理
 var AdpcmImaWav = struct {
 	Cast       func(frame *Frame) *AdpcmImaWavFrame
-	FromBinary func(binary []byte, id uint32, pts uint64, timebase uint32) *Frame
+	FromBinary func(binary []byte, length uint64, id uint32, pts uint64, timebase uint32,
+		sampleRate uint32, sampleNum uint32, channelNum uint32) *Frame
 }{
 	Cast: func(frame *Frame) *AdpcmImaWavFrame {
 		audioFrame := Audio.Cast(frame)
@@ -294,8 +340,14 @@ var AdpcmImaWav = struct {
 		adpcmImaWavFrame.ChannelNum = audioFrame.ChannelNum
 		return adpcmImaWavFrame
 	},
-	FromBinary: func(binary []byte, id uint32, pts uint64, timebase uint32) *Frame {
-		return nil
+	FromBinary: func(binary []byte, length uint64, id uint32, pts uint64, timebase uint32,
+		sampleRate uint32, sampleNum uint32, channelNum uint32) *Frame {
+		cFrame := C.AdpcmImaWavFrame_fromBinary(unsafe.Pointer(&binary[0]), C.size_t(length), C.uint32_t(id), C.uint64_t(pts), C.uint32_t(timebase),
+			C.uint32_t(sampleRate), C.uint32_t(sampleNum), C.uint32_t(channelNum))
+		frame := new(Frame)
+		frame.init(cttLibCFrame(cFrame))
+		frame.hasBody = true
+		return frame
 	},
 }
 
@@ -367,7 +419,7 @@ func (mp3 *Mp3Frame) GetBinaryBuffer(callback DataCallback) bool {
 // Mp3 Mp3処理
 var Mp3 = struct {
 	Cast       func(frame *Frame) *Mp3Frame
-	FromBinary func(binary []byte, id uint32, pts uint64, timebase uint32) *Frame
+	FromBinary func(binary []byte, length uint64, id uint32, pts uint64, timebase uint32) *Frame
 }{
 	Cast: func(frame *Frame) *Mp3Frame {
 		audioFrame := Audio.Cast(frame)
@@ -392,8 +444,12 @@ var Mp3 = struct {
 		mp3Frame.Mp3Type = subType{name}
 		return mp3Frame
 	},
-	FromBinary: func(binary []byte, id uint32, pts uint64, timebase uint32) *Frame {
-		return nil
+	FromBinary: func(binary []byte, length uint64, id uint32, pts uint64, timebase uint32) *Frame {
+		cFrame := C.Mp3Frame_fromBinary(unsafe.Pointer(&binary[0]), C.size_t(length), C.uint32_t(id), C.uint64_t(pts), C.uint32_t(timebase))
+		frame := new(Frame)
+		frame.init(cttLibCFrame(cFrame))
+		frame.hasBody = true
+		return frame
 	},
 }
 
@@ -443,7 +499,8 @@ func (nellymoser *NellymoserFrame) GetBinaryBuffer(callback DataCallback) bool {
 // Nellymoser Nellymoser処理
 var Nellymoser = struct {
 	Cast       func(frame *Frame) *NellymoserFrame
-	FromBinary func(binary []byte, id uint32, pts uint64, timebase uint32) *Frame
+	FromBinary func(binary []byte, length uint64, id uint32, pts uint64, timebase uint32,
+		sampleRate uint32, sampleNum uint32, channelNum uint32) *Frame
 }{
 	Cast: func(frame *Frame) *NellymoserFrame {
 		audioFrame := Audio.Cast(frame)
@@ -462,8 +519,14 @@ var Nellymoser = struct {
 		nellymoserFrame.ChannelNum = audioFrame.ChannelNum
 		return nellymoserFrame
 	},
-	FromBinary: func(binary []byte, id uint32, pts uint64, timebase uint32) *Frame {
-		return nil
+	FromBinary: func(binary []byte, length uint64, id uint32, pts uint64, timebase uint32,
+		sampleRate uint32, sampleNum uint32, channelNum uint32) *Frame {
+		cFrame := C.NellymoserFrame_fromBinary(unsafe.Pointer(&binary[0]), C.size_t(length), C.uint32_t(id), C.uint64_t(pts), C.uint32_t(timebase),
+			C.uint32_t(sampleRate), C.uint32_t(sampleNum), C.uint32_t(channelNum))
+		frame := new(Frame)
+		frame.init(cttLibCFrame(cFrame))
+		frame.hasBody = true
+		return frame
 	},
 }
 
@@ -535,7 +598,7 @@ func (opus *OpusFrame) GetBinaryBuffer(callback DataCallback) bool {
 // Opus Opus処理
 var Opus = struct {
 	Cast       func(frame *Frame) *OpusFrame
-	FromBinary func(binary []byte, id uint32, pts uint64, timebase uint32) *Frame
+	FromBinary func(binary []byte, length uint64, id uint32, pts uint64, timebase uint32) *Frame
 }{
 	Cast: func(frame *Frame) *OpusFrame {
 		audioFrame := Audio.Cast(frame)
@@ -560,8 +623,12 @@ var Opus = struct {
 		opusFrame.OpusType = subType{name}
 		return opusFrame
 	},
-	FromBinary: func(binary []byte, id uint32, pts uint64, timebase uint32) *Frame {
-		return nil
+	FromBinary: func(binary []byte, length uint64, id uint32, pts uint64, timebase uint32) *Frame {
+		cFrame := C.OpusFrame_fromBinary(unsafe.Pointer(&binary[0]), C.size_t(length), C.uint32_t(id), C.uint64_t(pts), C.uint32_t(timebase))
+		frame := new(Frame)
+		frame.init(cttLibCFrame(cFrame))
+		frame.hasBody = true
+		return frame
 	},
 }
 
@@ -611,7 +678,8 @@ func (pcmAlaw *PcmAlawFrame) GetBinaryBuffer(callback DataCallback) bool {
 // PcmAlaw PcmAlaw処理
 var PcmAlaw = struct {
 	Cast       func(frame *Frame) *PcmAlawFrame
-	FromBinary func(binary []byte, id uint32, pts uint64, timebase uint32) *Frame
+	FromBinary func(binary []byte, length uint64, id uint32, pts uint64, timebase uint32,
+		sampleRate uint32, sampleNum uint32, channelNum uint32) *Frame
 }{
 	Cast: func(frame *Frame) *PcmAlawFrame {
 		audioFrame := Audio.Cast(frame)
@@ -630,8 +698,14 @@ var PcmAlaw = struct {
 		pcmAlawFrame.ChannelNum = audioFrame.ChannelNum
 		return pcmAlawFrame
 	},
-	FromBinary: func(binary []byte, id uint32, pts uint64, timebase uint32) *Frame {
-		return nil
+	FromBinary: func(binary []byte, length uint64, id uint32, pts uint64, timebase uint32,
+		sampleRate uint32, sampleNum uint32, channelNum uint32) *Frame {
+		cFrame := C.PcmAlawsFrame_fromBinary(unsafe.Pointer(&binary[0]), C.size_t(length), C.uint32_t(id), C.uint64_t(pts), C.uint32_t(timebase),
+			C.uint32_t(sampleRate), C.uint32_t(sampleNum), C.uint32_t(channelNum))
+		frame := new(Frame)
+		frame.init(cttLibCFrame(cFrame))
+		frame.hasBody = true
+		return frame
 	},
 }
 
@@ -705,7 +779,9 @@ func (pcmF32 *PcmF32Frame) GetBinaryBuffer(callback DataCallback) bool {
 // PcmF32 PcmF32処理
 var PcmF32 = struct {
 	Cast       func(frame *Frame) *PcmF32Frame
-	FromBinary func(binary []byte, id uint32, pts uint64, timebase uint32) *Frame
+	FromBinary func(binary []byte, length uint64, id uint32, pts uint64, timebase uint32,
+		pcmF32Type subType, sampleRate uint32, sampleNum uint32, channelNum uint32,
+		lIndex uint32, rIndex uint32) *Frame
 }{
 	Cast: func(frame *Frame) *PcmF32Frame {
 		audioFrame := Audio.Cast(frame)
@@ -734,8 +810,18 @@ var PcmF32 = struct {
 		pcmF32Frame.RStep = uint32(C.PcmF32Frame_getRStep(ptr))
 		return pcmF32Frame
 	},
-	FromBinary: func(binary []byte, id uint32, pts uint64, timebase uint32) *Frame {
-		return nil
+	FromBinary: func(binary []byte, length uint64, id uint32, pts uint64, timebase uint32,
+		pcmF32Type subType, sampleRate uint32, sampleNum uint32, channelNum uint32,
+		lIndex uint32, rIndex uint32) *Frame {
+		cPcmF32Type := C.CString(pcmF32Type.value)
+		defer C.free(unsafe.Pointer(cPcmF32Type))
+		cFrame := C.PcmF32Frame_fromBinary(unsafe.Pointer(&binary[0]), C.size_t(length), C.uint32_t(id), C.uint64_t(pts), C.uint32_t(timebase),
+			cPcmF32Type, C.uint32_t(sampleRate), C.uint32_t(sampleNum), C.uint32_t(channelNum),
+			C.uint32_t(lIndex), C.uint32_t(rIndex))
+		frame := new(Frame)
+		frame.init(cttLibCFrame(cFrame))
+		frame.hasBody = true
+		return frame
 	},
 }
 
@@ -785,7 +871,8 @@ func (pcmMulaw *PcmMulawFrame) GetBinaryBuffer(callback DataCallback) bool {
 // PcmMulaw PcmMulaw処理
 var PcmMulaw = struct {
 	Cast       func(frame *Frame) *PcmMulawFrame
-	FromBinary func(binary []byte, id uint32, pts uint64, timebase uint32) *Frame
+	FromBinary func(binary []byte, length uint64, id uint32, pts uint64, timebase uint32,
+		sampleRate uint32, sampleNum uint32, channelNum uint32) *Frame
 }{
 	Cast: func(frame *Frame) *PcmMulawFrame {
 		audioFrame := Audio.Cast(frame)
@@ -804,8 +891,14 @@ var PcmMulaw = struct {
 		pcmMulawFrame.ChannelNum = audioFrame.ChannelNum
 		return pcmMulawFrame
 	},
-	FromBinary: func(binary []byte, id uint32, pts uint64, timebase uint32) *Frame {
-		return nil
+	FromBinary: func(binary []byte, length uint64, id uint32, pts uint64, timebase uint32,
+		sampleRate uint32, sampleNum uint32, channelNum uint32) *Frame {
+		cFrame := C.PcmMulawsFrame_fromBinary(unsafe.Pointer(&binary[0]), C.size_t(length), C.uint32_t(id), C.uint64_t(pts), C.uint32_t(timebase),
+			C.uint32_t(sampleRate), C.uint32_t(sampleNum), C.uint32_t(channelNum))
+		frame := new(Frame)
+		frame.init(cttLibCFrame(cFrame))
+		frame.hasBody = true
+		return frame
 	},
 }
 
@@ -883,7 +976,9 @@ func (pcmS16 *PcmS16Frame) GetBinaryBuffer(callback DataCallback) bool {
 // PcmS16 PcmS16処理
 var PcmS16 = struct {
 	Cast       func(frame *Frame) *PcmS16Frame
-	FromBinary func(binary []byte, id uint32, pts uint64, timebase uint32) *Frame
+	FromBinary func(binary []byte, length uint64, id uint32, pts uint64, timebase uint32,
+		pcmS16Type subType, sampleRate uint32, sampleNum uint32, channelNum uint32,
+		lIndex uint32, rIndex uint32) *Frame
 }{
 	Cast: func(frame *Frame) *PcmS16Frame {
 		audioFrame := Audio.Cast(frame)
@@ -912,8 +1007,19 @@ var PcmS16 = struct {
 		pcmS16Frame.RStep = uint32(C.PcmS16Frame_getRStep(ptr))
 		return pcmS16Frame
 	},
-	FromBinary: func(binary []byte, id uint32, pts uint64, timebase uint32) *Frame {
-		return nil
+	FromBinary: func(binary []byte, length uint64, id uint32, pts uint64, timebase uint32,
+		pcmS16Type subType, sampleRate uint32, sampleNum uint32, channelNum uint32,
+		lIndex uint32, rIndex uint32) *Frame {
+		cPcmS16Type := C.CString(pcmS16Type.value)
+		defer C.free(unsafe.Pointer(cPcmS16Type))
+		// で、ステレオでplanarでない場合は、r_dataは未設定にしなければならないと・・・
+		cFrame := C.PcmS16Frame_fromBinary(unsafe.Pointer(&binary[0]), C.size_t(length), C.uint32_t(id), C.uint64_t(pts), C.uint32_t(timebase),
+			cPcmS16Type, C.uint32_t(sampleRate), C.uint32_t(sampleNum), C.uint32_t(channelNum),
+			C.uint32_t(lIndex), C.uint32_t(rIndex))
+		frame := new(Frame)
+		frame.init(cttLibCFrame(cFrame))
+		frame.hasBody = true
+		return frame
 	},
 }
 
@@ -985,7 +1091,8 @@ func (speex *SpeexFrame) GetBinaryBuffer(callback DataCallback) bool {
 // Speex Speex処理
 var Speex = struct {
 	Cast       func(frame *Frame) *SpeexFrame
-	FromBinary func(binary []byte, id uint32, pts uint64, timebase uint32) *Frame
+	FromBinary func(binary []byte, length uint64, id uint32, pts uint64, timebase uint32,
+		sampleRate uint32, sampleNum uint32, channelNum uint32) *Frame
 }{
 	Cast: func(frame *Frame) *SpeexFrame {
 		audioFrame := Audio.Cast(frame)
@@ -1010,8 +1117,14 @@ var Speex = struct {
 		speexFrame.SpeexType = subType{name}
 		return speexFrame
 	},
-	FromBinary: func(binary []byte, id uint32, pts uint64, timebase uint32) *Frame {
-		return nil
+	FromBinary: func(binary []byte, length uint64, id uint32, pts uint64, timebase uint32,
+		sampleRate uint32, sampleNum uint32, channelNum uint32) *Frame {
+		cFrame := C.SpeexFrame_fromBinary(unsafe.Pointer(&binary[0]), C.size_t(length), C.uint32_t(id), C.uint64_t(pts), C.uint32_t(timebase),
+			C.uint32_t(sampleRate), C.uint32_t(sampleNum), C.uint32_t(channelNum))
+		frame := new(Frame)
+		frame.init(cttLibCFrame(cFrame))
+		frame.hasBody = true
+		return frame
 	},
 }
 
@@ -1085,7 +1198,8 @@ func (vorbis *VorbisFrame) GetBinaryBuffer(callback DataCallback) bool {
 // Vorbis Vorbis処理
 var Vorbis = struct {
 	Cast       func(frame *Frame) *VorbisFrame
-	FromBinary func(binary []byte, id uint32, pts uint64, timebase uint32) *Frame
+	FromBinary func(binary []byte, length uint64, id uint32, pts uint64, timebase uint32,
+		sampleRate uint32, sampleNum uint32, channelNum uint32) *Frame
 }{
 	Cast: func(frame *Frame) *VorbisFrame {
 		audioFrame := Audio.Cast(frame)
@@ -1110,7 +1224,13 @@ var Vorbis = struct {
 		vorbisFrame.VorbisType = subType{name}
 		return vorbisFrame
 	},
-	FromBinary: func(binary []byte, id uint32, pts uint64, timebase uint32) *Frame {
-		return nil
+	FromBinary: func(binary []byte, length uint64, id uint32, pts uint64, timebase uint32,
+		sampleRate uint32, sampleNum uint32, channelNum uint32) *Frame {
+		cFrame := C.VorbisFrame_fromBinary(unsafe.Pointer(&binary[0]), C.size_t(length), C.uint32_t(id), C.uint64_t(pts), C.uint32_t(timebase),
+			C.uint32_t(sampleRate), C.uint32_t(sampleNum), C.uint32_t(channelNum))
+		frame := new(Frame)
+		frame.init(cttLibCFrame(cFrame))
+		frame.hasBody = true
+		return frame
 	},
 }

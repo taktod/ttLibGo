@@ -3,6 +3,7 @@ package ttLibGo
 /*
 #include <stdio.h>
 #include <stdint.h>
+#include <stdlib.h>
 #include <stdbool.h>
 extern void VideoFrame_getVideoType(void *cFrame, char *buffer, size_t buffer_size);
 extern uint32_t VideoFrame_getWidth(void *frame);
@@ -31,6 +32,37 @@ extern void *newGoFrame(uint64_t pts, uint64_t dts, uint32_t timebase, uint32_t 
     uint64_t uDataPos, uint32_t uStride,
     uint64_t vDataPos, uint32_t vStride);
 extern void deleteGoFrame(void *frame);
+
+extern void *BgrFrame_fromBinary(void *data, size_t data_size,
+  uint32_t id, uint64_t pts, uint32_t timebase,
+  const char *bgr_type, uint32_t width, uint32_t height, uint32_t width_stride);
+extern void *Flv1Frame_fromBinary(void *data, size_t data_size,
+  uint32_t id, uint64_t pts, uint32_t timebase);
+extern void *H264Frame_fromBinary(void *data, size_t data_size,
+  uint32_t id, uint64_t pts, uint32_t timebase);
+extern void *H265Frame_fromBinary(void *data, size_t data_size,
+  uint32_t id, uint64_t pts, uint32_t timebase);
+extern void *JpegFrame_fromBinary(void *data, size_t data_size,
+  uint32_t id, uint64_t pts, uint32_t timebase);
+extern void *PngFrame_fromBinary(void *data, size_t data_size,
+  uint32_t id, uint64_t pts, uint32_t timebase);
+extern void *TheoraFrame_fromBinary(void *data, size_t data_size,
+	uint32_t id, uint64_t pts, uint32_t timebase,
+	uint32_t width, uint32_t height);
+extern void *Vp6Frame_fromBinary(void *data, size_t data_size,
+	uint32_t id, uint64_t pts, uint32_t timebase,
+	uint32_t width, uint32_t height, uint8_t adjustment);
+extern void *Vp8Frame_fromBinary(void *data, size_t data_size,
+	uint32_t id, uint64_t pts, uint32_t timebase,
+	uint32_t width, uint32_t height);
+extern void *Vp9Frame_fromBinary(void *data, size_t data_size,
+	uint32_t id, uint64_t pts, uint32_t timebase,
+	uint32_t width, uint32_t height);
+extern void *Yuv420Frame_fromPlaneBinaries(uint32_t id, uint64_t pts, uint32_t timebase,
+  const char *yuv_type, uint32_t width, uint32_t height,
+  void *y_data, uint32_t y_stride,
+  void *u_data, uint32_t u_stride,
+	void *v_data, uint32_t v_stride);
 */
 import "C"
 
@@ -228,6 +260,7 @@ var Bgr = struct {
 	Cast       func(frame *Frame) *BgrFrame // castして、frameを調整する
 	FromBinary func(
 		binary []byte,
+		length uint64,
 		id uint32,
 		pts uint64,
 		timebase uint32,
@@ -263,6 +296,7 @@ var Bgr = struct {
 	},
 	FromBinary: func(
 		binary []byte,
+		length uint64,
 		id uint32,
 		pts uint64,
 		timebase uint32,
@@ -270,8 +304,18 @@ var Bgr = struct {
 		width uint32,
 		height uint32,
 		widthStride uint32) *Frame {
+		// とりあえずなんとかして、ttLibC_Frameを作って、
+		// そのデータをベースにデータを作ってやればいいか・・・
 		// まだ未実装
-		return nil
+		cBgrType := C.CString(bgrType.value)
+		defer C.free(unsafe.Pointer(cBgrType))
+		cFrame := C.BgrFrame_fromBinary(unsafe.Pointer(&binary[0]), C.size_t(length),
+			C.uint32_t(id), C.uint64_t(pts), C.uint32_t(timebase),
+			cBgrType, C.uint32_t(width), C.uint32_t(height), C.uint32_t(widthStride))
+		frame := new(Frame)
+		frame.init(cttLibCFrame(cFrame))
+		frame.hasBody = true
+		return frame
 	},
 }
 
@@ -343,7 +387,7 @@ func (flv1 *Flv1Frame) GetBinaryBuffer(callback DataCallback) bool {
 // Flv1 Flv1処理
 var Flv1 = struct {
 	Cast       func(frame *Frame) *Flv1Frame
-	FromBinary func(binary []byte, id uint32, pts uint64, timebase uint32) *Frame
+	FromBinary func(binary []byte, length uint64, id uint32, pts uint64, timebase uint32) *Frame
 }{
 	Cast: func(frame *Frame) *Flv1Frame {
 		videoFrame := Video.Cast(frame)
@@ -368,9 +412,13 @@ var Flv1 = struct {
 		flv1Frame.Flv1Type = subType{name}
 		return flv1Frame
 	},
-	FromBinary: func(binary []byte, id uint32, pts uint64, timebase uint32) *Frame {
-		// まだ未実装
-		return nil
+	FromBinary: func(binary []byte, length uint64, id uint32, pts uint64, timebase uint32) *Frame {
+		cFrame := C.Flv1Frame_fromBinary(unsafe.Pointer(&binary[0]), C.size_t(length),
+			C.uint32_t(id), C.uint64_t(pts), C.uint32_t(timebase))
+		frame := new(Frame)
+		frame.init(cttLibCFrame(cFrame))
+		frame.hasBody = true
+		return frame
 	},
 }
 
@@ -463,7 +511,7 @@ func (h264 *H264Frame) GetBinaryBuffer(callback DataCallback) bool {
 // H264 H264処理
 var H264 = struct {
 	Cast       func(frame *Frame) *H264Frame
-	FromBinary func(binary []byte, id uint32, pts uint64, timebase uint32) *Frame
+	FromBinary func(binary []byte, length uint64, id uint32, pts uint64, timebase uint32) *Frame
 }{
 	Cast: func(frame *Frame) *H264Frame {
 		videoFrame := Video.Cast(frame)
@@ -490,8 +538,13 @@ var H264 = struct {
 		h264Frame.IsDisposable = bool(C.H264Frame_isDisposable(ptr))
 		return h264Frame
 	},
-	FromBinary: func(binary []byte, id uint32, pts uint64, timebase uint32) *Frame {
-		return nil
+	FromBinary: func(binary []byte, length uint64, id uint32, pts uint64, timebase uint32) *Frame {
+		cFrame := C.H264Frame_fromBinary(unsafe.Pointer(&binary[0]), C.size_t(length),
+			C.uint32_t(id), C.uint64_t(pts), C.uint32_t(timebase))
+		frame := new(Frame)
+		frame.init(cttLibCFrame(cFrame))
+		frame.hasBody = true
+		return frame
 	},
 }
 
@@ -580,7 +633,7 @@ func (h265 *H265Frame) GetBinaryBuffer(callback DataCallback) bool {
 // H265 H265処理
 var H265 = struct {
 	Cast       func(frame *Frame) *H265Frame
-	FromBinary func(binary []byte, id uint32, pts uint64, timebase uint32) *Frame
+	FromBinary func(binary []byte, length uint64, id uint32, pts uint64, timebase uint32) *Frame
 }{
 	Cast: func(frame *Frame) *H265Frame {
 		videoFrame := Video.Cast(frame)
@@ -607,8 +660,13 @@ var H265 = struct {
 		h265Frame.IsDisposable = bool(C.H265Frame_isDisposable(ptr))
 		return h265Frame
 	},
-	FromBinary: func(binary []byte, id uint32, pts uint64, timebase uint32) *Frame {
-		return nil
+	FromBinary: func(binary []byte, length uint64, id uint32, pts uint64, timebase uint32) *Frame {
+		cFrame := C.H265Frame_fromBinary(unsafe.Pointer(&binary[0]), C.size_t(length),
+			C.uint32_t(id), C.uint64_t(pts), C.uint32_t(timebase))
+		frame := new(Frame)
+		frame.init(cttLibCFrame(cFrame))
+		frame.hasBody = true
+		return frame
 	},
 }
 
@@ -658,7 +716,7 @@ func (jpeg *JpegFrame) GetBinaryBuffer(callback DataCallback) bool {
 // Jpeg Jpeg処理
 var Jpeg = struct {
 	Cast       func(frame *Frame) *JpegFrame
-	FromBinary func(binary []byte, id uint32, pts uint64, timebase uint32) *Frame
+	FromBinary func(binary []byte, length uint64, id uint32, pts uint64, timebase uint32) *Frame
 }{
 	Cast: func(frame *Frame) *JpegFrame {
 		videoFrame := Video.Cast(frame)
@@ -677,8 +735,13 @@ var Jpeg = struct {
 		jpegFrame.Width = videoFrame.Width
 		return jpegFrame
 	},
-	FromBinary: func(binary []byte, id uint32, pts uint64, timebase uint32) *Frame {
-		return nil
+	FromBinary: func(binary []byte, length uint64, id uint32, pts uint64, timebase uint32) *Frame {
+		cFrame := C.JpegFrame_fromBinary(unsafe.Pointer(&binary[0]), C.size_t(length),
+			C.uint32_t(id), C.uint64_t(pts), C.uint32_t(timebase))
+		frame := new(Frame)
+		frame.init(cttLibCFrame(cFrame))
+		frame.hasBody = true
+		return frame
 	},
 }
 
@@ -728,7 +791,7 @@ func (png *PngFrame) GetBinaryBuffer(callback DataCallback) bool {
 // Png Png処理
 var Png = struct {
 	Cast       func(frame *Frame) *PngFrame
-	FromBinary func(binary []byte, id uint32, pts uint64, timebase uint32) *Frame
+	FromBinary func(binary []byte, length uint64, id uint32, pts uint64, timebase uint32) *Frame
 }{
 	Cast: func(frame *Frame) *PngFrame {
 		videoFrame := Video.Cast(frame)
@@ -747,8 +810,13 @@ var Png = struct {
 		pngFrame.Width = videoFrame.Width
 		return pngFrame
 	},
-	FromBinary: func(binary []byte, id uint32, pts uint64, timebase uint32) *Frame {
-		return nil
+	FromBinary: func(binary []byte, length uint64, id uint32, pts uint64, timebase uint32) *Frame {
+		cFrame := C.PngFrame_fromBinary(unsafe.Pointer(&binary[0]), C.size_t(length),
+			C.uint32_t(id), C.uint64_t(pts), C.uint32_t(timebase))
+		frame := new(Frame)
+		frame.init(cttLibCFrame(cFrame))
+		frame.hasBody = true
+		return frame
 	},
 }
 
@@ -825,7 +893,7 @@ func (theora *TheoraFrame) GetBinaryBuffer(callback DataCallback) bool {
 // Theora Theora処理
 var Theora = struct {
 	Cast       func(frame *Frame) *TheoraFrame
-	FromBinary func(binary []byte, id uint32, pts uint64, timebase uint32) *Frame
+	FromBinary func(binary []byte, length uint64, id uint32, pts uint64, timebase uint32, width uint32, height uint32) *Frame
 }{
 	Cast: func(frame *Frame) *TheoraFrame {
 		videoFrame := Video.Cast(frame)
@@ -851,8 +919,14 @@ var Theora = struct {
 		theoraFrame.GranulePos = uint64(C.TheoraFrame_getGranulePos(ptr))
 		return theoraFrame
 	},
-	FromBinary: func(binary []byte, id uint32, pts uint64, timebase uint32) *Frame {
-		return nil
+	FromBinary: func(binary []byte, length uint64, id uint32, pts uint64, timebase uint32, width uint32, height uint32) *Frame {
+		cFrame := C.TheoraFrame_fromBinary(unsafe.Pointer(&binary[0]), C.size_t(length),
+			C.uint32_t(id), C.uint64_t(pts), C.uint32_t(timebase),
+			C.uint32_t(width), C.uint32_t(height))
+		frame := new(Frame)
+		frame.init(cttLibCFrame(cFrame))
+		frame.hasBody = true
+		return frame
 	},
 }
 
@@ -902,7 +976,7 @@ func (vp6 *Vp6Frame) GetBinaryBuffer(callback DataCallback) bool {
 // Vp6 Vp6処理
 var Vp6 = struct {
 	Cast       func(frame *Frame) *Vp6Frame
-	FromBinary func(binary []byte, id uint32, pts uint64, timebase uint32) *Frame
+	FromBinary func(binary []byte, length uint64, id uint32, pts uint64, timebase uint32, width uint32, height uint32, adjustment uint8) *Frame
 }{
 	Cast: func(frame *Frame) *Vp6Frame {
 		videoFrame := Video.Cast(frame)
@@ -921,8 +995,14 @@ var Vp6 = struct {
 		vp6Frame.Width = videoFrame.Width
 		return vp6Frame
 	},
-	FromBinary: func(binary []byte, id uint32, pts uint64, timebase uint32) *Frame {
-		return nil
+	FromBinary: func(binary []byte, length uint64, id uint32, pts uint64, timebase uint32, width uint32, height uint32, adjustment uint8) *Frame {
+		cFrame := C.Vp6Frame_fromBinary(unsafe.Pointer(&binary[0]), C.size_t(length),
+			C.uint32_t(id), C.uint64_t(pts), C.uint32_t(timebase),
+			C.uint32_t(width), C.uint32_t(height), C.uint8_t(adjustment))
+		frame := new(Frame)
+		frame.init(cttLibCFrame(cFrame))
+		frame.hasBody = true
+		return frame
 	},
 }
 
@@ -972,7 +1052,7 @@ func (vp8 *Vp8Frame) GetBinaryBuffer(callback DataCallback) bool {
 // Vp8 Vp8処理
 var Vp8 = struct {
 	Cast       func(frame *Frame) *Vp8Frame
-	FromBinary func(binary []byte, id uint32, pts uint64, timebase uint32) *Frame
+	FromBinary func(binary []byte, length uint64, id uint32, pts uint64, timebase uint32, width uint32, height uint32) *Frame
 }{
 	Cast: func(frame *Frame) *Vp8Frame {
 		videoFrame := Video.Cast(frame)
@@ -991,8 +1071,14 @@ var Vp8 = struct {
 		vp8Frame.Width = videoFrame.Width
 		return vp8Frame
 	},
-	FromBinary: func(binary []byte, id uint32, pts uint64, timebase uint32) *Frame {
-		return nil
+	FromBinary: func(binary []byte, length uint64, id uint32, pts uint64, timebase uint32, width uint32, height uint32) *Frame {
+		cFrame := C.Vp8Frame_fromBinary(unsafe.Pointer(&binary[0]), C.size_t(length),
+			C.uint32_t(id), C.uint64_t(pts), C.uint32_t(timebase),
+			C.uint32_t(width), C.uint32_t(height))
+		frame := new(Frame)
+		frame.init(cttLibCFrame(cFrame))
+		frame.hasBody = true
+		return frame
 	},
 }
 
@@ -1042,7 +1128,7 @@ func (vp9 *Vp9Frame) GetBinaryBuffer(callback DataCallback) bool {
 // Vp9 Vp9処理
 var Vp9 = struct {
 	Cast       func(frame *Frame) *Vp9Frame
-	FromBinary func(binary []byte, id uint32, pts uint64, timebase uint32) *Frame
+	FromBinary func(binary []byte, length uint64, id uint32, pts uint64, timebase uint32, width uint32, height uint32) *Frame
 }{
 	Cast: func(frame *Frame) *Vp9Frame {
 		videoFrame := Video.Cast(frame)
@@ -1061,8 +1147,14 @@ var Vp9 = struct {
 		vp9Frame.Width = videoFrame.Width
 		return vp9Frame
 	},
-	FromBinary: func(binary []byte, id uint32, pts uint64, timebase uint32) *Frame {
-		return nil
+	FromBinary: func(binary []byte, length uint64, id uint32, pts uint64, timebase uint32, width uint32, height uint32) *Frame {
+		cFrame := C.Vp9Frame_fromBinary(unsafe.Pointer(&binary[0]), C.size_t(length),
+			C.uint32_t(id), C.uint64_t(pts), C.uint32_t(timebase),
+			C.uint32_t(width), C.uint32_t(height))
+		frame := new(Frame)
+		frame.init(cttLibCFrame(cFrame))
+		frame.hasBody = true
+		return frame
 	},
 }
 
@@ -1132,7 +1224,7 @@ var Wmv1 = struct {
 		return wmv1Frame
 	},
 	FromBinary: func(binary []byte, id uint32, pts uint64, timebase uint32) *Frame {
-		return nil
+		panic("not implemented for wmv1")
 	},
 }
 
@@ -1202,7 +1294,7 @@ var Wmv2 = struct {
 		return wmv2Frame
 	},
 	FromBinary: func(binary []byte, id uint32, pts uint64, timebase uint32) *Frame {
-		return nil
+		panic("not implemented for wmv2")
 	},
 }
 
@@ -1284,18 +1376,26 @@ var Yuv420 = struct {
 	Cast       func(frame *Frame) *Yuv420Frame
 	FromBinary func(
 		binary []byte,
+		length uint64,
+		id uint32,
+		pts uint64,
+		timebase uint32,
+		yuv420Type subType,
+		width uint32,
+		height uint32) *Frame
+	FromPlaneBinaries func(
 		id uint32,
 		pts uint64,
 		timebase uint32,
 		yuv420Type subType,
 		width uint32,
 		height uint32,
-		YPos uintptr,
-		YStride uintptr,
-		UPos uintptr,
-		UStride uintptr,
-		VPos uintptr,
-		VStride uintptr) *Frame
+		yBinary []byte,
+		yStride uint32,
+		uBinary []byte,
+		uStride uint32,
+		vBinary []byte,
+		vStride uint32) *Frame
 }{
 	Cast: func(frame *Frame) *Yuv420Frame {
 		videoFrame := Video.Cast(frame)
@@ -1326,4 +1426,125 @@ var Yuv420 = struct {
 		yuv420Frame.VStride = uint32(C.Yuv420Frame_getVStride(ptr))
 		return yuv420Frame
 	},
+	FromBinary: func(
+		binary []byte,
+		length uint64,
+		id uint32,
+		pts uint64,
+		timebase uint32,
+		yuv420Type subType,
+		width uint32,
+		height uint32) *Frame {
+		//strideを自力で計算して・・・とすれば行けるか・・・
+		halfWidth := (width + 1) >> 1
+		halfHeight := (height + 1) >> 1
+		yStride := width
+		uStride := halfWidth
+		vStride := halfWidth
+		yBinary := binary
+		var uBinary []byte
+		var vBinary []byte
+		switch yuv420Type {
+		case Yuv420Types.Yuv420:
+			uBinary = binary[width*height:]
+			vBinary = uBinary[halfWidth*halfHeight:]
+			return yuv420_fromPlaneBinaries(
+				id,
+				pts,
+				timebase,
+				yuv420Type,
+				width,
+				height,
+				yBinary,
+				yStride,
+				uBinary,
+				uStride,
+				vBinary,
+				vStride)
+		case Yuv420Types.Yuv420SemiPlanar:
+			uStride := (halfWidth << 1)
+			vStride := (halfWidth << 1)
+			uBinary = binary[width*height:]
+			vBinary = uBinary[1:]
+			return yuv420_fromPlaneBinaries(
+				id,
+				pts,
+				timebase,
+				yuv420Type,
+				width,
+				height,
+				yBinary,
+				yStride,
+				uBinary,
+				uStride,
+				vBinary,
+				vStride)
+		case Yuv420Types.Yvu420:
+			vBinary = binary[width*height:]
+			uBinary = vBinary[halfWidth*halfHeight:]
+			return yuv420_fromPlaneBinaries(
+				id,
+				pts,
+				timebase,
+				yuv420Type,
+				width,
+				height,
+				yBinary,
+				yStride,
+				uBinary,
+				uStride,
+				vBinary,
+				vStride)
+		case Yuv420Types.Yvu420SemiPlanar:
+			uStride := (halfWidth << 1)
+			vStride := (halfWidth << 1)
+			vBinary = binary[width*height:]
+			uBinary = vBinary[1:]
+			return yuv420_fromPlaneBinaries(
+				id,
+				pts,
+				timebase,
+				yuv420Type,
+				width,
+				height,
+				yBinary,
+				yStride,
+				uBinary,
+				uStride,
+				vBinary,
+				vStride)
+		default:
+			return nil
+		}
+		return nil
+	},
+	FromPlaneBinaries: yuv420_fromPlaneBinaries,
+}
+
+func yuv420_fromPlaneBinaries(
+	id uint32,
+	pts uint64,
+	timebase uint32,
+	yuv420Type subType,
+	width uint32,
+	height uint32,
+	yBinary []byte,
+	yStride uint32,
+	uBinary []byte,
+	uStride uint32,
+	vBinary []byte,
+	vStride uint32) *Frame {
+
+	cYuv420Type := C.CString(yuv420Type.value)
+	defer C.free(unsafe.Pointer(cYuv420Type))
+	cFrame := C.Yuv420Frame_fromPlaneBinaries(
+		C.uint32_t(id), C.uint64_t(pts), C.uint32_t(timebase),
+		cYuv420Type, C.uint32_t(width), C.uint32_t(height),
+		unsafe.Pointer(&yBinary[0]), C.uint32_t(yStride),
+		unsafe.Pointer(&uBinary[0]), C.uint32_t(uStride),
+		unsafe.Pointer(&vBinary[0]), C.uint32_t(vStride))
+	frame := new(Frame)
+	frame.init(cttLibCFrame(cFrame))
+	frame.hasBody = true
+	return frame
 }

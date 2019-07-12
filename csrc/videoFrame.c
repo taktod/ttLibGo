@@ -216,4 +216,3 @@ uint32_t Yuv420Frame_getVStride(void *cFrame) {
   ttLibC_Yuv420 *yuv420 = (ttLibC_Yuv420 *)cFrame;
   return yuv420->v_stride;
 }
-
