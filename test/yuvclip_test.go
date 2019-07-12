@@ -7,7 +7,7 @@ import (
 	"github.com/taktod/ttLibGo"
 )
 
-func TestYuvClip(t *testing.T) {
+func TsTestYuvClip(t *testing.T) {
 	t.Log("h264 / aac")
 	in, err := os.Open(os.Getenv("HOME") + "/tools/data/source/test.h264.aac.flv")
 	if err != nil {

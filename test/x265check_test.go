@@ -8,7 +8,7 @@ import (
 	"github.com/taktod/ttLibGo"
 )
 
-func TestX265EncodeDataCheck(t *testing.T) {
+func TsTestX265EncodeDataCheck(t *testing.T) {
 	in, err := os.Open(os.Getenv("HOME") + "/tools/data/source/test.h264.aac.flv")
 	if err != nil {
 		panic(err)
