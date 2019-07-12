@@ -55,19 +55,21 @@ public:
     bool result = false;
     update(cFrame, goFrame);
     _writer->mode = mode;
-    ((ttLibC_ContainerWriter_ *)_writer)->unit_duration = unitDuration;
     switch(_writer->type) {
     case containerType_flv:
       result = ttLibC_FlvWriter_write((ttLibC_FlvWriter *)_writer, cFrame, ttLibGoDataCallback, (void *)ptr);
       break;
     case containerType_mkv:
     case containerType_webm:
+      ((ttLibC_ContainerWriter_ *)_writer)->unit_duration = unitDuration;
       result = ttLibC_MkvWriter_write((ttLibC_MkvWriter *)_writer, cFrame, ttLibGoDataCallback, (void *)ptr);
       break;
     case containerType_mp4:
+      ((ttLibC_ContainerWriter_ *)_writer)->unit_duration = unitDuration;
       result = ttLibC_Mp4Writer_write((ttLibC_Mp4Writer *)_writer, cFrame, ttLibGoDataCallback, (void *)ptr);
       break;
     case containerType_mpegts:
+      ((ttLibC_ContainerWriter_ *)_writer)->unit_duration = unitDuration;
       result = ttLibC_MpegtsWriter_write((ttLibC_MpegtsWriter *)_writer, cFrame, ttLibGoDataCallback, (void *)ptr);
       break;
     default:
