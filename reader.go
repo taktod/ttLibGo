@@ -14,6 +14,7 @@ extern bool ContainerReader_read(
 		void *data,
 		size_t data_size,
 		uintptr_t ptr);
+extern void ContainerReader_close(ttLibC_ContainerReader *reader);
 */
 import "C"
 import "unsafe"
@@ -111,6 +112,6 @@ func (reader *reader) ReadFrame(
 
 // Close 閉じる
 func (reader *reader) Close() {
-	C.ttLibC_ContainerReader_close(&reader.cReader)
+	C.ContainerReader_close(reader.cReader)
 	reader.cReader = nil
 }

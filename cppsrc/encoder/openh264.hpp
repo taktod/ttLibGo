@@ -2,7 +2,6 @@
 #define TTLIBGO_ENCODER_OPENH264_HPP
 
 #include "../encoder.hpp"
-#include <ttLibC/encoder/openh264Encoder.h>
 
 class Openh264Encoder : public Encoder {
 public:
@@ -13,7 +12,7 @@ public:
   bool setIDRInterval(uint32_t value);
   bool forceNextKeyFrame();
 private:
-  ttLibC_Openh264Encoder *_encoder;
+  void *_encoder;
 };
 
 #endif

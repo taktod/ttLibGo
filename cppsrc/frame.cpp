@@ -4,6 +4,8 @@
 #include <ttLibC/frame/video/flv1.h>
 #include <ttLibC/frame/video/h264.h>
 #include <ttLibC/frame/video/h265.h>
+#include <ttLibC/frame/video/jpeg.h>
+#include <ttLibC/frame/video/png.h>
 #include <ttLibC/frame/video/theora.h>
 #include <ttLibC/frame/video/vp6.h>
 #include <ttLibC/frame/video/vp8.h>
@@ -30,6 +32,86 @@
 #include <string>
 
 using namespace std;
+
+extern "C" {
+typedef bool (* ttLibC_isFrameType_func)(void *);
+typedef void *(* ttLibC_Frame_clone_func)(void *, void *);
+typedef void (* ttLibC_close_func)(void **);
+typedef bool (* ttLibC_isType_func)(ttLibC_Frame_Type);
+
+extern ttLibC_Frame_clone_func ttLibGo_Frame_clone;
+extern ttLibC_close_func       ttLibGo_Frame_close;
+extern ttLibC_isFrameType_func ttLibGo_Frame_isVideo;
+extern ttLibC_isFrameType_func ttLibGo_Frame_isAudio;
+extern ttLibC_isType_func ttLibGo_isAudio;
+extern ttLibC_isType_func ttLibGo_isVideo;
+
+typedef bool (* ttLibC_video_getMinimumBinaryBuffer_func)(void *, bool(*)(void *, void *, size_t), void *);
+
+extern ttLibC_video_getMinimumBinaryBuffer_func ttLibGo_Bgr_getMinimumBinaryBuffer;
+extern ttLibC_video_getMinimumBinaryBuffer_func ttLibGo_Yuv420_getMinimumBinaryBuffer;
+
+typedef void *(* ttLibC_Bgr_makeEmptyFrame_func)(ttLibC_Bgr_Type, uint32_t, uint32_t);
+typedef void *(* ttLibC_frame_getFrame_func)(void *, void *, size_t, bool, uint64_t, uint32_t);
+typedef uint32_t (* ttLibC_video_getWidth_func)(void *, void *, size_t);
+typedef uint32_t (* ttLibC_video_getHeight_func)(void *, void *, size_t);
+typedef void *(* ttLibC_Theora_make_func)(void *,ttLibC_Theora_Type,uint32_t,uint32_t,void *,size_t,bool,uint64_t,uint32_t);
+typedef bool (* ttLibC_video_isKey_func)(void *, size_t);
+typedef uint32_t (* ttLibC_Vp6_getWidth_func)(void *, void *, size_t, uint8_t);
+typedef uint32_t (* ttLibC_Vp6_getHeight_func)(void *, void *, size_t, uint8_t);
+typedef void *(* ttLibC_video_make_func)(void *,ttLibC_Video_Type,uint32_t,uint32_t,void *,size_t,bool,uint64_t,uint32_t);
+typedef void *(* ttLibC_Yuv420_makeEmptyFrame_func)(ttLibC_Yuv420_Type, uint32_t, uint32_t);
+
+extern ttLibC_Bgr_makeEmptyFrame_func ttLibGo_Bgr_makeEmptyFrame;
+extern ttLibC_frame_getFrame_func ttLibGo_Flv1_getFrame;
+extern ttLibC_frame_getFrame_func ttLibGo_H264_getFrame;
+extern ttLibC_frame_getFrame_func ttLibGo_H265_getFrame;
+extern ttLibC_frame_getFrame_func ttLibGo_Jpeg_getFrame;
+extern ttLibC_frame_getFrame_func ttLibGo_Png_getFrame;
+extern ttLibC_video_getWidth_func  ttLibGo_Theora_getWidth;
+extern ttLibC_video_getHeight_func ttLibGo_Theora_getHeight;
+extern ttLibC_Theora_make_func     ttLibGo_Theora_make;
+extern ttLibC_video_isKey_func   ttLibGo_Vp6_isKey;
+extern ttLibC_Vp6_getWidth_func  ttLibGo_Vp6_getWidth;
+extern ttLibC_Vp6_getHeight_func ttLibGo_Vp6_getHeight;
+extern ttLibC_video_make_func    ttLibGo_Vp6_make;
+extern ttLibC_video_isKey_func     ttLibGo_Vp8_isKey;
+extern ttLibC_video_getWidth_func  ttLibGo_Vp8_getWidth;
+extern ttLibC_video_getHeight_func ttLibGo_Vp8_getHeight;
+extern ttLibC_video_make_func      ttLibGo_Vp8_make;
+extern ttLibC_video_isKey_func     ttLibGo_Vp9_isKey;
+extern ttLibC_video_getWidth_func  ttLibGo_Vp9_getWidth;
+extern ttLibC_video_getHeight_func ttLibGo_Vp9_getHeight;
+extern ttLibC_video_make_func      ttLibGo_Vp9_make;
+extern ttLibC_Yuv420_makeEmptyFrame_func ttLibGo_Yuv420_makeEmptyFrame;
+
+typedef void *(* ttLibC_Aac_make_func)(void *,ttLibC_Aac_Type,uint32_t,uint32_t,uint32_t,void*,size_t,bool,uint64_t,uint32_t,uint64_t);
+typedef void *(* ttLibC_audio_make_func)(void *,uint32_t,uint32_t,uint32_t,void *,size_t,bool,uint64_t,uint32_t);
+typedef void *(* ttLibC_PcmF32_make_func)(void *,ttLibC_PcmF32_Type,uint32_t,uint32_t,uint32_t,void*,size_t,void *,uint32_t,void*,uint32_t,bool,uint64_t,uint32_t);
+typedef void *(* ttLibC_PcmS16_make_func)(void *,ttLibC_PcmS16_Type,uint32_t,uint32_t,uint32_t,void*,size_t,void *,uint32_t,void*,uint32_t,bool,uint64_t,uint32_t);
+typedef void *(* ttLibC_Speex_make_func)(void *,ttLibC_Speex_Type,uint32_t,uint32_t,uint32_t,void *,size_t,bool,uint64_t,uint32_t);
+typedef void *(* ttLibC_Vorbis_make_func)(void *,ttLibC_Vorbis_Type,uint32_t,uint32_t,uint32_t,void *,size_t,bool,uint64_t,uint32_t);
+
+extern ttLibC_Aac_make_func ttLibGo_Aac_make;
+extern ttLibC_audio_make_func ttLibGo_AdpcmImaWav_make;
+extern ttLibC_frame_getFrame_func ttLibGo_Mp3_getFrame;
+extern ttLibC_audio_make_func ttLibGo_Nellymoser_make;
+extern ttLibC_frame_getFrame_func ttLibGo_Opus_getFrame;
+extern ttLibC_audio_make_func ttLibGo_PcmAlaw_make;
+extern ttLibC_PcmF32_make_func ttLibGo_PcmF32_make;
+extern ttLibC_audio_make_func ttLibGo_PcmMulaw_make;
+extern ttLibC_PcmS16_make_func ttLibGo_PcmS16_make;
+extern ttLibC_Speex_make_func ttLibGo_Speex_make;
+extern ttLibC_Vorbis_make_func ttLibGo_Vorbis_make;
+
+typedef void *(* ttLibC_ByteReader_make_func)(void *,size_t,ttLibC_ByteUtil_Type);
+typedef uint64_t (* ttLibC_ByteReader_bit_func)(void *,uint32_t);
+
+extern ttLibC_ByteReader_make_func ttLibGo_ByteReader_make;
+extern ttLibC_ByteReader_bit_func  ttLibGo_ByteReader_bit;
+extern ttLibC_close_func           ttLibGo_ByteReader_close;
+
+}
 
 ttLibC_Frame_Type Frame_getFrameTypeFromString(string name) {
   if(name == "bgr") {return frameType_bgr;}
@@ -60,6 +142,10 @@ ttLibC_Frame_Type Frame_getFrameTypeFromString(string name) {
 }
 
 void FrameProcessor::update(ttLibC_Frame *cFrame, ttLibGoFrame *goFrame) {
+  if(ttLibGo_Frame_isVideo == nullptr
+  || ttLibGo_Frame_isAudio == nullptr) {
+    return;
+  }
   _pts = cFrame->pts;
   _dts = cFrame->dts;
   _timebase = cFrame->timebase;
@@ -68,7 +154,7 @@ void FrameProcessor::update(ttLibC_Frame *cFrame, ttLibGoFrame *goFrame) {
   cFrame->dts = goFrame->dts;
   cFrame->timebase = goFrame->timebase;
   cFrame->id = goFrame->id;
-  if(ttLibC_Frame_isVideo(cFrame)) {
+  if((*ttLibGo_Frame_isVideo)(cFrame)) {
     ttLibC_Video *video = (ttLibC_Video *)cFrame;
     _width = video->width;
     _height = video->height;
@@ -79,7 +165,7 @@ void FrameProcessor::update(ttLibC_Frame *cFrame, ttLibGoFrame *goFrame) {
       video->height = goFrame->height;
     }
   }
-  if(ttLibC_Frame_isAudio(cFrame)) {
+  if((*ttLibGo_Frame_isAudio)(cFrame)) {
     ttLibC_Audio *audio = (ttLibC_Audio *)cFrame;
     _sample_rate = audio->sample_rate;
     _sample_num = audio->sample_num;
@@ -142,16 +228,20 @@ void FrameProcessor::update(ttLibC_Frame *cFrame, ttLibGoFrame *goFrame) {
   }
 }
 void FrameProcessor::reset(ttLibC_Frame *cFrame, ttLibGoFrame *goFrame) {
+  if(ttLibGo_Frame_isVideo == nullptr
+  || ttLibGo_Frame_isAudio == nullptr) {
+    return;
+  }
   cFrame->pts = _pts;
   cFrame->dts = _dts;
   cFrame->timebase = _timebase;
   cFrame->id = _id;
-  if(ttLibC_Frame_isVideo(cFrame)) {
+  if((*ttLibGo_Frame_isVideo)(cFrame)) {
     ttLibC_Video *video = (ttLibC_Video *)cFrame;
     video->width = _width;
     video->height = _height;
   }
-  if(ttLibC_Frame_isAudio(cFrame)) {
+  if((*ttLibGo_Frame_isAudio)(cFrame)) {
     ttLibC_Audio *audio = (ttLibC_Audio *)cFrame;
     audio->sample_rate = _sample_rate;
     audio->sample_num = _sample_num;
@@ -182,6 +272,533 @@ void FrameProcessor::reset(ttLibC_Frame *cFrame, ttLibGoFrame *goFrame) {
 }
 
 extern "C" {
+
+/**
+ * frameTypeを参照する
+ * @param cFrame 対象frameオブジェクトポインタ
+ * @param buffer 文字列を格納するメモリー
+ * @param buffer_size メモリーのサイズ
+ */
+void Frame_getFrameType(void *cFrame, char *buffer, size_t buffer_size) {
+	if(cFrame == NULL || buffer == NULL || buffer_size < 256) {
+		return;
+	}
+	ttLibC_Frame *f = (ttLibC_Frame *)cFrame;
+	switch(f->type) {
+	case frameType_bgr:           strcpy(buffer, "bgr");         break;
+	case frameType_flv1:          strcpy(buffer, "flv1");        break;
+	case frameType_h264:          strcpy(buffer, "h264");        break;
+	case frameType_h265:          strcpy(buffer, "h265");        break;
+	case frameType_jpeg:          strcpy(buffer, "jpeg");        break;
+	case frameType_png:           strcpy(buffer, "png");         break;
+	case frameType_theora:        strcpy(buffer, "theora");      break;
+	case frameType_vp6:           strcpy(buffer, "vp6");         break;
+	case frameType_vp8:           strcpy(buffer, "vp8");         break;
+	case frameType_vp9:           strcpy(buffer, "vp9");         break;
+	case frameType_wmv1:          strcpy(buffer, "wmv1");        break;
+	case frameType_wmv2:          strcpy(buffer, "wmv2");        break;
+	case frameType_yuv420:        strcpy(buffer, "yuv420");      break;
+	case frameType_aac:           strcpy(buffer, "aac");         break;
+	case frameType_adpcm_ima_wav: strcpy(buffer, "adpcmImaWav"); break;
+	case frameType_mp3:           strcpy(buffer, "mp3");         break;
+	case frameType_nellymoser:    strcpy(buffer, "nellymoser");  break;
+	case frameType_opus:          strcpy(buffer, "opus");        break;
+	case frameType_pcm_alaw:      strcpy(buffer, "pcmAlaw");     break;
+	case frameType_pcmF32:        strcpy(buffer, "pcmF32");      break;
+	case frameType_pcm_mulaw:     strcpy(buffer, "pcmMulaw");    break;
+	case frameType_pcmS16:        strcpy(buffer, "pcmS16");      break;
+	case frameType_speex:         strcpy(buffer, "speex");       break;
+	case frameType_vorbis:        strcpy(buffer, "vorbis");      break;
+	default: strcpy(buffer, ""); break;
+	}
+}
+/**
+ * frameのptsの値を取得する
+ * @param frame
+ * @return ptsの値
+ */
+uint64_t Frame_getPts(void *frame) {
+	if(frame == NULL) {
+		return 0;
+	}
+	ttLibC_Frame *f = (ttLibC_Frame *)frame;
+	return f->pts;
+}
+
+/**
+ * frameのdtsの値を取得する
+ * @param frame
+ * @return ptsの値
+ */
+uint64_t Frame_getDts(void *frame) {
+	if(frame == NULL) {
+		return 0;
+	}
+	ttLibC_Frame *f = (ttLibC_Frame *)frame;
+	return f->dts;
+}
+
+/**
+ * frameのtimebaseの値を取得する
+ * @param frame
+ * @return timebaseの値
+ */
+uint32_t Frame_getTimebase(void *frame) {
+	if(frame == NULL) {
+		return 0;
+	}
+	ttLibC_Frame *f = (ttLibC_Frame *)frame;
+	return f->timebase;
+}
+
+/**
+ * frameのIDの値を取得する
+ * @param frame
+ * @return IDの値
+ */
+uint32_t Frame_getID(void *frame) {
+	if(frame == NULL) {
+		return 0;
+	}
+	ttLibC_Frame *f = (ttLibC_Frame *)frame;
+	return f->id;
+}
+
+/**
+ * frameを解放する動作
+ * @param frame
+ */
+void Frame_close(void *frame) {
+  if(frame == NULL) {
+    return;
+  }
+	if(ttLibGo_Frame_close != NULL) {
+		(*ttLibGo_Frame_close)(&frame);
+	}
+}
+
+/**
+ * frameのコピーを作成する動作
+ * @param frame
+ * @return 作成したフレーム
+ */
+ttLibC_Frame *Frame_clone(void *frame) {
+  if(frame == NULL) {
+    return NULL;
+  }
+	if(ttLibGo_Frame_clone != NULL) {
+		return (ttLibC_Frame *)(*ttLibGo_Frame_clone)(NULL, frame);
+	}
+	return NULL;
+}
+
+/**
+ * frameのsampleRateの値を取得する
+ * @param frame
+ * @return sampleRateの値
+ */
+uint32_t AudioFrame_getSampleRate(void *frame) {
+	if(frame == NULL || ttLibGo_isAudio == NULL || !(*ttLibGo_isAudio)(((ttLibC_Frame *)frame)->type)) {
+		return 0;
+	}
+	ttLibC_Audio *audio = (ttLibC_Audio *)frame;
+	return audio->sample_rate;
+}
+/**
+ * frameのsampleNumの値を取得する
+ * @param frame
+ * @return sampleNumの値
+ */
+uint32_t AudioFrame_getSampleNum(void *frame) {
+	if(frame == NULL || ttLibGo_isAudio == NULL || !(*ttLibGo_isAudio)(((ttLibC_Frame *)frame)->type)) {
+		return 0;
+	}
+	ttLibC_Audio *audio = (ttLibC_Audio *)frame;
+	return audio->sample_num;
+}
+/**
+ * frameのchannelNumの値を取得する
+ * @param frame
+ * @return channelNumの値
+ */
+uint32_t AudioFrame_getChannelNum(void *frame) {
+	if(frame == NULL || ttLibGo_isAudio == NULL || !(*ttLibGo_isAudio)(((ttLibC_Frame *)frame)->type)) {
+		return 0;
+	}
+	ttLibC_Audio *audio = (ttLibC_Audio *)frame;
+	return audio->channel_num;
+}
+
+void AacFrame_getAacType(void *cFrame, char *buffer, size_t buffer_size) {
+  if(cFrame == NULL || ((ttLibC_Frame *)cFrame)->type != frameType_aac || buffer == NULL || buffer_size < 5) {
+    return;
+  }
+  ttLibC_Aac *aac = (ttLibC_Aac *)cFrame;
+	switch(aac->type) {
+	case AacType_adts: strcpy(buffer, "adts"); break;
+	case AacType_dsi:  strcpy(buffer, "dsi");  break;
+	case AacType_raw:  strcpy(buffer, "raw");  break;
+	default:
+		break;
+	}
+}
+
+void Mp3Frame_getMp3Type(void *cFrame, char *buffer, size_t buffer_size) {
+  if(cFrame == NULL || ((ttLibC_Frame *)cFrame)->type != frameType_mp3 || buffer == NULL || buffer_size < 6) {
+    return;
+  }
+  ttLibC_Mp3 *mp3 = (ttLibC_Mp3 *)cFrame;
+	switch(mp3->type) {
+	case Mp3Type_frame: strcpy(buffer, "frame"); break;
+	case Mp3Type_id3:   strcpy(buffer, "id3");   break;
+	case Mp3Type_tag:   strcpy(buffer, "tag");   break;
+	default:
+		break;
+	}
+}
+
+void OpusFrame_getOpusType(void *cFrame, char *buffer, size_t buffer_size) {
+  if(cFrame == NULL || ((ttLibC_Frame *)cFrame)->type != frameType_opus || buffer == NULL || buffer_size < 6) {
+    return;
+  }
+  ttLibC_Opus *opus = (ttLibC_Opus *)cFrame;
+	switch(opus->type) {
+	case OpusType_header:  strcpy(buffer, "header");  break;
+	case OpusType_comment: strcpy(buffer, "comment"); break;
+	case OpusType_frame:   strcpy(buffer, "frame");   break;
+	default:
+		break;
+	}
+}
+
+void PcmF32Frame_getPcmF32Type(void *cFrame, char *buffer, size_t buffer_size) {
+  if(cFrame == NULL || ((ttLibC_Frame *)cFrame)->type != frameType_pcmF32 || buffer == NULL || buffer_size < 11) {
+    return;
+  }
+  ttLibC_PcmF32 *pcm = (ttLibC_PcmF32 *)cFrame;
+	switch(pcm->type) {
+	case PcmF32Type_interleave: strcpy(buffer, "interleave");  break;
+	case PcmF32Type_planar:     strcpy(buffer, "planar"); break;
+	default:
+		break;
+	}
+}
+
+uint32_t PcmF32Frame_getLStride(void *cFrame) {
+	if(cFrame == NULL || ((ttLibC_Frame *)cFrame)->type != frameType_pcmF32) {
+		return 0;
+	}
+	ttLibC_PcmF32 *pcm = (ttLibC_PcmF32 *)cFrame;
+	return pcm->l_stride;
+}
+
+uint32_t PcmF32Frame_getLStep(void *cFrame) {
+	if(cFrame == NULL || ((ttLibC_Frame *)cFrame)->type != frameType_pcmF32) {
+		return 0;
+	}
+	ttLibC_PcmF32 *pcm = (ttLibC_PcmF32 *)cFrame;
+	return pcm->l_step;
+}
+
+uint32_t PcmF32Frame_getRStride(void *cFrame) {
+	if(cFrame == NULL || ((ttLibC_Frame *)cFrame)->type != frameType_pcmF32) {
+		return 0;
+	}
+	ttLibC_PcmF32 *pcm = (ttLibC_PcmF32 *)cFrame;
+	return pcm->r_stride;
+}
+
+uint32_t PcmF32Frame_getRStep(void *cFrame) {
+	if(cFrame == NULL || ((ttLibC_Frame *)cFrame)->type != frameType_pcmF32) {
+		return 0;
+	}
+	ttLibC_PcmF32 *pcm = (ttLibC_PcmF32 *)cFrame;
+	return pcm->r_step;
+}
+
+void PcmS16Frame_getPcmS16Type(void *cFrame, char *buffer, size_t buffer_size) {
+  if(cFrame == NULL || ((ttLibC_Frame *)cFrame)->type != frameType_pcmS16 || buffer == NULL || buffer_size < 19) {
+    return;
+  }
+  ttLibC_PcmS16 *pcm = (ttLibC_PcmS16 *)cFrame;
+	switch(pcm->type) {
+	case PcmS16Type_bigEndian:           strcpy(buffer, "bigEndian");  break;
+	case PcmS16Type_bigEndian_planar:    strcpy(buffer, "bigEndianPlanar"); break;
+	case PcmS16Type_littleEndian:        strcpy(buffer, "littleEndian");  break;
+	case PcmS16Type_littleEndian_planar: strcpy(buffer, "littleEndianPlanar"); break;
+	default:
+		break;
+	}
+}
+
+uint32_t PcmS16Frame_getLStride(void *cFrame) {
+	if(cFrame == NULL || ((ttLibC_Frame *)cFrame)->type != frameType_pcmS16) {
+		return 0;
+	}
+	ttLibC_PcmS16 *pcm = (ttLibC_PcmS16 *)cFrame;
+	return pcm->l_stride;
+}
+
+uint32_t PcmS16Frame_getLStep(void *cFrame) {
+	if(cFrame == NULL || ((ttLibC_Frame *)cFrame)->type != frameType_pcmS16) {
+		return 0;
+	}
+	ttLibC_PcmS16 *pcm = (ttLibC_PcmS16 *)cFrame;
+	return pcm->l_step;
+}
+
+uint32_t PcmS16Frame_getRStride(void *cFrame) {
+	if(cFrame == NULL || ((ttLibC_Frame *)cFrame)->type != frameType_pcmS16) {
+		return 0;
+	}
+	ttLibC_PcmS16 *pcm = (ttLibC_PcmS16 *)cFrame;
+	return pcm->r_stride;
+}
+
+uint32_t PcmS16Frame_getRStep(void *cFrame) {
+	if(cFrame == NULL || ((ttLibC_Frame *)cFrame)->type != frameType_pcmS16) {
+		return 0;
+	}
+	ttLibC_PcmS16 *pcm = (ttLibC_PcmS16 *)cFrame;
+	return pcm->r_step;
+}
+
+void SpeexFrame_getSpeexType(void *cFrame, char *buffer, size_t buffer_size) {
+  if(cFrame == NULL || ((ttLibC_Frame *)cFrame)->type != frameType_speex || buffer == NULL || buffer_size < 19) {
+    return;
+  }
+  ttLibC_Speex *speex = (ttLibC_Speex *)cFrame;
+	switch(speex->type) {
+	case SpeexType_comment: strcpy(buffer, "comment"); break;
+	case SpeexType_frame:   strcpy(buffer, "frame");   break;
+	case SpeexType_header:  strcpy(buffer, "header");  break;
+	default:
+		break;
+	}
+}
+
+void VorbisFrame_getVorbisType(void *cFrame, char *buffer, size_t buffer_size) {
+  if(cFrame == NULL || ((ttLibC_Frame *)cFrame)->type != frameType_vorbis || buffer == NULL || buffer_size < 19) {
+    return;
+  }
+  ttLibC_Vorbis *vorbis = (ttLibC_Vorbis *)cFrame;
+	switch(vorbis->type) {
+	case VorbisType_comment:        strcpy(buffer, "comment");        break;
+	case VorbisType_frame:          strcpy(buffer, "frame");          break;
+	case VorbisType_identification: strcpy(buffer, "identification"); break;
+	case VorbisType_setup:          strcpy(buffer, "setup");          break;
+	default:
+		break;
+	}
+}
+
+/**
+ * frameのvideoTypeの値を取得する
+ * @param cFrame
+ * @param buffer
+ * @param buffer_size
+ */
+void VideoFrame_getVideoType(void *cFrame, char *buffer, size_t buffer_size) {
+	if(cFrame == NULL || ttLibGo_isVideo == NULL || !(*ttLibGo_isVideo)(((ttLibC_Frame *)cFrame)->type) || buffer == NULL || buffer_size < 6) {
+		return;
+	}
+	ttLibC_Video *video = (ttLibC_Video *)cFrame;
+	switch(video->type) {
+	case videoType_key:   strcpy(buffer, "key");   break;
+	case videoType_inner: strcpy(buffer, "inner"); break;
+	case videoType_info:  strcpy(buffer, "info");  break;
+	default:
+		break;
+	}
+}
+/**
+ * frameのwidthの値を取得する
+ * @param frame
+ * @return widthの値
+ */
+uint32_t VideoFrame_getWidth(void *frame) {
+	if(frame == NULL || ttLibGo_isVideo == NULL || !(*ttLibGo_isVideo)(((ttLibC_Frame *)frame)->type)) {
+		return 0;
+	}
+	ttLibC_Video *video = (ttLibC_Video *)frame;
+	return video->width;
+}
+/**
+ * frameのheightの値を取得する
+ * @param frame
+ * @return heightの値
+ */
+uint32_t VideoFrame_getHeight(void *frame) {
+	if(frame == NULL || ttLibGo_isVideo == NULL || !(*ttLibGo_isVideo)(((ttLibC_Frame *)frame)->type)) {
+		return 0;
+	}
+	ttLibC_Video *video = (ttLibC_Video *)frame;
+	return video->height;
+}
+
+void BgrFrame_getBgrType(void *cFrame, char *buffer, size_t buffer_size) {
+  if(cFrame == NULL || ((ttLibC_Frame *)cFrame)->type != frameType_bgr || buffer == NULL || buffer_size < 5) {
+    return;
+  }
+  ttLibC_Bgr *bgr = (ttLibC_Bgr *)cFrame;
+  switch(bgr->type) {
+  case BgrType_abgr: strcpy(buffer, "abgr"); break;
+  case BgrType_argb: strcpy(buffer, "argb"); break;
+  case BgrType_bgr:  strcpy(buffer, "bgr");  break;
+  case BgrType_bgra: strcpy(buffer, "bgra"); break;
+  case BgrType_rgb:  strcpy(buffer, "rgb");  break;
+  case BgrType_rgba: strcpy(buffer, "rgba"); break;
+  default:
+    break;
+  }
+}
+
+uint32_t BgrFrame_getWidthStride(void *frame) {
+	if(frame == NULL || ((ttLibC_Frame *)frame)->type != frameType_bgr) {
+		return 0;
+	}
+  ttLibC_Bgr *bgr = (ttLibC_Bgr *)frame;
+  return bgr->width_stride;
+}
+
+void Flv1Frame_getFlv1Type(void *cFrame, char *buffer, size_t buffer_size) {
+  if(cFrame == NULL || ((ttLibC_Frame *)cFrame)->type != frameType_bgr || buffer == NULL || buffer_size < 16) {
+    return;
+  }
+  ttLibC_Flv1 *flv1 = (ttLibC_Flv1 *)cFrame;
+  switch(flv1->type) {
+  case Flv1Type_disposableInner: strcpy(buffer, "disposableInner"); break;
+  case Flv1Type_inner:           strcpy(buffer, "inner");           break;
+  case Flv1Type_intra:           strcpy(buffer, "intra");           break;
+  default:
+    break;
+  }
+}
+
+void H264Frame_getH264Type(void *cFrame, char *buffer, size_t buffer_size) {
+  if(cFrame == NULL || ((ttLibC_Frame *)cFrame)->type != frameType_h264 || buffer == NULL || buffer_size < 11) {
+    return;
+  }
+  ttLibC_H264 *h264 = (ttLibC_H264 *)cFrame;
+  switch(h264->type) {
+  case H264Type_configData: strcpy(buffer, "configData"); break;
+  case H264Type_slice:      strcpy(buffer, "slice");      break;
+  case H264Type_sliceIDR:   strcpy(buffer, "sliceIDR");   break;
+  case H264Type_unknown:    strcpy(buffer, "unknown");    break;
+  default:
+    break;
+  }
+}
+
+uint32_t H264Frame_getH264FrameType(void *cFrame) {
+  if(cFrame == NULL || ((ttLibC_Frame *)cFrame)->type != frameType_h264) {
+    return -1;
+  }
+  ttLibC_H264 *h264 = (ttLibC_H264 *)cFrame;
+  return h264->frame_type;
+}
+
+bool H264Frame_isDisposable(void *cFrame) {
+  if(cFrame == NULL || ((ttLibC_Frame *)cFrame)->type != frameType_h264) {
+    return false;
+  }
+  ttLibC_H264 *h264 = (ttLibC_H264 *)cFrame;
+  return h264->is_disposable;
+}
+
+void H265Frame_getH265Type(void *cFrame, char *buffer, size_t buffer_size) {
+  if(cFrame == NULL || ((ttLibC_Frame *)cFrame)->type != frameType_h265 || buffer == NULL || buffer_size < 11) {
+    return;
+  }
+  ttLibC_H265 *h265 = (ttLibC_H265 *)cFrame;
+  switch(h265->type) {
+  case H265Type_configData: strcpy(buffer, "configData"); break;
+  case H265Type_slice:      strcpy(buffer, "slice");      break;
+  case H265Type_sliceIDR:   strcpy(buffer, "sliceIDR");   break;
+  case H265Type_unknown:    strcpy(buffer, "unknown");    break;
+  default:
+    break;
+  }
+}
+
+uint32_t H265Frame_getH265FrameType(void *cFrame) {
+  if(cFrame == NULL || ((ttLibC_Frame *)cFrame)->type != frameType_h265) {
+    return -1;
+  }
+  ttLibC_H265 *h265 = (ttLibC_H265 *)cFrame;
+  return h265->frame_type;
+}
+
+bool H265Frame_isDisposable(void *cFrame) {
+  if(cFrame == NULL || ((ttLibC_Frame *)cFrame)->type != frameType_h265) {
+    return false;
+  }
+  ttLibC_H265 *h265 = (ttLibC_H265 *)cFrame;
+  return h265->is_disposable;
+}
+
+void TheoraFrame_getTheoraType(void *cFrame, char *buffer, size_t buffer_size) {
+  if(cFrame == NULL || ((ttLibC_Frame *)cFrame)->type != frameType_theora || buffer == NULL || buffer_size < 22) {
+    return;
+  }
+  ttLibC_Theora *theora = (ttLibC_Theora *)cFrame;
+  switch(theora->type) {
+  case TheoraType_identificationHeaderDecodeFrame: strcpy(buffer, "identificationHeaders"); break;
+  case TheoraType_commentHeaderFrame:              strcpy(buffer, "commentHeader");         break;
+  case TheoraType_setupHeaderFrame:                strcpy(buffer, "setupHeader");           break;
+  case TheoraType_intraFrame:                      strcpy(buffer, "intra");                 break;
+  case TheoraType_innerFrame:                      strcpy(buffer, "inner");                 break;
+  default:
+    break;
+  }
+}
+
+uint64_t TheoraFrame_getGranulePos(void *cFrame) {
+  if(cFrame == NULL || ((ttLibC_Frame *)cFrame)->type != frameType_theora) {
+    return false;
+  }
+  ttLibC_Theora *theora = (ttLibC_Theora *)cFrame;
+  return theora->granule_pos;
+}
+
+void Yuv420Frame_getYuv420Type(void *cFrame, char *buffer, size_t buffer_size) {
+  if(cFrame == NULL || ((ttLibC_Frame *)cFrame)->type != frameType_yuv420 || buffer == NULL || buffer_size < 17) {
+    return;
+  }
+  ttLibC_Yuv420 *yuv420 = (ttLibC_Yuv420 *)cFrame;
+  switch(yuv420->type) {
+  case Yuv420Type_planar:     strcpy(buffer, "yuv420"); break;
+  case Yuv420Type_semiPlanar: strcpy(buffer, "yuv420SemiPlanar"); break;
+  case Yvu420Type_planar:     strcpy(buffer, "yvu420"); break;
+  case Yvu420Type_semiPlanar: strcpy(buffer, "yvu420SemiPlanar"); break;
+  default:
+    break;
+  }
+}
+
+uint32_t Yuv420Frame_getYStride(void *cFrame) {
+  if(cFrame == NULL || ((ttLibC_Frame *)cFrame)->type != frameType_yuv420) {
+    return false;
+  }
+  ttLibC_Yuv420 *yuv420 = (ttLibC_Yuv420 *)cFrame;
+  return yuv420->y_stride;
+}
+
+uint32_t Yuv420Frame_getUStride(void *cFrame) {
+  if(cFrame == NULL || ((ttLibC_Frame *)cFrame)->type != frameType_yuv420) {
+    return false;
+  }
+  ttLibC_Yuv420 *yuv420 = (ttLibC_Yuv420 *)cFrame;
+  return yuv420->u_stride;
+}
+
+uint32_t Yuv420Frame_getVStride(void *cFrame) {
+  if(cFrame == NULL || ((ttLibC_Frame *)cFrame)->type != frameType_yuv420) {
+    return false;
+  }
+  ttLibC_Yuv420 *yuv420 = (ttLibC_Yuv420 *)cFrame;
+  return yuv420->v_stride;
+}
 
 extern bool ttLibGoDataCallback(void *ptr, void *data, size_t data_size);
 
@@ -218,6 +835,11 @@ void deleteGoFrame(void *frame) {
 }
 
 bool Frame_getBinaryBuffer(uintptr_t ptr, void *frame) {
+  if(ttLibGo_Frame_close == nullptr || ttLibGo_Frame_clone == nullptr
+  || ttLibGo_Bgr_getMinimumBinaryBuffer == nullptr
+  || ttLibGo_Yuv420_getMinimumBinaryBuffer == nullptr) {
+    return false;
+  }
   if(frame == NULL) {
     return false;
   }
@@ -225,31 +847,23 @@ bool Frame_getBinaryBuffer(uintptr_t ptr, void *frame) {
 	switch(f->type) {
 	case frameType_bgr:
     {
-      return ttLibC_Bgr_getMinimumBinaryBuffer(
-        (ttLibC_Bgr *)f,
-        [](void *ptr, void *data, size_t data_size) -> bool {
-          return ttLibGoDataCallback(ptr, data, data_size);
-        }, (void *)ptr);
+      return (*ttLibGo_Bgr_getMinimumBinaryBuffer)(f, ttLibGoDataCallback, (void *)ptr);
     }
     break;
 	case frameType_yuv420:
     {
-      return ttLibC_Yuv420_getMinimumBinaryBuffer(
-        (ttLibC_Yuv420 *)f,
-        [](void *ptr, void *data, size_t data_size) -> bool {
-          return ttLibGoDataCallback(ptr, data, data_size);
-        }, (void *)ptr);
+      return (*ttLibGo_Yuv420_getMinimumBinaryBuffer)(f, ttLibGoDataCallback, (void *)ptr);
     }
 		break;
 	case frameType_pcmS16:
 	case frameType_pcmF32:
 		{
-      ttLibC_Frame *cloned = ttLibC_Frame_clone(nullptr, f);
+      ttLibC_Frame *cloned = (ttLibC_Frame *)(*ttLibGo_Frame_clone)(nullptr, f);
       if(cloned == nullptr) {
         return false;
       }
   		bool result = ttLibGoDataCallback((void *)ptr, cloned->data, cloned->buffer_size);
-      ttLibC_Frame_close(&cloned);
+      (*ttLibGo_Frame_close)((void **)&cloned);
       return result;
 		}
 		break;
@@ -264,6 +878,9 @@ void *BgrFrame_fromBinary(void *data, size_t data_size,
   uint32_t id, uint64_t pts, uint32_t timebase,
   const char *bgr_type, uint32_t width, uint32_t height, uint32_t width_stride) {
   // まず、emptyFrameを作って、それからデータをコピーする形にするべきかな・・・
+  if(ttLibGo_Bgr_makeEmptyFrame == nullptr) {
+    return nullptr;
+  }
   string bgrTypeName(bgr_type);
   ttLibC_Bgr_Type bgrType = BgrType_bgr;
   if(bgrTypeName == "bgr") {
@@ -284,7 +901,7 @@ void *BgrFrame_fromBinary(void *data, size_t data_size,
   else if(bgrTypeName == "rgba") {
     bgrType = BgrType_rgba;
   }
-  ttLibC_Bgr *bgr = ttLibC_Bgr_makeEmptyFrame(bgrType, width, height);
+  ttLibC_Bgr *bgr = (ttLibC_Bgr *)(*ttLibGo_Bgr_makeEmptyFrame)(bgrType, width, height);
   if(bgr != nullptr) {
     bgr->inherit_super.inherit_super.id       = id;
     bgr->inherit_super.inherit_super.pts      = pts;
@@ -302,7 +919,10 @@ void *BgrFrame_fromBinary(void *data, size_t data_size,
 
 void *Flv1Frame_fromBinary(void *data, size_t data_size,
   uint32_t id, uint64_t pts, uint32_t timebase) {
-  ttLibC_Flv1 *flv1 = ttLibC_Flv1_getFrame(
+  if(ttLibGo_Flv1_getFrame == nullptr) {
+    return nullptr;
+  }
+  ttLibC_Flv1 *flv1 = (ttLibC_Flv1 *)(*ttLibGo_Flv1_getFrame)(
     nullptr,
     (uint8_t *)data,
     data_size,
@@ -317,7 +937,10 @@ void *Flv1Frame_fromBinary(void *data, size_t data_size,
 
 void *H264Frame_fromBinary(void *data, size_t data_size,
   uint32_t id, uint64_t pts, uint32_t timebase) {
-  ttLibC_H264 *h264 = ttLibC_H264_getFrame(
+  if(ttLibGo_H264_getFrame == nullptr) {
+    return nullptr;
+  }
+  ttLibC_H264 *h264 = (ttLibC_H264 *)(*ttLibGo_H264_getFrame)(
     nullptr,
     (uint8_t *)data,
     data_size,
@@ -332,7 +955,10 @@ void *H264Frame_fromBinary(void *data, size_t data_size,
 
 void *H265Frame_fromBinary(void *data, size_t data_size,
   uint32_t id, uint64_t pts, uint32_t timebase) {
-  ttLibC_H265 *h265 = ttLibC_H265_getFrame(
+  if(ttLibGo_H265_getFrame == nullptr) {
+    return nullptr;
+  }
+  ttLibC_H265 *h265 = (ttLibC_H265 *)(*ttLibGo_H265_getFrame)(
     nullptr,
     (uint8_t *)data,
     data_size,
@@ -347,7 +973,10 @@ void *H265Frame_fromBinary(void *data, size_t data_size,
 
 void *JpegFrame_fromBinary(void *data, size_t data_size,
   uint32_t id, uint64_t pts, uint32_t timebase) {
-  ttLibC_Jpeg *jpeg = ttLibC_Jpeg_getFrame(
+  if(ttLibGo_Jpeg_getFrame == nullptr) {
+    return nullptr;
+  }
+  ttLibC_Jpeg *jpeg = (ttLibC_Jpeg *)(*ttLibGo_Jpeg_getFrame)(
     nullptr,
     (uint8_t *)data,
     data_size,
@@ -362,7 +991,10 @@ void *JpegFrame_fromBinary(void *data, size_t data_size,
 
 void *PngFrame_fromBinary(void *data, size_t data_size,
   uint32_t id, uint64_t pts, uint32_t timebase) {
-  ttLibC_Png *png = ttLibC_Png_getFrame(
+  if(ttLibGo_Png_getFrame == nullptr) {
+    return nullptr;
+  }
+  ttLibC_Png *png = (ttLibC_Png *)(*ttLibGo_Png_getFrame)(
     nullptr,
     (uint8_t *)data,
     data_size,
@@ -377,6 +1009,11 @@ void *PngFrame_fromBinary(void *data, size_t data_size,
 
 void *TheoraFrame_fromBinary(void *data, size_t data_size,
   uint32_t id, uint64_t pts, uint32_t timebase, uint32_t width, uint32_t height) {
+  if(ttLibGo_Theora_getWidth == nullptr
+  || ttLibGo_Theora_getHeight == nullptr
+  || ttLibGo_Theora_make == nullptr) {
+    return nullptr;
+  }
   uint8_t *u8data = (uint8_t *)data;
 	uint8_t first_byte = *u8data;
 	ttLibC_Theora_Type type = TheoraType_innerFrame;
@@ -401,16 +1038,16 @@ void *TheoraFrame_fromBinary(void *data, size_t data_size,
 			type = TheoraType_intraFrame;
 		}
     if(width == 0) {
-	    width = ttLibC_Theora_getWidth(nullptr, u8data, data_size);
+	    width = (*ttLibGo_Theora_getWidth)(nullptr, u8data, data_size);
     }
     if(height == 0) {
-	    height = ttLibC_Theora_getHeight(nullptr, u8data, data_size);
+	    height = (*ttLibGo_Theora_getHeight)(nullptr, u8data, data_size);
     }
 		if(width == 0 || height == 0) {
 			return NULL;
 		}
 	}
-	ttLibC_Theora *theora = ttLibC_Theora_make(
+	ttLibC_Theora *theora = (ttLibC_Theora *)(*ttLibGo_Theora_make)(
 			nullptr,
 			type,
 			width,
@@ -429,20 +1066,26 @@ void *TheoraFrame_fromBinary(void *data, size_t data_size,
 void *Vp6Frame_fromBinary(void *data, size_t data_size,
   uint32_t id, uint64_t pts, uint32_t timebase, uint32_t width, uint32_t height, uint8_t adjustment) {
   uint8_t *u8data = (uint8_t *)data;
+  if(ttLibGo_Vp6_isKey == nullptr
+  || ttLibGo_Vp6_getWidth == nullptr
+  || ttLibGo_Vp6_getHeight == nullptr
+  || ttLibGo_Vp6_make == nullptr) {
+    return nullptr;
+  }
 	if(data_size <= 1) {
 		return NULL;
 	}
-	bool is_key = ttLibC_Vp6_isKey(u8data, data_size);
+	bool is_key = (*ttLibGo_Vp6_isKey)(u8data, data_size);
   if(width == 0) {
-	  width = ttLibC_Vp6_getWidth(nullptr, u8data, data_size, adjustment);
+	  width = (*ttLibGo_Vp6_getWidth)(nullptr, u8data, data_size, adjustment);
   }
   if(height == 0) {
-	  height = ttLibC_Vp6_getHeight(nullptr, u8data, data_size, adjustment);
+	  height = (*ttLibGo_Vp6_getHeight)(nullptr, u8data, data_size, adjustment);
   }
 	if(width == 0 || height == 0) {
 		return NULL;
 	}
-	ttLibC_Vp6 *vp6 = ttLibC_Vp6_make(
+	ttLibC_Vp6 *vp6 = (ttLibC_Vp6 *)(*ttLibGo_Vp6_make)(
 			nullptr,
 			is_key ? videoType_key : videoType_inner,
 			width,
@@ -459,21 +1102,27 @@ void *Vp6Frame_fromBinary(void *data, size_t data_size,
 
 void *Vp8Frame_fromBinary(void *data, size_t data_size,
   uint32_t id, uint64_t pts, uint32_t timebase, uint32_t width, uint32_t height) {
+  if(ttLibGo_Vp8_isKey == nullptr
+  || ttLibGo_Vp8_getWidth == nullptr
+  || ttLibGo_Vp8_getHeight == nullptr
+  || ttLibGo_Vp8_make == nullptr) {
+    return nullptr;
+  }
   uint8_t *u8data = (uint8_t *)data;
 	if(data_size <= 1) {
 		return NULL;
 	}
-	bool is_key = ttLibC_Vp8_isKey(u8data, data_size);
+	bool is_key = (*ttLibGo_Vp8_isKey)(u8data, data_size);
   if(width == 0) {
-	  width = ttLibC_Vp8_getWidth(nullptr, u8data, data_size);
+	  width = (*ttLibGo_Vp8_getWidth)(nullptr, u8data, data_size);
   }
   if(height == 0) {
-	  height = ttLibC_Vp8_getHeight(nullptr, u8data, data_size);
+	  height = (*ttLibGo_Vp8_getHeight)(nullptr, u8data, data_size);
   }
 	if(width == 0 || height == 0) {
 		return NULL;
 	}
-	ttLibC_Vp8 *vp8 = ttLibC_Vp8_make(
+	ttLibC_Vp8 *vp8 = (ttLibC_Vp8 *)(*ttLibGo_Vp8_make)(
 			nullptr,
 			is_key ? videoType_key : videoType_inner,
 			width,
@@ -490,21 +1139,27 @@ void *Vp8Frame_fromBinary(void *data, size_t data_size,
 
 void *Vp9Frame_fromBinary(void *data, size_t data_size,
   uint32_t id, uint64_t pts, uint32_t timebase, uint32_t width, uint32_t height) {
+  if(ttLibGo_Vp9_isKey == nullptr
+  || ttLibGo_Vp9_getWidth == nullptr
+  || ttLibGo_Vp9_getHeight == nullptr
+  || ttLibGo_Vp9_make == nullptr) {
+    return nullptr;
+  }
   uint8_t *u8data = (uint8_t *)data;
 	if(data_size <= 1) {
 		return NULL;
 	}
-	bool is_key = ttLibC_Vp9_isKey(u8data, data_size);
+	bool is_key = (*ttLibGo_Vp9_isKey)(u8data, data_size);
   if(width == 0) {
-	  width = ttLibC_Vp9_getWidth(nullptr, u8data, data_size);
+	  width = (*ttLibGo_Vp9_getWidth)(nullptr, u8data, data_size);
   }
   if(height == 0) {
-	  height = ttLibC_Vp9_getHeight(nullptr, u8data, data_size);
+	  height = (*ttLibGo_Vp9_getHeight)(nullptr, u8data, data_size);
   }
 	if(width == 0 || height == 0) {
 		return NULL;
 	}
-	ttLibC_Vp9 *vp9 = ttLibC_Vp9_make(
+	ttLibC_Vp9 *vp9 = (ttLibC_Vp9 *)(*ttLibGo_Vp9_make)(
 			nullptr,
 			is_key ? videoType_key : videoType_inner,
 			width,
@@ -524,7 +1179,9 @@ void *Yuv420Frame_fromPlaneBinaries(uint32_t id, uint64_t pts, uint32_t timebase
   void *y_data, uint32_t y_stride,
   void *u_data, uint32_t u_stride,
   void *v_data, uint32_t v_stride) {
-
+  if(ttLibGo_Yuv420_makeEmptyFrame == nullptr) {
+    return nullptr;
+  }
   string yuvTypeName(yuv_type);
   ttLibC_Yuv420_Type yuvType = Yuv420Type_planar;
   uint32_t y_step = 1;
@@ -548,7 +1205,7 @@ void *Yuv420Frame_fromPlaneBinaries(uint32_t id, uint64_t pts, uint32_t timebase
     u_step = 2;
     v_step = 2;
   }
-  ttLibC_Yuv420 *yuv = ttLibC_Yuv420_makeEmptyFrame(yuvType, width, height);
+  ttLibC_Yuv420 *yuv = (ttLibC_Yuv420 *)(*ttLibGo_Yuv420_makeEmptyFrame)(yuvType, width, height);
   if(yuv != nullptr) {
     yuv->inherit_super.inherit_super.id       = id;
     yuv->inherit_super.inherit_super.pts      = pts;
@@ -600,6 +1257,12 @@ static uint32_t aac_sample_rate_table[] = {
 void *AacFrame_fromBinary(void *data, size_t data_size,
   uint32_t id, uint64_t pts, uint32_t timebase,
   void *dsiFrame) {
+  if(ttLibGo_Aac_make == nullptr
+  || ttLibGo_ByteReader_make == nullptr
+  || ttLibGo_ByteReader_bit == nullptr
+  || ttLibGo_ByteReader_close == nullptr) {
+    return nullptr;
+  }
   // データを確認する。
   if(dsiFrame != nullptr) {
     ttLibC_Aac_ *dsi = reinterpret_cast<ttLibC_Aac_ *>(dsiFrame);
@@ -613,7 +1276,7 @@ void *AacFrame_fromBinary(void *data, size_t data_size,
       // rawデータなのに、なぜか入力 binaryがadtsっぽいので、nullptr応答しておく
       return nullptr;
     }
-    ttLibC_Aac *aac = ttLibC_Aac_make(
+    ttLibC_Aac *aac = (ttLibC_Aac *)(*ttLibGo_Aac_make)(
       nullptr,
       AacType_raw,
       dsi->inherit_super.inherit_super.sample_rate,
@@ -631,36 +1294,36 @@ void *AacFrame_fromBinary(void *data, size_t data_size,
     return aac;
   }
   // あとはこっち。
-  ttLibC_ByteReader *reader = ttLibC_ByteReader_make(data, data_size, ByteUtilType_default);
-  if(ttLibC_ByteReader_bit(reader, 12) != 0xFFF) {
-    ttLibC_ByteReader_close(&reader);
+  ttLibC_ByteReader *reader = (ttLibC_ByteReader *)(*ttLibGo_ByteReader_make)(data, data_size, ByteUtilType_default);
+  if((*ttLibGo_ByteReader_bit)(reader, 12) != 0xFFF) {
+    (*ttLibGo_ByteReader_close)((void **)&reader);
     // dsi情報を取り出し
-		ttLibC_ByteReader *reader = ttLibC_ByteReader_make(data, data_size, ByteUtilType_default);
+		ttLibC_ByteReader *reader = (ttLibC_ByteReader *)(*ttLibGo_ByteReader_make)(data, data_size, ByteUtilType_default);
 		uint64_t dsi_info;
 		uint32_t bit_size = 0;
 		memcpy(&dsi_info, data, data_size);
-		uint32_t object_type = ttLibC_ByteReader_bit(reader, 5);
+		uint32_t object_type = (*ttLibGo_ByteReader_bit)(reader, 5);
 		bit_size += 5;
 		if(object_type == 31) {
-			object_type = ttLibC_ByteReader_bit(reader, 6);
+			object_type = (*ttLibGo_ByteReader_bit)(reader, 6);
 			bit_size += 6;
 		}
-		uint32_t sample_rate_index = ttLibC_ByteReader_bit(reader, 4);
+		uint32_t sample_rate_index = (*ttLibGo_ByteReader_bit)(reader, 4);
 		bit_size += 4;
 		uint32_t sample_rate = 44100;
 		if(sample_rate_index == 15) {
 			LOG_PRINT("sample_rate is not in index_table.");
-			sample_rate = ttLibC_ByteReader_bit(reader, 24);
+			sample_rate = (*ttLibGo_ByteReader_bit)(reader, 24);
 			bit_size += 24;
 		}
 		else {
 			sample_rate = aac_sample_rate_table[sample_rate_index];
 		}
-		uint32_t channel_num = ttLibC_ByteReader_bit(reader, 4);
+		uint32_t channel_num = (*ttLibGo_ByteReader_bit)(reader, 4);
 		bit_size += 4;
 		uint32_t buffer_size = (uint32_t)((bit_size + 7) / 8);
-		ttLibC_ByteReader_close(&reader);
-		ttLibC_Aac *aac = ttLibC_Aac_make(
+    (*ttLibGo_ByteReader_close)((void **)&reader);
+		ttLibC_Aac *aac = (ttLibC_Aac *)(*ttLibGo_Aac_make)(
 				nullptr,
 				AacType_dsi,
 				sample_rate,
@@ -679,29 +1342,29 @@ void *AacFrame_fromBinary(void *data, size_t data_size,
 		return aac;
   }
   // adtsの取り出し
-	ttLibC_ByteReader_bit(reader, 1);
-	ttLibC_ByteReader_bit(reader, 2);
-	ttLibC_ByteReader_bit(reader, 1);
-	ttLibC_ByteReader_bit(reader, 2);
-	uint32_t sample_rate_index = ttLibC_ByteReader_bit(reader, 4);
+	(*ttLibGo_ByteReader_bit)(reader, 1);
+	(*ttLibGo_ByteReader_bit)(reader, 2);
+	(*ttLibGo_ByteReader_bit)(reader, 1);
+	(*ttLibGo_ByteReader_bit)(reader, 2);
+	uint32_t sample_rate_index = (*ttLibGo_ByteReader_bit)(reader, 4);
 	uint32_t sample_rate = aac_sample_rate_table[sample_rate_index];
-	ttLibC_ByteReader_bit(reader, 1);
-	uint32_t channel_num = ttLibC_ByteReader_bit(reader, 3);
-	ttLibC_ByteReader_bit(reader, 1);
-	ttLibC_ByteReader_bit(reader, 1);
-	ttLibC_ByteReader_bit(reader, 1);
-	ttLibC_ByteReader_bit(reader, 1);
-	uint32_t frame_size = ttLibC_ByteReader_bit(reader, 13);
-	ttLibC_ByteReader_bit(reader, 11);
-	ttLibC_ByteReader_bit(reader, 2);
+	(*ttLibGo_ByteReader_bit)(reader, 1);
+	uint32_t channel_num = (*ttLibGo_ByteReader_bit)(reader, 3);
+	(*ttLibGo_ByteReader_bit)(reader, 1);
+	(*ttLibGo_ByteReader_bit)(reader, 1);
+	(*ttLibGo_ByteReader_bit)(reader, 1);
+	(*ttLibGo_ByteReader_bit)(reader, 1);
+	uint32_t frame_size = (*ttLibGo_ByteReader_bit)(reader, 13);
+	(*ttLibGo_ByteReader_bit)(reader, 11);
+	(*ttLibGo_ByteReader_bit)(reader, 2);
 	if(reader->error != Error_noError) {
 		LOG_ERROR(reader->error);
-		ttLibC_ByteReader_close(&reader);
+    (*ttLibGo_ByteReader_close)((void **)&reader);
     return nullptr;
 	}
-	ttLibC_ByteReader_close(&reader);
+    (*ttLibGo_ByteReader_close)((void **)&reader);
   // fffで始まってたらadtsとして処理
-  ttLibC_Aac *aac = ttLibC_Aac_make(
+  ttLibC_Aac *aac = (ttLibC_Aac *)(*ttLibGo_Aac_make)(
 			nullptr,
 			AacType_adts,
 			sample_rate,
@@ -722,7 +1385,10 @@ void *AacFrame_fromBinary(void *data, size_t data_size,
 void *AdpcmImaWavFrame_fromBinary(void *data, size_t data_size, 
   uint32_t id, uint64_t pts, uint32_t timebase,
   uint32_t sample_rate, uint32_t sample_num, uint32_t channel_num) {
-  ttLibC_AdpcmImaWav *adpcm = ttLibC_AdpcmImaWav_make(
+  if(ttLibGo_AdpcmImaWav_make == nullptr) {
+    return nullptr;
+  }
+  ttLibC_AdpcmImaWav *adpcm = (ttLibC_AdpcmImaWav *)(*ttLibGo_AdpcmImaWav_make)(
     nullptr,
     sample_rate,
     sample_num,
@@ -740,7 +1406,10 @@ void *AdpcmImaWavFrame_fromBinary(void *data, size_t data_size,
 
 void *Mp3Frame_fromBinary(void *data, size_t data_size,
   uint32_t id, uint64_t pts, uint32_t timebase) {
-  ttLibC_Mp3 *mp3 = ttLibC_Mp3_getFrame(
+  if(ttLibGo_Mp3_getFrame == nullptr) {
+    return nullptr;
+  }
+  ttLibC_Mp3 *mp3 = (ttLibC_Mp3 *)(*ttLibGo_Mp3_getFrame)(
     nullptr,
     data,
     data_size,
@@ -756,7 +1425,10 @@ void *Mp3Frame_fromBinary(void *data, size_t data_size,
 void *NellymoserFrame_fromBinary(void *data, size_t data_size, 
   uint32_t id, uint64_t pts, uint32_t timebase,
   uint32_t sample_rate, uint32_t sample_num, uint32_t channel_num) {
-  ttLibC_Nellymoser *nellymoser = ttLibC_Nellymoser_make(
+  if(ttLibGo_Nellymoser_make == nullptr) {
+    return nullptr;
+  }
+  ttLibC_Nellymoser *nellymoser = (ttLibC_Nellymoser *)(*ttLibGo_Nellymoser_make)(
     nullptr,
     sample_rate,
     sample_num,
@@ -774,7 +1446,10 @@ void *NellymoserFrame_fromBinary(void *data, size_t data_size,
 
 void *OpusFrame_fromBinary(void *data, size_t data_size,
   uint32_t id, uint64_t pts, uint32_t timebase) {
-  ttLibC_Opus *opus = ttLibC_Opus_getFrame(
+  if(ttLibGo_Opus_getFrame == nullptr) {
+    return nullptr;
+  }
+  ttLibC_Opus *opus = (ttLibC_Opus *)(*ttLibGo_Opus_getFrame)(
     nullptr,
     data,
     data_size,
@@ -790,7 +1465,10 @@ void *OpusFrame_fromBinary(void *data, size_t data_size,
 void *PcmAlawsFrame_fromBinary(void *data, size_t data_size, 
   uint32_t id, uint64_t pts, uint32_t timebase,
   uint32_t sample_rate, uint32_t sample_num, uint32_t channel_num) {
-  ttLibC_PcmAlaw *pcmAlaw = ttLibC_PcmAlaw_make(
+  if(ttLibGo_PcmAlaw_make == nullptr) {
+    return nullptr;
+  }
+  ttLibC_PcmAlaw *pcmAlaw = (ttLibC_PcmAlaw *)(*ttLibGo_PcmAlaw_make)(
     nullptr,
     sample_rate,
     sample_num,
@@ -810,6 +1488,9 @@ void *PcmF32Frame_fromBinary(void *data, size_t data_size,
   uint32_t id, uint64_t pts, uint32_t timebase,
   const char *pcmF32_type, uint32_t sample_rate, uint32_t sample_num, uint32_t channel_num,
   uint32_t l_index, uint32_t r_index) {
+  if(ttLibGo_PcmF32_make == nullptr) {
+    return nullptr;
+  }
   string pcmF32Name(pcmF32_type);
   ttLibC_PcmF32_Type pcmF32Type = PcmF32Type_interleave;
   uint32_t l_stride = 0;
@@ -826,7 +1507,7 @@ void *PcmF32Frame_fromBinary(void *data, size_t data_size,
     r_stride = data_size - r_index;
   }
   uint8_t *u8data = (uint8_t *)data;
-  ttLibC_PcmF32 *pcmF32 = ttLibC_PcmF32_make(
+  ttLibC_PcmF32 *pcmF32 = (ttLibC_PcmF32 *)(*ttLibGo_PcmF32_make)(
     nullptr,
     pcmF32Type,
     sample_rate,
@@ -850,7 +1531,10 @@ void *PcmF32Frame_fromBinary(void *data, size_t data_size,
 void *PcmMulawsFrame_fromBinary(void *data, size_t data_size, 
   uint32_t id, uint64_t pts, uint32_t timebase,
   uint32_t sample_rate, uint32_t sample_num, uint32_t channel_num) {
-  ttLibC_PcmMulaw *pcmMulaw = ttLibC_PcmMulaw_make(
+  if(ttLibGo_PcmMulaw_make == nullptr) {
+    return nullptr;
+  }
+  ttLibC_PcmMulaw *pcmMulaw = (ttLibC_PcmMulaw *)(*ttLibGo_PcmMulaw_make)(
     nullptr,
     sample_rate,
     sample_num,
@@ -870,6 +1554,9 @@ void *PcmS16Frame_fromBinary(void *data, size_t data_size,
   uint32_t id, uint64_t pts, uint32_t timebase,
   const char *pcmS16_type, uint32_t sample_rate, uint32_t sample_num, uint32_t channel_num,
   uint32_t l_index, uint32_t r_index) {
+  if(ttLibGo_PcmS16_make == nullptr) {
+    return nullptr;
+  }
   string pcmS16Name(pcmS16_type);
   ttLibC_PcmS16_Type pcmS16Type = PcmS16Type_littleEndian;
   uint32_t l_stride = 0;
@@ -897,7 +1584,7 @@ void *PcmS16Frame_fromBinary(void *data, size_t data_size,
     r_stride = data_size - r_index;
   }
   uint8_t *u8data = (uint8_t *)data;
-  ttLibC_PcmS16 *pcmS16 = ttLibC_PcmS16_make(
+  ttLibC_PcmS16 *pcmS16 = (ttLibC_PcmS16 *)(*ttLibGo_PcmS16_make)(
     nullptr,
     pcmS16Type,
     sample_rate,
@@ -921,6 +1608,9 @@ void *PcmS16Frame_fromBinary(void *data, size_t data_size,
 void *SpeexFrame_fromBinary(void *data, size_t data_size, 
   uint32_t id, uint64_t pts, uint32_t timebase,
   uint32_t sample_rate, uint32_t sample_num, uint32_t channel_num) {
+  if(ttLibGo_Speex_make == nullptr) {
+    return nullptr;
+  }
   if(data_size < 8) {
     return nullptr;
   }
@@ -945,7 +1635,7 @@ void *SpeexFrame_fromBinary(void *data, size_t data_size,
     uint32_t sample_num = le_uint32_t(*buf_int);
     buf_int += 2;
     sample_num *= le_uint32_t(*buf_int);
-    speex = ttLibC_Speex_make(
+    speex = (ttLibC_Speex *)(ttLibGo_Speex_make)(
         nullptr,
         SpeexType_header,
         sample_rate,
@@ -963,7 +1653,7 @@ void *SpeexFrame_fromBinary(void *data, size_t data_size,
     // 強制コメント扱いにしておく。
     // speexのcommentは先頭が4byte little endianのコメントデータ長になってる。非常に長いコメントが存在しない
     // 通常のフレームだと何かしらの値が入ることから、これで判断してお茶を濁しておこう。
-    speex = ttLibC_Speex_make(
+    speex = (ttLibC_Speex *)(ttLibGo_Speex_make)(
         nullptr,
         SpeexType_comment,
         sample_rate,
@@ -977,7 +1667,7 @@ void *SpeexFrame_fromBinary(void *data, size_t data_size,
   }
   else {
     // どれにも当てはまらなかったらframeということで・・・
-    speex = ttLibC_Speex_make(
+    speex = (ttLibC_Speex *)(ttLibGo_Speex_make)(
         nullptr,
         SpeexType_frame,
         sample_rate,
@@ -998,6 +1688,9 @@ void *SpeexFrame_fromBinary(void *data, size_t data_size,
 void *VorbisFrame_fromBinary(void *data, size_t data_size, 
   uint32_t id, uint64_t pts, uint32_t timebase,
   uint32_t sample_rate, uint32_t sample_num, uint32_t channel_num) {
+  if(ttLibGo_Vorbis_make == nullptr) {
+    return nullptr;
+  }
   uint8_t *buf = (uint8_t *)data;
   ttLibC_Vorbis *vorbis = nullptr;
   if(data_size > 7) {
@@ -1021,7 +1714,7 @@ void *VorbisFrame_fromBinary(void *data, size_t data_size,
             uint32_t block1 = (buf[28] >> 4) & 0x0F;
             uint32_t block0_value = (1 << block0);
             uint32_t block1_value = (1 << block1);
-            vorbis = ttLibC_Vorbis_make(
+            vorbis = (ttLibC_Vorbis *)(*ttLibGo_Vorbis_make)(
                 nullptr,
                 VorbisType_identification,
                 sample_rate,
@@ -1043,7 +1736,7 @@ void *VorbisFrame_fromBinary(void *data, size_t data_size,
           break;
         case 0x03: // comment
           {
-            vorbis = ttLibC_Vorbis_make(
+            vorbis = (ttLibC_Vorbis *)(*ttLibGo_Vorbis_make)(
                 nullptr,
                 VorbisType_comment,
                 sample_rate,
@@ -1062,7 +1755,7 @@ void *VorbisFrame_fromBinary(void *data, size_t data_size,
           break;
         case 0x05: // setup
           {
-            vorbis = ttLibC_Vorbis_make(
+            vorbis = (ttLibC_Vorbis *)(*ttLibGo_Vorbis_make)(
                 nullptr,
                 VorbisType_setup,
                 sample_rate,
@@ -1086,7 +1779,7 @@ void *VorbisFrame_fromBinary(void *data, size_t data_size,
   }
   if(vorbis == nullptr) {
     // 強制フレーム扱い
-    vorbis = ttLibC_Vorbis_make(
+    vorbis = (ttLibC_Vorbis *)(*ttLibGo_Vorbis_make)(
         nullptr,
         VorbisType_frame,
         sample_rate,

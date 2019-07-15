@@ -32,44 +32,28 @@ using namespace std;
 Decoder *Decoder::create(maps *mp) {
   string decoderType = mp->getString("decoder");
   if(decoderType == "avcodecVideo" || decoderType == "avcodecAudio") {
-#ifdef __ENABLE_AVCODEC__
     return new AvcodecDecoder(mp);
-#endif
   }
   else if(decoderType == "jpeg") {
-#ifdef __ENABLE_JPEG__
     return new JpegDecoder(mp);
-#endif
   }
   else if(decoderType == "openh264") {
-#ifdef __ENABLE_OPENH264__
     return new Openh264Decoder(mp);
-#endif
   }
   else if(decoderType == "opus") {
-#ifdef __ENABLE_OPUS__
     return new tOpusDecoder(mp);
-#endif
   }
   else if(decoderType == "png") {
-#ifdef __ENABLE_LIBPNG__
     return new PngDecoder(mp);
-#endif
   }
   else if(decoderType == "speex") {
-#ifdef __ENABLE_SPEEX__
     return new SpeexDecoder(mp);
-#endif
   }
   else if(decoderType == "theora") {
-#ifdef __ENABLE_THEORA__
     return new TheoraDecoder(mp);
-#endif
   }
   else if(decoderType == "vorbis") {
-#ifdef __ENABLE_VORBIS_DECODE__
     return new VorbisDecoder(mp);
-#endif
   }
   return nullptr;
 }

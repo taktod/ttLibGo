@@ -5,31 +5,37 @@
 using namespace std;
 
 extern "C" {
+typedef void *(* ttLibC_VorbisEncoder_make_func)(uint32_t, uint32_t);
+typedef void *(* ttLibC_codec_func)(void *, void *, ttLibC_getFrameFunc, void *);
+typedef void (* ttLibC_close_func)(void **);
+
+extern ttLibC_VorbisEncoder_make_func ttLibGo_VorbisEncoder_make;
+extern ttLibC_codec_func ttLibGo_VorbisEncoder_encode;
+extern ttLibC_close_func ttLibGo_VorbisEncoder_close;
+
 extern bool ttLibGoFrameCallback(void *ptr, ttLibC_Frame *frame);
 }
 VorbisEncoder::VorbisEncoder(maps *mp) {
-#ifdef __ENABLE_VORBIS_ENCODE__
-  _encoder = ttLibC_VorbisEncoder_make(mp->getUint32("sampleRate"), mp->getUint32("channelNum"));
-#endif
+  if(ttLibGo_VorbisEncoder_make != nullptr) {
+    _encoder = (*ttLibGo_VorbisEncoder_make)(mp->getUint32("sampleRate"), mp->getUint32("channelNum"));
+  }
 }
 
 VorbisEncoder::~VorbisEncoder() {
-#ifdef __ENABLE_VORBIS_ENCODE__
-  ttLibC_VorbisEncoder_close(&_encoder);
-#endif
+  if(ttLibGo_VorbisEncoder_close != nullptr) {
+    (*ttLibGo_VorbisEncoder_close)(&_encoder);
+  }
 }
 bool VorbisEncoder::encodeFrame(ttLibC_Frame *cFrame, ttLibGoFrame *goFrame, void *ptr) {
   bool result = false;
-#ifdef __ENABLE_VORBIS_ENCODE__
-  if(cFrame->type != frameType_pcmS16
-  && cFrame->type != frameType_pcmF32) {
-    return result;
+  if(ttLibGo_VorbisEncoder_encode != nullptr) {
+    if(cFrame->type != frameType_pcmS16
+    && cFrame->type != frameType_pcmF32) {
+      return result;
+    }
+    update(cFrame, goFrame);
+    result = (*ttLibGo_VorbisEncoder_encode)(_encoder, cFrame, ttLibGoFrameCallback, ptr);
+    reset(cFrame, goFrame);
   }
-  update(cFrame, goFrame);
-  result = ttLibC_VorbisEncoder_encode(_encoder, (ttLibC_Audio *)cFrame, [](void *ptr, ttLibC_Vorbis *vorbis)->bool {
-    return ttLibGoFrameCallback(ptr, (ttLibC_Frame *)vorbis);
-  }, ptr);
-  reset(cFrame, goFrame);
-#endif
   return result;
 }

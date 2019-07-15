@@ -2,7 +2,6 @@
 #define TTLIBGO_RESAMPLER_AUDIO_HPP
 
 #include "../resampler.hpp"
-#include <ttLibC/resampler/audioResampler.h>
 
 class AudioResampler : public Resampler {
 public:

@@ -1,30 +1,37 @@
 #include "vorbis.hpp"
 #include "../util.hpp"
 #include <iostream>
+#include <ttLibC/container/container.h>
 
 using namespace std;
 
 extern "C" {
+typedef void *(* ttLibC_make_func)();
+typedef void *(* ttLibC_codec_func)(void *, void *, ttLibC_getFrameFunc, void *);
+typedef void (* ttLibC_close_func)(void **);
+
+extern ttLibC_make_func   ttLibGo_VorbisDecoder_make;
+extern ttLibC_codec_func ttLibGo_VorbisDecoder_decode;
+extern ttLibC_close_func  ttLibGo_VorbisDecoder_close;
+
 extern bool ttLibGoFrameCallback(void *ptr, ttLibC_Frame *frame);
 }
 VorbisDecoder::VorbisDecoder(maps *mp) {
-#ifdef __ENABLE_VORBIS_DECODE__
-  _decoder = ttLibC_VorbisDecoder_make();
-#endif
+  if(ttLibGo_VorbisDecoder_make != nullptr) {
+    _decoder = (*ttLibGo_VorbisDecoder_make)();
+  }
 }
 VorbisDecoder::~VorbisDecoder() {
-#ifdef __ENABLE_VORBIS_DECODE__
-  ttLibC_VorbisDecoder_close(&_decoder);
-#endif
+  if(ttLibGo_VorbisDecoder_close != nullptr) {
+    (*ttLibGo_VorbisDecoder_close)(&_decoder);
+  }
 }
 bool VorbisDecoder::decodeFrame(ttLibC_Frame *cFrame, ttLibGoFrame *goFrame, void *ptr) {
   bool result = false;
-#ifdef __ENABLE_VORBIS_DECODE__
-  update(cFrame, goFrame);
-  result = ttLibC_VorbisDecoder_decode(_decoder, (ttLibC_Vorbis *)cFrame, [](void *ptr, ttLibC_PcmF32 *pcm) -> bool{
-    return ttLibGoFrameCallback(ptr, (ttLibC_Frame *)pcm);
-  }, ptr);
-  reset(cFrame, goFrame);
-#endif
+  if(ttLibGo_VorbisDecoder_decode != nullptr) {
+    update(cFrame, goFrame);
+    result = (*ttLibGo_VorbisDecoder_decode)(_decoder, cFrame, ttLibGoFrameCallback, ptr);
+    reset(cFrame, goFrame);
+  }
   return result;
 }

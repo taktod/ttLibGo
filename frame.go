@@ -115,6 +115,9 @@ type Frame struct {
 // init データを使って初期化します。
 func (frame *Frame) init(cframe cttLibCFrame) {
 	// cのframeデータを元にどういうデータであるかを取得しなければならない。
+	if cframe == nil {
+		panic("nullなデータのframe初期化を実施しようとしました。")
+	}
 	frame.cFrame = cframe
 	buf := make([]byte, 256)
 	ptr := unsafe.Pointer(cframe)

@@ -2,7 +2,6 @@
 #define TTLIBGO_ENCODER_VORBIS_HPP
 
 #include "../encoder.hpp"
-#include <ttLibC/encoder/vorbisEncoder.h>
 
 class VorbisEncoder : public Encoder {
 public:
@@ -10,7 +9,7 @@ public:
   ~VorbisEncoder();
   bool encodeFrame(ttLibC_Frame *cFrame, ttLibGoFrame *goFrame, void *ptr);
 private:
-  ttLibC_VorbisEncoder *_encoder;
+  void *_encoder;
 };
 
 #endif

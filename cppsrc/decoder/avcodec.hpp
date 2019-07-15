@@ -2,7 +2,6 @@
 #define TTLIBGO_DECODER_AVCODEC_HPP
 
 #include "../decoder.hpp"
-#include <ttLibC/decoder/avcodecDecoder.h>
 
 class AvcodecDecoder : public Decoder {
 public:
@@ -10,7 +9,7 @@ public:
   ~AvcodecDecoder();
   bool decodeFrame(ttLibC_Frame *cFrame, ttLibGoFrame *goFrame, void *ptr);
 private:
-  ttLibC_AvcodecDecoder *_decoder;
+  void *_decoder;
 };
 
 #endif

@@ -8,6 +8,14 @@
 using namespace std;
 
 extern "C" {
+typedef void *(* ttLibC_SwresampleResampler_make_func)(ttLibC_Frame_Type, uint32_t, uint32_t, uint32_t, ttLibC_Frame_Type, uint32_t, uint32_t, uint32_t);
+typedef void *(* ttLibC_codec_func)(void *, void *, ttLibC_getFrameFunc, void *);
+typedef void (* ttLibC_close_func)(void **);
+
+extern ttLibC_SwresampleResampler_make_func ttLibGo_SwresampleResampler_make;
+extern ttLibC_codec_func                    ttLibGo_SwresampleResampler_resample;
+extern ttLibC_close_func                    ttLibGo_SwresampleResampler_close;
+
 extern bool ttLibGoFrameCallback(void *ptr, ttLibC_Frame *frame);
 }
 
@@ -30,37 +38,37 @@ uint32_t SwresampleResampler::getSubType(ttLibC_Frame_Type type, string name) {
 }
 
 SwresampleResampler::SwresampleResampler(maps *mp) {
-#ifdef __ENABLE_SWRESAMPLE__
-  ttLibC_Frame_Type inType = Frame_getFrameTypeFromString(mp->getString("inType"));
-  uint32_t inSubType = getSubType(inType, mp->getString("inSubType"));
-  uint32_t inSampleRate = mp->getUint32("inSampleRate");
-  uint32_t inChannelNum = mp->getUint32("inChannelNum");
-  ttLibC_Frame_Type outType = Frame_getFrameTypeFromString(mp->getString("outType"));
-  uint32_t outSubType = getSubType(outType, mp->getString("outSubType"));
-  uint32_t outSampleRate = mp->getUint32("outSampleRate");
-  uint32_t outChannelNum = mp->getUint32("outChannelNum");
-  _resampler = ttLibC_SwresampleResampler_make(
-    inType, inSubType, inSampleRate, inChannelNum,
-    outType, outSubType, outSampleRate, outChannelNum);
-#endif
+  if(ttLibGo_SwresampleResampler_make != nullptr) {
+    ttLibC_Frame_Type inType = Frame_getFrameTypeFromString(mp->getString("inType"));
+    uint32_t inSubType = getSubType(inType, mp->getString("inSubType"));
+    uint32_t inSampleRate = mp->getUint32("inSampleRate");
+    uint32_t inChannelNum = mp->getUint32("inChannelNum");
+    ttLibC_Frame_Type outType = Frame_getFrameTypeFromString(mp->getString("outType"));
+    uint32_t outSubType = getSubType(outType, mp->getString("outSubType"));
+    uint32_t outSampleRate = mp->getUint32("outSampleRate");
+    uint32_t outChannelNum = mp->getUint32("outChannelNum");
+    _resampler = (*ttLibGo_SwresampleResampler_make)(
+      inType, inSubType, inSampleRate, inChannelNum,
+      outType, outSubType, outSampleRate, outChannelNum);
+  }
 }
 
 SwresampleResampler::~SwresampleResampler() {
-#ifdef __ENABLE_SWRESAMPLE__
-  ttLibC_SwresampleResampler_close(&_resampler);
-#endif
+  if(ttLibGo_SwresampleResampler_close != nullptr) {
+    (*ttLibGo_SwresampleResampler_close)(&_resampler);
+  }
 }
 
 bool SwresampleResampler::resampleFrame(ttLibC_Frame *cFrame, ttLibGoFrame *goFrame, void *ptr) {
   bool result = false;
-#ifdef __ENABLE_SWRESAMPLE__
-  update(cFrame, goFrame);
-  result = ttLibC_SwresampleResampler_resample(
-    _resampler,
-    cFrame,
-    ttLibGoFrameCallback,
-    ptr);
-  reset(cFrame, goFrame);
-#endif
+  if(ttLibGo_SwresampleResampler_resample != nullptr) {
+    update(cFrame, goFrame);
+    result = (*ttLibGo_SwresampleResampler_resample)(
+      _resampler,
+      cFrame,
+      ttLibGoFrameCallback,
+      ptr);
+    reset(cFrame, goFrame);
+  }
   return result;
 }

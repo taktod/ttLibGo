@@ -1,13 +1,5 @@
-#include "dummy/checker.h"
-
 #define TT_ATTRIBUTE_API __attribute__ ((visibility("hidden")))
 #define TT_ATTRIBUTE_INNER __attribute__ ((visibility("hidden")))
-
-#include "ttLibC/ttLibC/util/stlListUtil.cpp"
-#include "ttLibC/ttLibC/util/stlMapUtil.cpp"
-#include "ttLibC/ttLibC/decoder/openh264Decoder.cpp"
-#include "ttLibC/ttLibC/encoder/openh264Encoder.cpp"
-#include "ttLibC/ttLibC/resampler/soundtouchResampler.cpp"
 
 #include "cppsrc/decoder/avcodec.cpp"
 #include "cppsrc/decoder/jpeg.cpp"
@@ -25,6 +17,8 @@
 #include "cppsrc/encoder/speex.cpp"
 #include "cppsrc/encoder/theora.cpp"
 #include "cppsrc/encoder/vorbis.cpp"
+#include "cppsrc/encoder/x264.cpp"
+#include "cppsrc/encoder/x265.cpp"
 #include "cppsrc/encoder.cpp"
 #include "cppsrc/resampler/audio.cpp"
 #include "cppsrc/resampler/image.cpp"

@@ -1,9 +1,6 @@
 #include <stdio.h>
 #include <ttLibC/allocator.h>
-#include <ttLibC/container/flv.h>
-#include <ttLibC/container/mkv.h>
-#include <ttLibC/container/mp4.h>
-#include <ttLibC/container/mpegts.h>
+#include <ttLibC/container/container.h>
 #include <string>
 
 using namespace std;
@@ -13,19 +10,49 @@ extern "C" {
 
 extern bool ttLibGoFrameCallback(void *ptr, ttLibC_Frame *frame);
 
+typedef void *(* ttLibC_make_func)();
+typedef bool(* ttLibC_ContainerReader_read_func)(void *, void *, size_t, bool(*)(void *, void *), void *);
+typedef bool(* ttLibC_Container_GetFrame_func)(void *, ttLibC_getFrameFunc, void *);
+typedef void (* ttLibC_close_func)(void **);
+
+extern ttLibC_make_func ttLibGo_FlvReader_make;
+extern ttLibC_make_func ttLibGo_MkvReader_make;
+extern ttLibC_make_func ttLibGo_Mp4Reader_make;
+extern ttLibC_make_func ttLibGo_MpegtsReader_make;
+
+extern ttLibC_ContainerReader_read_func ttLibGo_FlvReader_read;
+extern ttLibC_ContainerReader_read_func ttLibGo_MkvReader_read;
+extern ttLibC_ContainerReader_read_func ttLibGo_Mp4Reader_read;
+extern ttLibC_ContainerReader_read_func ttLibGo_MpegtsReader_read;
+
+extern ttLibC_Container_GetFrame_func ttLibGo_Flv_getFrame;
+extern ttLibC_Container_GetFrame_func ttLibGo_Mkv_getFrame;
+extern ttLibC_Container_GetFrame_func ttLibGo_Mp4_getFrame;
+extern ttLibC_Container_GetFrame_func ttLibGo_Mpegts_getFrame;
+
+extern ttLibC_close_func ttLibGo_ContainerReader_close;
+
 ttLibC_ContainerReader *ContainerReader_make(const char *format) {
   string fmt = string(format);
   if(fmt == "flv") {
-		return (ttLibC_ContainerReader *)ttLibC_FlvReader_make();
+		if(ttLibGo_FlvReader_make != nullptr) {
+			return (ttLibC_ContainerReader *)(*ttLibGo_FlvReader_make)();
+		}
   }
   if(fmt == "mkv" || fmt == "webm") {
-		return (ttLibC_ContainerReader *)ttLibC_MkvReader_make();
+		if(ttLibGo_MkvReader_make != nullptr) {
+			return (ttLibC_ContainerReader *)(*ttLibGo_MkvReader_make)();
+		}
   }
   if(fmt == "mp4") {
-		return (ttLibC_ContainerReader *)ttLibC_Mp4Reader_make();
+		if(ttLibGo_Mp4Reader_make != nullptr) {
+			return (ttLibC_ContainerReader *)(*ttLibGo_Mp4Reader_make)();
+		}
   }
   if(fmt == "mpegts") {
-		return (ttLibC_ContainerReader *)ttLibC_MpegtsReader_make();
+		if(ttLibGo_MpegtsReader_make != nullptr) {
+			return (ttLibC_ContainerReader *)(*ttLibGo_MpegtsReader_make)();
+		}
   }
 	return NULL;
 }
@@ -41,26 +68,56 @@ bool ContainerReader_read(
 	}
 	switch(reader->type) {
 	case containerType_flv:
-		return ttLibC_FlvReader_read((ttLibC_FlvReader *)reader, data, data_size, [](void *ptr, ttLibC_Flv *flv) -> bool{
-    	return ttLibC_Flv_getFrame(flv, ttLibGoFrameCallback, ptr);
-    }, (void *)ptr);
+		if(ttLibGo_FlvReader_read != nullptr) {
+			return (*ttLibGo_FlvReader_read)(reader, data, data_size, [](void *ptr, void *flv) -> bool{
+				if(ttLibGo_Flv_getFrame != nullptr) {
+	  	  	return (*ttLibGo_Flv_getFrame)(flv, ttLibGoFrameCallback, ptr);
+				}
+				return false;
+	    }, (void *)ptr);
+		}
+		break;
 	case containerType_mkv:
 	case containerType_webm:
-		return ttLibC_MkvReader_read((ttLibC_MkvReader *)reader, data, data_size, [](void *ptr, ttLibC_Mkv *mkv) -> bool{
-      return ttLibC_Mkv_getFrame(mkv, ttLibGoFrameCallback, ptr);
-    }, (void *)ptr);
+		if(ttLibGo_MkvReader_read != nullptr) {
+			return (*ttLibGo_MkvReader_read)(reader, data, data_size, [](void *ptr, void *mkv) -> bool{
+				if(ttLibGo_Mkv_getFrame != nullptr) {
+	  	  	return (*ttLibGo_Mkv_getFrame)(mkv, ttLibGoFrameCallback, ptr);
+				}
+				return false;
+	    }, (void *)ptr);
+		}
+		break;
 	case containerType_mp4:
-		return ttLibC_Mp4Reader_read((ttLibC_Mp4Reader *)reader, data, data_size, [](void *ptr, ttLibC_Mp4 *mp4) -> bool {
-	    return ttLibC_Mp4_getFrame(mp4, ttLibGoFrameCallback, ptr);
-    }, (void *)ptr);
+		if(ttLibGo_Mp4Reader_read != nullptr) {
+			return (*ttLibGo_Mp4Reader_read)(reader, data, data_size, [](void *ptr, void *mp4) -> bool{
+				if(ttLibGo_Mp4_getFrame != nullptr) {
+	  	  	return (*ttLibGo_Mp4_getFrame)(mp4, ttLibGoFrameCallback, ptr);
+				}
+				return false;
+	    }, (void *)ptr);
+		}
+		break;
 	case containerType_mpegts:
-		return ttLibC_MpegtsReader_read((ttLibC_MpegtsReader *)reader, data, data_size, [](void *ptr, ttLibC_Mpegts *mpegts) -> bool {
-    	return ttLibC_Mpegts_getFrame(mpegts, ttLibGoFrameCallback, ptr);
-    }, (void *)ptr);
+		if(ttLibGo_MpegtsReader_read != nullptr) {
+			return (*ttLibGo_MpegtsReader_read)(reader, data, data_size, [](void *ptr, void *mpegts) -> bool{
+				if(ttLibGo_Mpegts_getFrame != nullptr) {
+	  	  	return (*ttLibGo_Mpegts_getFrame)(mpegts, ttLibGoFrameCallback, ptr);
+				}
+				return false;
+	    }, (void *)ptr);
+		}
+		break;
 	default:
 		break;
 	}
 	return false;
+}
+
+void ContainerReader_close(ttLibC_ContainerReader *reader) {
+	if(ttLibGo_ContainerReader_close != nullptr) {
+		(*ttLibGo_ContainerReader_close)((void **)&reader);
+	}
 }
 
 }

@@ -2,7 +2,6 @@
 #define TTLIBGO_RESAMPLER_IMAGE_HPP
 
 #include "../resampler.hpp"
-#include <ttLibC/resampler/imageResampler.h>
 
 class ImageResampler : public Resampler {
 public:

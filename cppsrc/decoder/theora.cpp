@@ -1,30 +1,37 @@
 #include "theora.hpp"
 #include "../util.hpp"
 #include <iostream>
+#include <ttLibC/container/container.h>
 
 using namespace std;
 
 extern "C" {
+typedef void *(* ttLibC_make_func)();
+typedef void *(* ttLibC_codec_func)(void *, void *, ttLibC_getFrameFunc, void *);
+typedef void (* ttLibC_close_func)(void **);
+
+extern ttLibC_make_func   ttLibGo_TheoraDecoder_make;
+extern ttLibC_codec_func ttLibGo_TheoraDecoder_decode;
+extern ttLibC_close_func  ttLibGo_TheoraDecoder_close;
+
 extern bool ttLibGoFrameCallback(void *ptr, ttLibC_Frame *frame);
 }
 TheoraDecoder::TheoraDecoder(maps *mp) {
-#ifdef __ENABLE_THEORA__
-  _decoder = ttLibC_TheoraDecoder_make();
-#endif
+  if(ttLibGo_TheoraDecoder_make != nullptr) {
+    _decoder = (*ttLibGo_TheoraDecoder_make)();
+  }
 }
 TheoraDecoder::~TheoraDecoder() {
-#ifdef __ENABLE_THEORA__
-  ttLibC_TheoraDecoder_close(&_decoder);
-#endif
+  if(ttLibGo_TheoraDecoder_close != nullptr) {
+    (*ttLibGo_TheoraDecoder_close)(&_decoder);
+  }
 }
 bool TheoraDecoder::decodeFrame(ttLibC_Frame *cFrame, ttLibGoFrame *goFrame, void *ptr) {
   bool result = false;
-#ifdef __ENABLE_THEORA__
-  update(cFrame, goFrame);
-  result = ttLibC_TheoraDecoder_decode(_decoder, (ttLibC_Theora *)cFrame, [](void *ptr, ttLibC_Yuv420 *yuv) -> bool{
-    return ttLibGoFrameCallback(ptr, (ttLibC_Frame *)yuv);
-  }, ptr);
-  reset(cFrame, goFrame);
-#endif
+  if(ttLibGo_TheoraDecoder_decode != nullptr) {
+    update(cFrame, goFrame);
+    result = (*ttLibGo_TheoraDecoder_decode)(_decoder, cFrame, ttLibGoFrameCallback, ptr);
+    reset(cFrame, goFrame);
+  }
   return result;
 }

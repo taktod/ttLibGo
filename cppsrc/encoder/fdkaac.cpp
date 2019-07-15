@@ -355,11 +355,15 @@ bool FdkaacEncoder::encodeFrame(ttLibC_Frame *cFrame, ttLibGoFrame *goFrame, voi
 }
 
 bool FdkaacEncoder::setBitrate(uint32_t value) {
+#ifdef __ENABLE_FDKAAC__
   if(handle_ == NULL) {
     cout << "handleが準備されていません。" << endl;
     return false;
   }
 	return aacEncoder_SetParam(handle_, AACENC_BITRATE, value);
+#else
+	return false;
+#endif
 }
 extern "C" {
 bool FdkaacEncoder_setBitrate(void *encoder, uint32_t value) {

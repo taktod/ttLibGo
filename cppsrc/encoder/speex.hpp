@@ -2,7 +2,6 @@
 #define TTLIBGO_ENCODER_SPEEX_HPP
 
 #include "../encoder.hpp"
-#include <ttLibC/encoder/speexEncoder.h>
 
 class SpeexEncoder : public Encoder {
 public:
@@ -10,7 +9,7 @@ public:
   ~SpeexEncoder();
   bool encodeFrame(ttLibC_Frame *cFrame, ttLibGoFrame *goFrame, void *ptr);
 private:
-  ttLibC_SpeexEncoder *_encoder;
+  void *_encoder;
 };
 
 #endif

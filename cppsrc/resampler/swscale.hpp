@@ -11,7 +11,7 @@ public:
   bool resampleFrame(ttLibC_Frame *cFrame, ttLibGoFrame *goFrame, void *ptr);
 private:
   uint32_t getSubType(ttLibC_Frame_Type type, string name);
-  ttLibC_SwscaleResampler *_resampler;
+  void *_resampler;
 };
 
 #endif

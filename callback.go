@@ -23,6 +23,9 @@ type frameCall struct {
 //export ttLibGoFrameCallback
 func ttLibGoFrameCallback(any unsafe.Pointer, cFrame *C.ttLibC_Frame) C.bool {
 	// c言語側に渡してたvoid*にいれてる参照からgoで利用するcallbackを復元する
+	if cFrame == nil {
+		panic("frameができてないのに、frameCallbackが呼ばれました。")
+	}
 	call := (*frameCall)(any)
 	// goで利用可能なフレームの形にして応答する
 	frame := new(Frame)

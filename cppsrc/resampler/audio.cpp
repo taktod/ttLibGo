@@ -6,6 +6,12 @@
 using namespace std;
 
 extern "C" {
+typedef void *(* ttLibC_AudioResampler_convertFormat_func)(void *, ttLibC_Frame_Type, uint32_t, uint32_t, void *);
+typedef void (* ttLibC_close_func)(void **);
+
+extern ttLibC_close_func ttLibGo_Frame_close;
+extern ttLibC_AudioResampler_convertFormat_func ttLibGo_AudioResampler_convertFormat;
+
 extern bool ttLibGoFrameCallback(void *ptr, ttLibC_Frame *frame);
 }
 
@@ -46,7 +52,9 @@ AudioResampler::AudioResampler(maps *mp) {
 }
 
 AudioResampler::~AudioResampler() {
-  ttLibC_Audio_close(&_pcm);
+  if(ttLibGo_Frame_close != nullptr) {
+    (*ttLibGo_Frame_close)((void **)&_pcm);
+  }
 }
 bool AudioResampler::resampleFrame(ttLibC_Frame *cFrame, ttLibGoFrame *goFrame, void *ptr) {
   switch(cFrame->type) {
@@ -57,12 +65,14 @@ bool AudioResampler::resampleFrame(ttLibC_Frame *cFrame, ttLibGoFrame *goFrame, 
     return false;
   }
   bool result = false;
-  update(cFrame, goFrame);
-  ttLibC_Audio *pcm = (ttLibC_Audio *)cFrame;
-  ttLibC_Audio *resampled = ttLibC_AudioResampler_convertFormat(_pcm, _targetType, _subType, pcm->channel_num, pcm);
-  if(resampled != nullptr) {
-    _pcm = resampled;
-    result = ttLibGoFrameCallback(ptr, (ttLibC_Frame *)_pcm);
+  if(ttLibGo_AudioResampler_convertFormat != nullptr) {
+    update(cFrame, goFrame);
+    ttLibC_Audio *pcm = (ttLibC_Audio *)cFrame;
+    ttLibC_Audio *resampled = (ttLibC_Audio *)(*ttLibGo_AudioResampler_convertFormat)(_pcm, _targetType, _subType, pcm->channel_num, pcm);
+    if(resampled != nullptr) {
+      _pcm = resampled;
+      result = ttLibGoFrameCallback(ptr, (ttLibC_Frame *)_pcm);
+    }
   }
   reset(cFrame, goFrame);
   return result;

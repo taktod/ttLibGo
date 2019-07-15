@@ -6,6 +6,14 @@
 using namespace std;
 
 extern "C" {
+typedef void *(* ttLibC_ImageResampler_makeYuv420FromBgr_func)(void *, ttLibC_Yuv420_Type, void *);
+typedef void *(* ttLibC_ImageResampler_makeBgrFromYuv420_func)(void *, ttLibC_Bgr_Type, void *);
+typedef void (* ttLibC_close_func)(void **);
+
+extern ttLibC_close_func ttLibGo_Frame_close;
+extern ttLibC_ImageResampler_makeYuv420FromBgr_func ttLibGo_ImageResampler_makeYuv420FromBgr;
+extern ttLibC_ImageResampler_makeBgrFromYuv420_func ttLibGo_ImageResampler_makeBgrFromYuv420;
+
 extern bool ttLibGoFrameCallback(void *ptr, ttLibC_Frame *frame);
 }
 
@@ -66,7 +74,9 @@ ImageResampler::ImageResampler(maps *mp) {
   }
 }
 ImageResampler::~ImageResampler() {
-  ttLibC_Video_close(&_image);
+  if(ttLibGo_Frame_close != nullptr) {
+    (*ttLibGo_Frame_close)((void **)&_image);
+  }
 }
 
 bool ImageResampler::resampleFrame(ttLibC_Frame *cFrame, ttLibGoFrame *goFrame, void *ptr) {
@@ -74,41 +84,45 @@ bool ImageResampler::resampleFrame(ttLibC_Frame *cFrame, ttLibGoFrame *goFrame, 
     return false;
   }
   bool result = false;
-  update(cFrame, goFrame);
-  switch(cFrame->type) {
-  case frameType_bgr:
-    {
-      if(_image != nullptr && _image->inherit_super.type != frameType_yuv420) {
-        ttLibC_Video_close(&_image);
+  if(ttLibGo_ImageResampler_makeYuv420FromBgr != nullptr
+  && ttLibGo_ImageResampler_makeBgrFromYuv420 != nullptr
+  && ttLibGo_Frame_close != nullptr) {
+    update(cFrame, goFrame);
+    switch(cFrame->type) {
+    case frameType_bgr:
+      {
+        if(_image != nullptr && _image->inherit_super.type != frameType_yuv420) {
+          (*ttLibGo_Frame_close)((void **)&_image);
+        }
+        ttLibC_Yuv420 *yuv = (ttLibC_Yuv420 *)(*ttLibGo_ImageResampler_makeYuv420FromBgr)(
+          (ttLibC_Yuv420 *)_image,
+          (ttLibC_Yuv420_Type)_subType,
+          (ttLibC_Bgr *)cFrame);
+        if(yuv != nullptr) {
+          _image = (ttLibC_Video *)yuv;
+          result = ttLibGoFrameCallback(ptr, (ttLibC_Frame *)_image);
+        }
       }
-      ttLibC_Yuv420 *yuv = ttLibC_ImageResampler_makeYuv420FromBgr(
-        (ttLibC_Yuv420 *)_image,
-        (ttLibC_Yuv420_Type)_subType,
-        (ttLibC_Bgr *)cFrame);
-      if(yuv != nullptr) {
-        _image = (ttLibC_Video *)yuv;
-        result = ttLibGoFrameCallback(ptr, (ttLibC_Frame *)_image);
+      break;
+    case frameType_yuv420:
+      {
+        if(_image != nullptr && _image->inherit_super.type != frameType_bgr) {
+          (*ttLibGo_Frame_close)((void **)&_image);
+        }
+        ttLibC_Bgr *bgr = (ttLibC_Bgr*)(*ttLibGo_ImageResampler_makeBgrFromYuv420)(
+          (ttLibC_Bgr *)_image,
+          (ttLibC_Bgr_Type)_subType,
+          (ttLibC_Yuv420 *)cFrame);
+        if(bgr != nullptr) {
+          _image = (ttLibC_Video *)bgr;
+          result = ttLibGoFrameCallback(ptr, (ttLibC_Frame *)_image);
+        }
       }
+      break;
+    default:
+      break;
     }
-    break;
-  case frameType_yuv420:
-    {
-      if(_image != nullptr && _image->inherit_super.type != frameType_bgr) {
-        ttLibC_Video_close(&_image);
-      }
-      ttLibC_Bgr *bgr = ttLibC_ImageResampler_makeBgrFromYuv420(
-        (ttLibC_Bgr *)_image,
-        (ttLibC_Bgr_Type)_subType,
-        (ttLibC_Yuv420 *)cFrame);
-      if(bgr != nullptr) {
-        _image = (ttLibC_Video *)bgr;
-        result = ttLibGoFrameCallback(ptr, (ttLibC_Frame *)_image);
-      }
-    }
-    break;
-  default:
-    break;
+    reset(cFrame, goFrame);
   }
-  reset(cFrame, goFrame);
   return result;
 }

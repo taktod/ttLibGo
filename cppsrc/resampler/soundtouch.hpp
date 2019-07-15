@@ -2,7 +2,6 @@
 #define TTLIBGO_RESAMPLER_SOUNDTOUCH_HPP
 
 #include "../resampler.hpp"
-#include <ttLibC/resampler/soundtouchResampler.h>
 
 class SoundtouchResampler : public Resampler {
 public:
@@ -18,7 +17,7 @@ public:
   void setPitchOctaves(double newPitch);
   void setPitchSemiTones(double newPitch);
 private:
-  ttLibC_Soundtouch *_resampler;
+  void *_resampler;
 };
 
 #endif

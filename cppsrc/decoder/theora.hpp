@@ -2,7 +2,6 @@
 #define TTLIBGO_DECODER_THEORA_HPP
 
 #include "../decoder.hpp"
-#include <ttLibC/decoder/theoraDecoder.h>
 
 class TheoraDecoder : public Decoder {
 public:
@@ -10,7 +9,7 @@ public:
   ~TheoraDecoder();
   bool decodeFrame(ttLibC_Frame *cFrame, ttLibGoFrame *goFrame, void *ptr);
 private:
-  ttLibC_TheoraDecoder *_decoder;
+  void *_decoder;
 };
 
 #endif

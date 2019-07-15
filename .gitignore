@@ -4,3 +4,5 @@
 *.mp4
 *.mkv
 *.flv
+*.ts
+build

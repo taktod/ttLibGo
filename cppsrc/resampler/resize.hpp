@@ -2,7 +2,6 @@
 #define TTLIBGO_RESAMPLER_RESIZE_HPP
 
 #include "../resampler.hpp"
-#include <ttLibC/resampler/imageResizer.h>
 
 class ResizeResampler : public Resampler {
 public:
