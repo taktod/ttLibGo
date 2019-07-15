@@ -1358,7 +1358,8 @@ void *AacFrame_fromBinary(void *data, size_t data_size,
 	(*ttLibGo_ByteReader_bit)(reader, 11);
 	(*ttLibGo_ByteReader_bit)(reader, 2);
 	if(reader->error != Error_noError) {
-		LOG_ERROR(reader->error);
+		//LOG_ERROR(reader->error); // この動作、ttLibCの内部関数をkickしていたため、buildが失敗してた。
+    LOG_PRINT("error:%d", reader->error);
     (*ttLibGo_ByteReader_close)((void **)&reader);
     return nullptr;
 	}
