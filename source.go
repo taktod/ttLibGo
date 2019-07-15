@@ -1,11 +1,9 @@
 package ttLibGo
 
 /*
-//#cgo pkg-config: libavcodec libavutil libswscale libswresample libjpeg openh264 opus libpng speex theora vorbis vorbisenc fdk-aac x264 x265 soundtouch speexdsp
-//#cgo pkg-config: fdk-aac
-#cgo CFLAGS: -I./ -I./ttLibC/ -I./cppsrc/ -std=c99
-#cgo LDFLAGS: -lc++ -L/usr/local/lib
-#cgo CXXFLAGS: -std=c++0x -I./ -I./ttLibC/ -I./cppsrc/
+#cgo CFLAGS: -I./ -I./ttLibC/ -I./cppsrc/ -std=c99 -Wno-multichar
+#cgo LDFLAGS: -L/usr/local/lib -ldl
+#cgo CXXFLAGS: -std=c++0x -I./ -I./ttLibC/ -I./cppsrc/ -Wno-multichar
 
 #include <stdio.h>
 #include <stdlib.h>
