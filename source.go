@@ -34,72 +34,72 @@ typedef bool (* ttLibC_ContainerReader_read_func)(void *, void *, size_t, bool(*
 typedef bool (* ttLibC_Container_GetFrame_func)(void *, ttLibC_getFrameFunc, void *);
 typedef void (* ttLibC_close_func)(void **);
 
-ttLibC_make_func ttLibGo_FlvReader_make;
-ttLibC_make_func ttLibGo_MkvReader_make;
-ttLibC_make_func ttLibGo_Mp4Reader_make;
-ttLibC_make_func ttLibGo_MpegtsReader_make;
+ttLibC_make_func ttLibGo_FlvReader_make = NULL;
+ttLibC_make_func ttLibGo_MkvReader_make = NULL;
+ttLibC_make_func ttLibGo_Mp4Reader_make = NULL;
+ttLibC_make_func ttLibGo_MpegtsReader_make = NULL;
 
-ttLibC_ContainerReader_read_func ttLibGo_FlvReader_read;
-ttLibC_ContainerReader_read_func ttLibGo_MkvReader_read;
-ttLibC_ContainerReader_read_func ttLibGo_Mp4Reader_read;
-ttLibC_ContainerReader_read_func ttLibGo_MpegtsReader_read;
+ttLibC_ContainerReader_read_func ttLibGo_FlvReader_read = NULL;
+ttLibC_ContainerReader_read_func ttLibGo_MkvReader_read = NULL;
+ttLibC_ContainerReader_read_func ttLibGo_Mp4Reader_read = NULL;
+ttLibC_ContainerReader_read_func ttLibGo_MpegtsReader_read = NULL;
 
-ttLibC_Container_GetFrame_func ttLibGo_Flv_getFrame;
-ttLibC_Container_GetFrame_func ttLibGo_Mkv_getFrame;
-ttLibC_Container_GetFrame_func ttLibGo_Mp4_getFrame;
-ttLibC_Container_GetFrame_func ttLibGo_Mpegts_getFrame;
+ttLibC_Container_GetFrame_func ttLibGo_Flv_getFrame = NULL;
+ttLibC_Container_GetFrame_func ttLibGo_Mkv_getFrame = NULL;
+ttLibC_Container_GetFrame_func ttLibGo_Mp4_getFrame = NULL;
+ttLibC_Container_GetFrame_func ttLibGo_Mpegts_getFrame = NULL;
 
-ttLibC_close_func ttLibGo_ContainerReader_close;
+ttLibC_close_func ttLibGo_ContainerReader_close = NULL;
 
 typedef void *(* ttLibC_AvcodecDecoder_make_func)(ttLibC_Frame_Type, uint32_t, uint32_t);
 typedef void *(* ttLibC_codec_func)(void *, void *, ttLibC_getFrameFunc, void *);
 
-ttLibC_AvcodecDecoder_make_func ttLibGo_AvcodecVideoDecoder_make;
-ttLibC_AvcodecDecoder_make_func ttLibGo_AvcodecAudioDecoder_make;
-ttLibC_codec_func               ttLibGo_AvcodecDecoder_decode;
-ttLibC_close_func               ttLibGo_AvcodecDecoder_close;
+ttLibC_AvcodecDecoder_make_func ttLibGo_AvcodecVideoDecoder_make = NULL;
+ttLibC_AvcodecDecoder_make_func ttLibGo_AvcodecAudioDecoder_make = NULL;
+ttLibC_codec_func               ttLibGo_AvcodecDecoder_decode = NULL;
+ttLibC_close_func               ttLibGo_AvcodecDecoder_close = NULL;
 
-ttLibC_make_func  ttLibGo_JpegDecoder_make;
-ttLibC_codec_func ttLibGo_JpegDecoder_decode;
-ttLibC_close_func ttLibGo_JpegDecoder_close;
+ttLibC_make_func  ttLibGo_JpegDecoder_make = NULL;
+ttLibC_codec_func ttLibGo_JpegDecoder_decode = NULL;
+ttLibC_close_func ttLibGo_JpegDecoder_close = NULL;
 
-ttLibC_make_func  ttLibGo_Openh264Decoder_make;
-ttLibC_codec_func ttLibGo_Openh264Decoder_decode;
-ttLibC_close_func ttLibGo_Openh264Decoder_close;
+ttLibC_make_func  ttLibGo_Openh264Decoder_make = NULL;
+ttLibC_codec_func ttLibGo_Openh264Decoder_decode = NULL;
+ttLibC_close_func ttLibGo_Openh264Decoder_close = NULL;
 
 typedef void *(* ttLibC_OpusDecoder_make_func)(uint32_t, uint32_t);
 typedef int (* ttLibC_opus_codecControl_func)(void *, const char *, int);
 
-ttLibC_OpusDecoder_make_func  ttLibGo_OpusDecoder_make;
-ttLibC_codec_func             ttLibGo_OpusDecoder_decode;
-ttLibC_close_func             ttLibGo_OpusDecoder_close;
-ttLibC_opus_codecControl_func ttLibGo_OpusDecoder_codecControl;
+ttLibC_OpusDecoder_make_func  ttLibGo_OpusDecoder_make = NULL;
+ttLibC_codec_func             ttLibGo_OpusDecoder_decode = NULL;
+ttLibC_close_func             ttLibGo_OpusDecoder_close = NULL;
+ttLibC_opus_codecControl_func ttLibGo_OpusDecoder_codecControl = NULL;
 
-ttLibC_make_func  ttLibGo_PngDecoder_make;
-ttLibC_codec_func ttLibGo_PngDecoder_decode;
-ttLibC_close_func ttLibGo_PngDecoder_close;
+ttLibC_make_func  ttLibGo_PngDecoder_make = NULL;
+ttLibC_codec_func ttLibGo_PngDecoder_decode = NULL;
+ttLibC_close_func ttLibGo_PngDecoder_close = NULL;
 
 typedef void *(* ttLibC_SpeexDecoder_make_func)(uint32_t, uint32_t);
 
-ttLibC_SpeexDecoder_make_func ttLibGo_SpeexDecoder_make;
-ttLibC_codec_func             ttLibGo_SpeexDecoder_decode;
-ttLibC_close_func             ttLibGo_SpeexDecoder_close;
+ttLibC_SpeexDecoder_make_func ttLibGo_SpeexDecoder_make = NULL;
+ttLibC_codec_func             ttLibGo_SpeexDecoder_decode = NULL;
+ttLibC_close_func             ttLibGo_SpeexDecoder_close = NULL;
 
-ttLibC_make_func  ttLibGo_TheoraDecoder_make;
-ttLibC_codec_func ttLibGo_TheoraDecoder_decode;
-ttLibC_close_func ttLibGo_TheoraDecoder_close;
+ttLibC_make_func  ttLibGo_TheoraDecoder_make = NULL;
+ttLibC_codec_func ttLibGo_TheoraDecoder_decode = NULL;
+ttLibC_close_func ttLibGo_TheoraDecoder_close = NULL;
 
-ttLibC_make_func  ttLibGo_VorbisDecoder_make;
-ttLibC_codec_func ttLibGo_VorbisDecoder_decode;
-ttLibC_close_func ttLibGo_VorbisDecoder_close;
+ttLibC_make_func  ttLibGo_VorbisDecoder_make = NULL;
+ttLibC_codec_func ttLibGo_VorbisDecoder_decode = NULL;
+ttLibC_close_func ttLibGo_VorbisDecoder_close = NULL;
 
 typedef void *(* ttLibC_JpegEncoder_make_func)(uint32_t, uint32_t, uint32_t);
 typedef void *(* ttLibC_JpegEncoder_setQuality_func)(void *, uint32_t);
 
-ttLibC_JpegEncoder_make_func       ttLibGo_JpegEncoder_make;
-ttLibC_codec_func                  ttLibGo_JpegEncoder_encode;
-ttLibC_JpegEncoder_setQuality_func ttLibGo_JpegEncoder_setQuality;
-ttLibC_close_func                  ttLibGo_JpegEncoder_close;
+ttLibC_JpegEncoder_make_func       ttLibGo_JpegEncoder_make = NULL;
+ttLibC_codec_func                  ttLibGo_JpegEncoder_encode = NULL;
+ttLibC_JpegEncoder_setQuality_func ttLibGo_JpegEncoder_setQuality = NULL;
+ttLibC_close_func                  ttLibGo_JpegEncoder_close = NULL;
 
 typedef void (* ttLibC_Openh264Encoder_getDefaultSEncParamExt_func)(void *, uint32_t, uint32_t);
 typedef bool (* ttLibC_Openh264Encoder_paramParse_func)(void *, const char *, const char *);
@@ -109,40 +109,40 @@ typedef bool (* ttLibC_Openh264Encoder_setRCMode_func)(void *, ttLibC_Openh264En
 typedef bool (* ttLibC_Openh264Encoder_setIDRInterval_func)(void *, uint32_t);
 typedef bool (* ttLibC_Openh264Encoder_forceNextKeyFrame_func)(void *);
 
-ttLibC_Openh264Encoder_getDefaultSEncParamExt_func ttLibGo_Openh264Encoder_getDefaultSEncParamExt;
-ttLibC_Openh264Encoder_paramParse_func             ttLibGo_Openh264Encoder_paramParse;
-ttLibC_Openh264Encoder_spatialParamParse_func      ttLibGo_Openh264Encoder_spatialParamParse;
-ttLibC_Openh264Encoder_makeWithSEncParamExt_func   ttLibGo_Openh264Encoder_makeWithSEncParamExt;
-ttLibC_codec_func                                  ttLibGo_Openh264Encoder_encode;
-ttLibC_close_func                                  ttLibGo_Openh264Encoder_close;
-ttLibC_Openh264Encoder_setRCMode_func              ttLibGo_Openh264Encoder_setRCMode;
-ttLibC_Openh264Encoder_setIDRInterval_func         ttLibGo_Openh264Encoder_setIDRInterval;
-ttLibC_Openh264Encoder_forceNextKeyFrame_func      ttLibGo_Openh264Encoder_forceNextKeyFrame;
+ttLibC_Openh264Encoder_getDefaultSEncParamExt_func ttLibGo_Openh264Encoder_getDefaultSEncParamExt = NULL;
+ttLibC_Openh264Encoder_paramParse_func             ttLibGo_Openh264Encoder_paramParse = NULL;
+ttLibC_Openh264Encoder_spatialParamParse_func      ttLibGo_Openh264Encoder_spatialParamParse = NULL;
+ttLibC_Openh264Encoder_makeWithSEncParamExt_func   ttLibGo_Openh264Encoder_makeWithSEncParamExt = NULL;
+ttLibC_codec_func                                  ttLibGo_Openh264Encoder_encode = NULL;
+ttLibC_close_func                                  ttLibGo_Openh264Encoder_close = NULL;
+ttLibC_Openh264Encoder_setRCMode_func              ttLibGo_Openh264Encoder_setRCMode = NULL;
+ttLibC_Openh264Encoder_setIDRInterval_func         ttLibGo_Openh264Encoder_setIDRInterval = NULL;
+ttLibC_Openh264Encoder_forceNextKeyFrame_func      ttLibGo_Openh264Encoder_forceNextKeyFrame = NULL;
 
 typedef void *(* ttLibC_OpusEncoder_make_func)(uint32_t, uint32_t, uint32_t);
 
-ttLibC_OpusEncoder_make_func  ttLibGo_OpusEncoder_make;
-ttLibC_codec_func             ttLibGo_OpusEncoder_encode;
-ttLibC_opus_codecControl_func ttLibGo_OpusEncoder_codecControl;
-ttLibC_close_func             ttLibGo_OpusEncoder_close;
+ttLibC_OpusEncoder_make_func  ttLibGo_OpusEncoder_make = NULL;
+ttLibC_codec_func             ttLibGo_OpusEncoder_encode = NULL;
+ttLibC_opus_codecControl_func ttLibGo_OpusEncoder_codecControl = NULL;
+ttLibC_close_func             ttLibGo_OpusEncoder_close = NULL;
 
 typedef void *(* ttLibC_SpeexEncoder_make_func)(uint32_t, uint32_t, uint32_t);
 
-ttLibC_SpeexEncoder_make_func ttLibGo_SpeexEncoder_make;
-ttLibC_codec_func             ttLibGo_SpeexEncoder_encode;
-ttLibC_close_func             ttLibGo_SpeexEncoder_close;
+ttLibC_SpeexEncoder_make_func ttLibGo_SpeexEncoder_make = NULL;
+ttLibC_codec_func             ttLibGo_SpeexEncoder_encode = NULL;
+ttLibC_close_func             ttLibGo_SpeexEncoder_close = NULL;
 
 typedef void *(* ttLibC_TheoraEncoder_make_ex_func)(uint32_t, uint32_t, uint32_t, uint32_t, uint32_t);
 
-ttLibC_TheoraEncoder_make_ex_func ttLibGo_TheoraEncoder_make_ex;
-ttLibC_codec_func                 ttLibGo_TheoraEncoder_encode;
-ttLibC_close_func                 ttLibGo_TheoraEncoder_close;
+ttLibC_TheoraEncoder_make_ex_func ttLibGo_TheoraEncoder_make_ex = NULL;
+ttLibC_codec_func                 ttLibGo_TheoraEncoder_encode = NULL;
+ttLibC_close_func                 ttLibGo_TheoraEncoder_close = NULL;
 
 typedef void *(* ttLibC_VorbisEncoder_make_func)(uint32_t, uint32_t);
 
-ttLibC_VorbisEncoder_make_func ttLibGo_VorbisEncoder_make;
-ttLibC_codec_func ttLibGo_VorbisEncoder_encode;
-ttLibC_close_func ttLibGo_VorbisEncoder_close;
+ttLibC_VorbisEncoder_make_func ttLibGo_VorbisEncoder_make = NULL;
+ttLibC_codec_func ttLibGo_VorbisEncoder_encode = NULL;
+ttLibC_close_func ttLibGo_VorbisEncoder_close = NULL;
 
 typedef void (* ttLibC_X264Encoder_getDefaultX264ParamTWithPresetTune_func)(void *, uint32_t, uint32_t, const char *, const char *);
 typedef int (* ttLibC_X264Encoder_paramParse_func)(void *, const char *, const char *);
@@ -150,13 +150,13 @@ typedef int (* ttLibC_X264Encoder_paramApplyProfile_func)(void *, const char *);
 typedef void *(* ttLibC_X264Encoder_makeWithX264ParamT_func)(void *);
 typedef bool (* ttLibC_X264Encoder_forceNextFrameType_func)(void *, ttLibC_X264Encoder_FrameType);
 
-ttLibC_X264Encoder_getDefaultX264ParamTWithPresetTune_func ttLibGo_X264Encoder_getDefaultX264ParamTWithPresetTune;
-ttLibC_X264Encoder_paramParse_func                         ttLibGo_X264Encoder_paramParse;
-ttLibC_X264Encoder_paramApplyProfile_func                  ttLibGo_X264Encoder_paramApplyProfile;
-ttLibC_X264Encoder_makeWithX264ParamT_func                 ttLibGo_X264Encoder_makeWithX264ParamT;
-ttLibC_codec_func                                          ttLibGo_X264Encoder_encode;
-ttLibC_X264Encoder_forceNextFrameType_func                 ttLibGo_X264Encoder_forceNextFrameType;
-ttLibC_close_func                                          ttLibGo_X264Encoder_close;
+ttLibC_X264Encoder_getDefaultX264ParamTWithPresetTune_func ttLibGo_X264Encoder_getDefaultX264ParamTWithPresetTune = NULL;
+ttLibC_X264Encoder_paramParse_func                         ttLibGo_X264Encoder_paramParse = NULL;
+ttLibC_X264Encoder_paramApplyProfile_func                  ttLibGo_X264Encoder_paramApplyProfile = NULL;
+ttLibC_X264Encoder_makeWithX264ParamT_func                 ttLibGo_X264Encoder_makeWithX264ParamT = NULL;
+ttLibC_codec_func                                          ttLibGo_X264Encoder_encode = NULL;
+ttLibC_X264Encoder_forceNextFrameType_func                 ttLibGo_X264Encoder_forceNextFrameType = NULL;
+ttLibC_close_func                                          ttLibGo_X264Encoder_close = NULL;
 
 typedef bool (* ttLibC_X265Encoder_getDefaultX265ApiAndParam_func)(void **, void **, const char *, const char *, uint32_t, uint32_t);
 typedef int (* ttLibC_X265Encoder_paramParse_func)(void *param, const char *key, const char *value);
@@ -164,94 +164,94 @@ typedef int (* ttLibC_X265Encoder_paramApplyProfile_func)(void *param, const cha
 typedef void *(* ttLibC_X265Encoder_makeWithX265ApiAndParam_func)(void *, void *);
 typedef bool (* ttLibC_X265Encoder_forceNextFrameType_func)(void *, ttLibC_X265Encoder_FrameType);
 
-ttLibC_X265Encoder_getDefaultX265ApiAndParam_func ttLibGo_X265Encoder_getDefaultX265ApiAndParam;
-ttLibC_X265Encoder_paramParse_func                ttLibGo_X265Encoder_paramParse;
-ttLibC_X265Encoder_paramApplyProfile_func         ttLibGo_X265Encoder_paramApplyProfile;
-ttLibC_X265Encoder_makeWithX265ApiAndParam_func   ttLibGo_X265Encoder_makeWithX265ApiAndParam;
-ttLibC_codec_func                                 ttLibGo_X265Encoder_encode;
-ttLibC_X265Encoder_forceNextFrameType_func        ttLibGo_X265Encoder_forceNextFrameType;
-ttLibC_close_func                                 ttLibGo_X265Encoder_close;
+ttLibC_X265Encoder_getDefaultX265ApiAndParam_func ttLibGo_X265Encoder_getDefaultX265ApiAndParam = NULL;
+ttLibC_X265Encoder_paramParse_func                ttLibGo_X265Encoder_paramParse = NULL;
+ttLibC_X265Encoder_paramApplyProfile_func         ttLibGo_X265Encoder_paramApplyProfile = NULL;
+ttLibC_X265Encoder_makeWithX265ApiAndParam_func   ttLibGo_X265Encoder_makeWithX265ApiAndParam = NULL;
+ttLibC_codec_func                                 ttLibGo_X265Encoder_encode = NULL;
+ttLibC_X265Encoder_forceNextFrameType_func        ttLibGo_X265Encoder_forceNextFrameType = NULL;
+ttLibC_close_func                                 ttLibGo_X265Encoder_close = NULL;
 
 typedef void *(* ttLibC_AudioResampler_convertFormat_func)(void *, ttLibC_Frame_Type, uint32_t, uint32_t, void *);
 
-ttLibC_AudioResampler_convertFormat_func ttLibGo_AudioResampler_convertFormat;
+ttLibC_AudioResampler_convertFormat_func ttLibGo_AudioResampler_convertFormat = NULL;
 
 typedef void *(* ttLibC_ImageResampler_makeYuv420FromBgr_func)(void *, ttLibC_Yuv420_Type, void *);
 typedef void *(* ttLibC_ImageResampler_makeBgrFromYuv420_func)(void *, ttLibC_Bgr_Type, void *);
 
-ttLibC_ImageResampler_makeYuv420FromBgr_func ttLibGo_ImageResampler_makeYuv420FromBgr;
-ttLibC_ImageResampler_makeBgrFromYuv420_func ttLibGo_ImageResampler_makeBgrFromYuv420;
+ttLibC_ImageResampler_makeYuv420FromBgr_func ttLibGo_ImageResampler_makeYuv420FromBgr = NULL;
+ttLibC_ImageResampler_makeBgrFromYuv420_func ttLibGo_ImageResampler_makeBgrFromYuv420 = NULL;
 
 typedef void *(* ttLibC_ImageResizer_resizeBgr_func)(void *, ttLibC_Bgr_Type, uint32_t, uint32_t, void *);
 typedef void *(* ttLibC_ImageResizer_resizeYuv420_func)(void *, ttLibC_Yuv420_Type, uint32_t, uint32_t, void *, bool);
 
-ttLibC_ImageResizer_resizeBgr_func    ttLibGo_ImageResizer_resizeBgr;
-ttLibC_ImageResizer_resizeYuv420_func ttLibGo_ImageResizer_resizeYuv420;
+ttLibC_ImageResizer_resizeBgr_func    ttLibGo_ImageResizer_resizeBgr = NULL;
+ttLibC_ImageResizer_resizeYuv420_func ttLibGo_ImageResizer_resizeYuv420 = NULL;
 
 typedef void *(* ttLibC_Soundtouch_make_func)(uint32_t, uint32_t);
 typedef void (* ttLibC_soundtouch_set_func)(void *, double);
 
-ttLibC_Soundtouch_make_func ttLibGo_Soundtouch_make;
-ttLibC_codec_func           ttLibGo_Soundtouch_resample;
-ttLibC_close_func           ttLibGo_Soundtouch_close;
-ttLibC_soundtouch_set_func  ttLibGo_Soundtouch_setRate;
-ttLibC_soundtouch_set_func  ttLibGo_Soundtouch_setTempo;
-ttLibC_soundtouch_set_func  ttLibGo_Soundtouch_setRateChange;
-ttLibC_soundtouch_set_func  ttLibGo_Soundtouch_setTempoChange;
-ttLibC_soundtouch_set_func  ttLibGo_Soundtouch_setPitch;
-ttLibC_soundtouch_set_func  ttLibGo_Soundtouch_setPitchOctaves;
-ttLibC_soundtouch_set_func  ttLibGo_Soundtouch_setPitchSemiTones;
+ttLibC_Soundtouch_make_func ttLibGo_Soundtouch_make = NULL;
+ttLibC_codec_func           ttLibGo_Soundtouch_resample = NULL;
+ttLibC_close_func           ttLibGo_Soundtouch_close = NULL;
+ttLibC_soundtouch_set_func  ttLibGo_Soundtouch_setRate = NULL;
+ttLibC_soundtouch_set_func  ttLibGo_Soundtouch_setTempo = NULL;
+ttLibC_soundtouch_set_func  ttLibGo_Soundtouch_setRateChange = NULL;
+ttLibC_soundtouch_set_func  ttLibGo_Soundtouch_setTempoChange = NULL;
+ttLibC_soundtouch_set_func  ttLibGo_Soundtouch_setPitch = NULL;
+ttLibC_soundtouch_set_func  ttLibGo_Soundtouch_setPitchOctaves = NULL;
+ttLibC_soundtouch_set_func  ttLibGo_Soundtouch_setPitchSemiTones = NULL;
 
 typedef void *(* ttLibC_SpeexdspResampler_make_func)(uint32_t,uint32_t,uint32_t,uint32_t);
 typedef void *(* ttLibC_SpeexdspResampler_resample_func)(void *, void *, void *);
 
-ttLibC_SpeexdspResampler_make_func     ttLibGo_SpeexdspResampler_make;
-ttLibC_close_func                      ttLibGo_SpeexdspResampler_close;
-ttLibC_SpeexdspResampler_resample_func ttLibGo_SpeexdspResampler_resample;
+ttLibC_SpeexdspResampler_make_func     ttLibGo_SpeexdspResampler_make = NULL;
+ttLibC_close_func                      ttLibGo_SpeexdspResampler_close = NULL;
+ttLibC_SpeexdspResampler_resample_func ttLibGo_SpeexdspResampler_resample = NULL;
 
 typedef void *(* ttLibC_SwresampleResampler_make_func)(ttLibC_Frame_Type, uint32_t, uint32_t, uint32_t, ttLibC_Frame_Type, uint32_t, uint32_t, uint32_t);
 
-ttLibC_SwresampleResampler_make_func ttLibGo_SwresampleResampler_make;
-ttLibC_codec_func                    ttLibGo_SwresampleResampler_resample;
-ttLibC_close_func                    ttLibGo_SwresampleResampler_close;
+ttLibC_SwresampleResampler_make_func ttLibGo_SwresampleResampler_make = NULL;
+ttLibC_codec_func                    ttLibGo_SwresampleResampler_resample = NULL;
+ttLibC_close_func                    ttLibGo_SwresampleResampler_close = NULL;
 
 typedef void *(* ttLibC_SwscaleResampler_make_func)(ttLibC_Frame_Type, uint32_t, uint32_t, uint32_t, ttLibC_Frame_Type, uint32_t, uint32_t, uint32_t, ttLibC_SwscaleResampler_Mode);
 
-ttLibC_SwscaleResampler_make_func ttLibGo_SwscaleResampler_make;
-ttLibC_codec_func                 ttLibGo_SwscaleResampler_resample;
-ttLibC_close_func                 ttLibGo_SwscaleResampler_close;
+ttLibC_SwscaleResampler_make_func ttLibGo_SwscaleResampler_make = NULL;
+ttLibC_codec_func                 ttLibGo_SwscaleResampler_resample = NULL;
+ttLibC_close_func                 ttLibGo_SwscaleResampler_close = NULL;
 
 typedef void *(* ttLibC_FlvWriter_make_func)(ttLibC_Frame_Type, ttLibC_Frame_Type);
 typedef void *(* ttLibC_containerWriter_make_func)(ttLibC_Frame_Type *, uint32_t);
 typedef bool (* ttLibC_containerWriter_write_func)(void *, void *, bool(*)(void *, void *, size_t), void *);
 typedef bool (* ttLibC_mpegtsWriter_writeInfo_func)(void *, bool(*)(void *, void *,size_t), void *);
 
-ttLibC_FlvWriter_make_func       ttLibGo_FlvWriter_make;
-ttLibC_containerWriter_make_func ttLibGo_Mp4Writer_make;
-ttLibC_containerWriter_make_func ttLibGo_MpegtsWriter_make;
-ttLibC_containerWriter_make_func ttLibGo_MkvWriter_make;
-ttLibC_containerWriter_write_func ttLibGo_FlvWriter_write;
-ttLibC_containerWriter_write_func ttLibGo_MkvWriter_write;
-ttLibC_containerWriter_write_func ttLibGo_Mp4Writer_write;
-ttLibC_containerWriter_write_func ttLibGo_MpegtsWriter_write;
-ttLibC_mpegtsWriter_writeInfo_func ttLibGo_MpegtsWriter_writeInfo;
-ttLibC_close_func ttLibGo_ContainerWriter_close;
+ttLibC_FlvWriter_make_func       ttLibGo_FlvWriter_make = NULL;
+ttLibC_containerWriter_make_func ttLibGo_Mp4Writer_make = NULL;
+ttLibC_containerWriter_make_func ttLibGo_MpegtsWriter_make = NULL;
+ttLibC_containerWriter_make_func ttLibGo_MkvWriter_make = NULL;
+ttLibC_containerWriter_write_func ttLibGo_FlvWriter_write = NULL;
+ttLibC_containerWriter_write_func ttLibGo_MkvWriter_write = NULL;
+ttLibC_containerWriter_write_func ttLibGo_Mp4Writer_write = NULL;
+ttLibC_containerWriter_write_func ttLibGo_MpegtsWriter_write = NULL;
+ttLibC_mpegtsWriter_writeInfo_func ttLibGo_MpegtsWriter_writeInfo = NULL;
+ttLibC_close_func ttLibGo_ContainerWriter_close = NULL;
 
 typedef bool (* ttLibC_isType_func)(ttLibC_Frame_Type);
 typedef void *(* ttLibC_Frame_clone_func)(void *, void *);
 typedef bool (* ttLibC_isFrameType_func)(void *);
 
-ttLibC_isType_func ttLibGo_isAudio;
-ttLibC_isType_func ttLibGo_isVideo;
-ttLibC_Frame_clone_func ttLibGo_Frame_clone;
-ttLibC_close_func       ttLibGo_Frame_close;
-ttLibC_isFrameType_func ttLibGo_Frame_isVideo;
-ttLibC_isFrameType_func ttLibGo_Frame_isAudio;
+ttLibC_isType_func ttLibGo_isAudio = NULL;
+ttLibC_isType_func ttLibGo_isVideo = NULL;
+ttLibC_Frame_clone_func ttLibGo_Frame_clone = NULL;
+ttLibC_close_func       ttLibGo_Frame_close = NULL;
+ttLibC_isFrameType_func ttLibGo_Frame_isVideo = NULL;
+ttLibC_isFrameType_func ttLibGo_Frame_isAudio = NULL;
 
 typedef bool (* ttLibC_video_getMinimumBinaryBuffer_func)(void *, bool(*)(void *, void *, size_t), void *);
 
-ttLibC_video_getMinimumBinaryBuffer_func ttLibGo_Bgr_getMinimumBinaryBuffer;
-ttLibC_video_getMinimumBinaryBuffer_func ttLibGo_Yuv420_getMinimumBinaryBuffer;
+ttLibC_video_getMinimumBinaryBuffer_func ttLibGo_Bgr_getMinimumBinaryBuffer = NULL;
+ttLibC_video_getMinimumBinaryBuffer_func ttLibGo_Yuv420_getMinimumBinaryBuffer = NULL;
 
 typedef void *(* ttLibC_Bgr_makeEmptyFrame_func)(ttLibC_Bgr_Type, uint32_t, uint32_t);
 typedef void *(* ttLibC_frame_getFrame_func)(void *, void *, size_t, bool, uint64_t, uint32_t);
@@ -264,28 +264,28 @@ typedef uint32_t (* ttLibC_Vp6_getHeight_func)(void *, void *, size_t, uint8_t);
 typedef void *(* ttLibC_video_make_func)(void *,ttLibC_Video_Type,uint32_t,uint32_t,void *,size_t,bool,uint64_t,uint32_t);
 typedef void *(* ttLibC_Yuv420_makeEmptyFrame_func)(ttLibC_Yuv420_Type, uint32_t, uint32_t);
 
-ttLibC_Bgr_makeEmptyFrame_func ttLibGo_Bgr_makeEmptyFrame;
-ttLibC_frame_getFrame_func ttLibGo_Flv1_getFrame;
-ttLibC_frame_getFrame_func ttLibGo_H264_getFrame;
-ttLibC_frame_getFrame_func ttLibGo_H265_getFrame;
-ttLibC_frame_getFrame_func ttLibGo_Jpeg_getFrame;
-ttLibC_frame_getFrame_func ttLibGo_Png_getFrame;
-ttLibC_video_getWidth_func  ttLibGo_Theora_getWidth;
-ttLibC_video_getHeight_func ttLibGo_Theora_getHeight;
-ttLibC_Theora_make_func     ttLibGo_Theora_make;
-ttLibC_video_isKey_func   ttLibGo_Vp6_isKey;
-ttLibC_Vp6_getWidth_func  ttLibGo_Vp6_getWidth;
-ttLibC_Vp6_getHeight_func ttLibGo_Vp6_getHeight;
-ttLibC_video_make_func    ttLibGo_Vp6_make;
-ttLibC_video_isKey_func     ttLibGo_Vp8_isKey;
-ttLibC_video_getWidth_func  ttLibGo_Vp8_getWidth;
-ttLibC_video_getHeight_func ttLibGo_Vp8_getHeight;
-ttLibC_video_make_func      ttLibGo_Vp8_make;
-ttLibC_video_isKey_func     ttLibGo_Vp9_isKey;
-ttLibC_video_getWidth_func  ttLibGo_Vp9_getWidth;
-ttLibC_video_getHeight_func ttLibGo_Vp9_getHeight;
-ttLibC_video_make_func      ttLibGo_Vp9_make;
-ttLibC_Yuv420_makeEmptyFrame_func ttLibGo_Yuv420_makeEmptyFrame;
+ttLibC_Bgr_makeEmptyFrame_func ttLibGo_Bgr_makeEmptyFrame = NULL;
+ttLibC_frame_getFrame_func ttLibGo_Flv1_getFrame = NULL;
+ttLibC_frame_getFrame_func ttLibGo_H264_getFrame = NULL;
+ttLibC_frame_getFrame_func ttLibGo_H265_getFrame = NULL;
+ttLibC_frame_getFrame_func ttLibGo_Jpeg_getFrame = NULL;
+ttLibC_frame_getFrame_func ttLibGo_Png_getFrame = NULL;
+ttLibC_video_getWidth_func  ttLibGo_Theora_getWidth = NULL;
+ttLibC_video_getHeight_func ttLibGo_Theora_getHeight = NULL;
+ttLibC_Theora_make_func     ttLibGo_Theora_make = NULL;
+ttLibC_video_isKey_func   ttLibGo_Vp6_isKey = NULL;
+ttLibC_Vp6_getWidth_func  ttLibGo_Vp6_getWidth = NULL;
+ttLibC_Vp6_getHeight_func ttLibGo_Vp6_getHeight = NULL;
+ttLibC_video_make_func    ttLibGo_Vp6_make = NULL;
+ttLibC_video_isKey_func     ttLibGo_Vp8_isKey = NULL;
+ttLibC_video_getWidth_func  ttLibGo_Vp8_getWidth = NULL;
+ttLibC_video_getHeight_func ttLibGo_Vp8_getHeight = NULL;
+ttLibC_video_make_func      ttLibGo_Vp8_make = NULL;
+ttLibC_video_isKey_func     ttLibGo_Vp9_isKey = NULL;
+ttLibC_video_getWidth_func  ttLibGo_Vp9_getWidth = NULL;
+ttLibC_video_getHeight_func ttLibGo_Vp9_getHeight = NULL;
+ttLibC_video_make_func      ttLibGo_Vp9_make = NULL;
+ttLibC_Yuv420_makeEmptyFrame_func ttLibGo_Yuv420_makeEmptyFrame = NULL;
 
 typedef void *(* ttLibC_Aac_make_func)(void *,ttLibC_Aac_Type,uint32_t,uint32_t,uint32_t,void*,size_t,bool,uint64_t,uint32_t,uint64_t);
 typedef void *(* ttLibC_audio_make_func)(void *,uint32_t,uint32_t,uint32_t,void *,size_t,bool,uint64_t,uint32_t);
@@ -294,24 +294,24 @@ typedef void *(* ttLibC_PcmS16_make_func)(void *,ttLibC_PcmS16_Type,uint32_t,uin
 typedef void *(* ttLibC_Speex_make_func)(void *,ttLibC_Speex_Type,uint32_t,uint32_t,uint32_t,void *,size_t,bool,uint64_t,uint32_t);
 typedef void *(* ttLibC_Vorbis_make_func)(void *,ttLibC_Vorbis_Type,uint32_t,uint32_t,uint32_t,void *,size_t,bool,uint64_t,uint32_t);
 
-ttLibC_Aac_make_func ttLibGo_Aac_make;
-ttLibC_audio_make_func ttLibGo_AdpcmImaWav_make;
-ttLibC_frame_getFrame_func ttLibGo_Mp3_getFrame;
-ttLibC_audio_make_func ttLibGo_Nellymoser_make;
-ttLibC_frame_getFrame_func ttLibGo_Opus_getFrame;
-ttLibC_audio_make_func ttLibGo_PcmAlaw_make;
-ttLibC_PcmF32_make_func ttLibGo_PcmF32_make;
-ttLibC_audio_make_func ttLibGo_PcmMulaw_make;
-ttLibC_PcmS16_make_func ttLibGo_PcmS16_make;
-ttLibC_Speex_make_func ttLibGo_Speex_make;
-ttLibC_Vorbis_make_func ttLibGo_Vorbis_make;
+ttLibC_Aac_make_func ttLibGo_Aac_make = NULL;
+ttLibC_audio_make_func ttLibGo_AdpcmImaWav_make = NULL;
+ttLibC_frame_getFrame_func ttLibGo_Mp3_getFrame = NULL;
+ttLibC_audio_make_func ttLibGo_Nellymoser_make = NULL;
+ttLibC_frame_getFrame_func ttLibGo_Opus_getFrame = NULL;
+ttLibC_audio_make_func ttLibGo_PcmAlaw_make = NULL;
+ttLibC_PcmF32_make_func ttLibGo_PcmF32_make = NULL;
+ttLibC_audio_make_func ttLibGo_PcmMulaw_make = NULL;
+ttLibC_PcmS16_make_func ttLibGo_PcmS16_make = NULL;
+ttLibC_Speex_make_func ttLibGo_Speex_make = NULL;
+ttLibC_Vorbis_make_func ttLibGo_Vorbis_make = NULL;
 
 typedef void *(* ttLibC_ByteReader_make_func)(void *,size_t,ttLibC_ByteUtil_Type);
 typedef uint64_t (* ttLibC_ByteReader_bit_func)(void *,uint32_t);
 
-ttLibC_ByteReader_make_func ttLibGo_ByteReader_make;
-ttLibC_ByteReader_bit_func  ttLibGo_ByteReader_bit;
-ttLibC_close_func           ttLibGo_ByteReader_close;
+ttLibC_ByteReader_make_func ttLibGo_ByteReader_make = NULL;
+ttLibC_ByteReader_bit_func  ttLibGo_ByteReader_bit = NULL;
+ttLibC_close_func           ttLibGo_ByteReader_close = NULL;
 
 static void *lib_handle;
 
