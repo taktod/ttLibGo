@@ -1,5 +1,13 @@
 # 概要
+ 
+ttLibGoを作り直した。
+今回は起動時にcmakeとmakeを実行
+作成したshared libraryにdlopenでアクセスして利用する形にしました。
 
+dylibかsoがあるなら、buildする必要はないんですが、ttLibGoのデータが新しくなったときにbuildしなおしてくれないので、とりあえず毎回buildにしてみた。
+
+ひととおり動作を調整したけど、fdkaacはttLibCにはいってないので、未実装状態
+これは、別でソースコードをいれておいて、対応可能にしておきたいところ。
 ttLibGoをもう一度作り直す。
 buildでcmakeを実施して、色々やります。cmake ../ttLibC
 みたいな感じ。
