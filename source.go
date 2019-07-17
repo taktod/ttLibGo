@@ -91,6 +91,14 @@ ttLibC_make_func  ttLibGo_VorbisDecoder_make = NULL;
 ttLibC_codec_func ttLibGo_VorbisDecoder_decode = NULL;
 ttLibC_close_func ttLibGo_VorbisDecoder_close = NULL;
 
+typedef void *(* ttLibC_FdkaacEncoder_make_func)(const char *,uint32_t,uint32_t,uint32_t);
+typedef bool (* ttLibC_FdkaacEncoder_setBitrate_func)(void *,uint32_t);
+
+ttLibC_FdkaacEncoder_make_func       ttLibGo_FdkaacEncoder_make = NULL;
+ttLibC_codec_func                    ttLibGo_FdkaacEncoder_encode = NULL;
+ttLibC_close_func                    ttLibGo_FdkaacEncoder_close = NULL;
+ttLibC_FdkaacEncoder_setBitrate_func ttLibGo_FdkaacEncoder_setBitrate = NULL;
+
 typedef void *(* ttLibC_JpegEncoder_make_func)(uint32_t, uint32_t, uint32_t);
 typedef void *(* ttLibC_JpegEncoder_setQuality_func)(void *, uint32_t);
 
@@ -392,6 +400,11 @@ bool setupLibrary(const char *lib_path) {
 	ttLibGo_VorbisDecoder_make   = (ttLibC_make_func)dlsym(lib_handle,  "ttLibC_VorbisDecoder_make");
 	ttLibGo_VorbisDecoder_decode = (ttLibC_codec_func)dlsym(lib_handle, "ttLibC_VorbisDecoder_decode");
 	ttLibGo_VorbisDecoder_close  = (ttLibC_close_func)dlsym(lib_handle, "ttLibC_VorbisDecoder_close");
+
+	ttLibGo_FdkaacEncoder_make        = (ttLibC_FdkaacEncoder_make_func)dlsym(lib_handle,       "ttLibC_FdkaacEncoder_make");
+	ttLibGo_FdkaacEncoder_encode      = (ttLibC_codec_func)dlsym(lib_handle,                    "ttLibC_FdkaacEncoder_encode");
+	ttLibGo_FdkaacEncoder_close       = (ttLibC_close_func)dlsym(lib_handle,                    "ttLibC_FdkaacEncoder_close");
+	ttLibGo_FdkaacEncoder_setBitrate  = (ttLibC_FdkaacEncoder_setBitrate_func)dlsym(lib_handle, "ttLibC_FdkaacEncoder_setBitrate");
 
 	ttLibGo_JpegEncoder_make       = (ttLibC_JpegEncoder_make_func)dlsym(lib_handle,       "ttLibC_JpegEncoder_make");
 	ttLibGo_JpegEncoder_encode     = (ttLibC_codec_func)dlsym(lib_handle,                  "ttLibC_JpegEncoder_encode");

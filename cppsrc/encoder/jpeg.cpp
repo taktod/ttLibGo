@@ -31,7 +31,7 @@ JpegEncoder::~JpegEncoder() {
 }
 bool JpegEncoder::encodeFrame(ttLibC_Frame *cFrame, ttLibGoFrame *goFrame, void *ptr) {
   bool result = false;
-    if(ttLibGo_JpegEncoder_encode != nullptr) {
+  if(ttLibGo_JpegEncoder_encode != nullptr) {
     if(cFrame->type != frameType_yuv420) {
       return result;
     }
