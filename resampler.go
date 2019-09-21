@@ -39,6 +39,7 @@ type resampler struct {
 var ResamplerTypes = struct {
 	Audio      resamplerType
 	Image      resamplerType
+	Libyuv     resamplerType
 	Resize     resamplerType
 	Soundtouch resamplerType
 	Speexdsp   resamplerType
@@ -47,6 +48,7 @@ var ResamplerTypes = struct {
 }{
 	resamplerType{"audio"},
 	resamplerType{"image"},
+	resamplerType{"libyuv"},
 	resamplerType{"resize"},
 	resamplerType{"soundtouch"},
 	resamplerType{"speexdsp"},
@@ -58,6 +60,7 @@ var ResamplerTypes = struct {
 var Resamplers = struct {
 	Audio      func(frameType frameType, subType subType) *resampler
 	Image      func(frameType frameType, subType subType) *resampler
+	Libyuv     func() *libyuvResampler
 	Resize     func(width uint32, height uint32, isQuick bool) *resampler
 	Soundtouch func(sampleRate uint32, channelNum uint32) *soundtouchResampler
 	Speexdsp   func(inSampleRate uint32, outSampleRate uint32, channelNum uint32, quality uint32) *resampler
@@ -87,6 +90,17 @@ var Resamplers = struct {
 			"resampler": resampler.Type.value,
 			"frameType": frameType.value,
 			"subType":   subType.value,
+		}
+		v := mapUtil.fromMap(params)
+		resampler.cResampler = cttlibCResampler(C.Resampler_make(v))
+		mapUtil.close(v)
+		return resampler
+	},
+	Libyuv: func() *libyuvResampler {
+		resampler := new(libyuvResampler)
+		resampler.Type = ResamplerTypes.Libyuv
+		params := map[string]interface{}{
+			"resampler": resampler.Type.value,
 		}
 		v := mapUtil.fromMap(params)
 		resampler.cResampler = cttlibCResampler(C.Resampler_make(v))

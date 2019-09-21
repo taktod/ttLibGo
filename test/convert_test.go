@@ -18,7 +18,7 @@ func checkEq(t *testing.T, targetHex string, frame ttLibGo.IFrame) {
 		}
 		err := false
 		for i := 0; i < l; i++ {
-			if math.Abs(float64(data[i]-targetArray[i])) > 3 {
+			if math.Abs(float64(data[i])-float64(targetArray[i])) > 10 {
 				err = true
 			}
 		}
@@ -108,5 +108,20 @@ func TestSwscale(t *testing.T) {
 			ttLibGo.FrameTypes.Yuv420, ttLibGo.Yuv420Types.Yuv420, 8, 2, ttLibGo.SwscaleModes.FastBilinear)
 		defer swscale.Close()
 		scaleYuvPlanarClip(t, swscale.Resample)
+	}
+}
+
+func TestLibyuv(t *testing.T) {
+	libyuv := ttLibGo.Resamplers.Libyuv()
+	defer libyuv.Close()
+	{
+		scaleYuvPlanar(t, func(dst ttLibGo.IFrame, src ttLibGo.IFrame) bool {
+			return libyuv.Resize(dst, src, ttLibGo.LibyuvModes.Linear, ttLibGo.LibyuvModes.None)
+		})
+	}
+	{
+		scaleYuvPlanarClip(t, func(dst ttLibGo.IFrame, src ttLibGo.IFrame) bool {
+			return libyuv.Resize(dst, src, ttLibGo.LibyuvModes.Linear, ttLibGo.LibyuvModes.None)
+		})
 	}
 }

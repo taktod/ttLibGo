@@ -25,6 +25,7 @@ package ttLibGo
 #include "ttLibC/ttLibC/frame/audio/speex.h"
 #include "ttLibC/ttLibC/frame/audio/vorbis.h"
 #include "ttLibC/ttLibC/resampler/swscaleResampler.h"
+#include "ttLibC/ttLibC/resampler/libyuvResampler.h"
 #include "ttLibC/ttLibC/util/byteUtil.h"
 
 typedef void *(* ttLibC_make_func)();
@@ -193,6 +194,15 @@ typedef void *(* ttLibC_ImageResizer_resizeYuv420_func)(void *, ttLibC_Yuv420_Ty
 
 ttLibC_ImageResizer_resizeBgr_func    ttLibGo_ImageResizer_resizeBgr = NULL;
 ttLibC_ImageResizer_resizeYuv420_func ttLibGo_ImageResizer_resizeYuv420 = NULL;
+
+typedef bool (* ttLibC_LibyuvResampler_resize_func)(void *, void *, ttLibC_LibyuvFilter_Mode, ttLibC_LibyuvFilter_Mode);
+typedef bool (* ttLibC_LibyuvResampler_rotate_func)(void *, void *, ttLibC_LibyuvRotate_Mode);
+typedef bool (* ttLibC_LibyuvResampler_convert_func)(void *, void *);
+
+ttLibC_LibyuvResampler_resize_func  ttLibGo_LibyuvResampler_resize   = NULL;
+ttLibC_LibyuvResampler_rotate_func  ttLibGo_LibyuvResampler_rotate   = NULL;
+ttLibC_LibyuvResampler_convert_func ttLibGo_LibyuvResampler_ToBgr    = NULL;
+ttLibC_LibyuvResampler_convert_func ttLibGo_LibyuvResampler_ToYuv420 = NULL;
 
 typedef void *(* ttLibC_Soundtouch_make_func)(uint32_t, uint32_t);
 typedef void (* ttLibC_soundtouch_set_func)(void *, double);
@@ -462,6 +472,11 @@ bool setupLibrary(const char *lib_path) {
 
 	ttLibGo_ImageResizer_resizeBgr    = (ttLibC_ImageResizer_resizeBgr_func)dlsym(lib_handle,    "ttLibC_ImageResizer_resizeBgr");
 	ttLibGo_ImageResizer_resizeYuv420 = (ttLibC_ImageResizer_resizeYuv420_func)dlsym(lib_handle, "ttLibC_ImageResizer_resizeYuv420");
+
+	ttLibGo_LibyuvResampler_resize   = (ttLibC_LibyuvResampler_resize_func)dlsym(lib_handle,  "ttLibC_LibyuvResampler_resize");
+	ttLibGo_LibyuvResampler_rotate   = (ttLibC_LibyuvResampler_rotate_func)dlsym(lib_handle,  "ttLibC_LibyuvResampler_rotate");
+	ttLibGo_LibyuvResampler_ToBgr    = (ttLibC_LibyuvResampler_convert_func)dlsym(lib_handle, "ttLibC_LibyuvResampler_ToBgr");
+	ttLibGo_LibyuvResampler_ToYuv420 = (ttLibC_LibyuvResampler_convert_func)dlsym(lib_handle, "ttLibC_LibyuvResampler_ToYuv420");
 
 	ttLibGo_Soundtouch_make              = (ttLibC_Soundtouch_make_func)dlsym(lib_handle, "ttLibC_Soundtouch_make");
 	ttLibGo_Soundtouch_resample          = (ttLibC_codec_func)dlsym(lib_handle,           "ttLibC_Soundtouch_resample");

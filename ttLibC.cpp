@@ -22,6 +22,7 @@
 #include "cppsrc/encoder.cpp"
 #include "cppsrc/resampler/audio.cpp"
 #include "cppsrc/resampler/image.cpp"
+#include "cppsrc/resampler/libyuv.cpp"
 #include "cppsrc/resampler/resize.cpp"
 #include "cppsrc/resampler/soundtouch.cpp"
 #include "cppsrc/resampler/speexdsp.cpp"

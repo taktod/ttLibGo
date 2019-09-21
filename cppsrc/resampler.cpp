@@ -4,6 +4,7 @@
 #include "resampler.hpp"
 #include "resampler/audio.hpp"
 #include "resampler/image.hpp"
+#include "resampler/libyuv.hpp"
 #include "resampler/resize.hpp"
 #include "resampler/soundtouch.hpp"
 #include "resampler/speexdsp.hpp"
@@ -20,6 +21,9 @@ Resampler *Resampler::create(maps *mp) {
   }
   else if(resamplerType == "image") {
     return new ImageResampler(mp);
+  }
+  else if(resamplerType == "libyuv") {
+    return new LibyuvResampler(mp);
   }
   else if(resamplerType == "resize") {
     return new ResizeResampler(mp);
