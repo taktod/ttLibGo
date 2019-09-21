@@ -36,6 +36,8 @@ type IFrame interface {
 	newGoRefFrame() unsafe.Pointer
 	refCFrame() cttLibCFrame
 	deleteGoRefFrame(ptr unsafe.Pointer)
+	ToFrame() *Frame
+	GetBinaryBuffer(callback func(data []byte) bool) bool
 }
 
 // frameType frameタイプ
@@ -158,6 +160,10 @@ func (frame *Frame) newGoRefFrame() unsafe.Pointer {
 		0, 0,
 		0, 0,
 		0, 0)
+}
+
+func (frame *Frame) ToFrame() *Frame {
+	return frame
 }
 
 // refCFrame interface経由でcframe参照
