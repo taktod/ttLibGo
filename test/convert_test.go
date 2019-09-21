@@ -96,6 +96,69 @@ func scaleYuvPlanarClip(t *testing.T, targetCall func(dst ttLibGo.IFrame, src tt
 		ydst)
 }
 
+func yuvPlanarToBgra(t *testing.T, targetCall func(dst ttLibGo.IFrame, src ttLibGo.IFrame) bool) {
+	t.Log("yuvPlanarToBgra")
+	src := ttLibGo.Yuv420.FromBinary([]byte(""+
+		"\x00\x00\x80\x80"+
+		"\x00\x00\x40\x20"+
+		"\xFF\xFF"+
+		"\x80\xF0"),
+		12, 1, 0, 1000, ttLibGo.Yuv420Types.Yuv420, 4, 2)
+	defer src.Close()
+	dst := ttLibGo.Bgr.FromBinary([]byte(""+
+		"\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00"+
+		"\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00"),
+		32, 1, 0, 1000, ttLibGo.BgrTypes.Bgra, 4, 2, 16)
+	defer dst.Close()
+	targetCall(dst, src)
+	checkEq(t, ""+
+		"\xEB\x00\x00\xFF\xEB\x00\x00\xFF\xFF\x00\xFF\xFF\xFF\x00\xFF\xFF"+
+		"\xEB\x00\x00\xFF\xEB\x00\x00\xFF\xFF\x00\xEA\xFF\xFF\x00\xC5\xFF",
+		dst)
+}
+
+func yuvPlanarToAbgr(t *testing.T, targetCall func(dst ttLibGo.IFrame, src ttLibGo.IFrame) bool) {
+	t.Log("yuvPlanarToAbgr")
+	src := ttLibGo.Yuv420.FromBinary([]byte(""+
+		"\x00\x00\x80\x80"+
+		"\x00\x00\x40\x20"+
+		"\xFF\xFF"+
+		"\x80\xF0"),
+		12, 1, 0, 1000, ttLibGo.Yuv420Types.Yuv420, 4, 2)
+	defer src.Close()
+	dst := ttLibGo.Bgr.FromBinary([]byte(""+
+		"\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00"+
+		"\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00"),
+		32, 1, 0, 1000, ttLibGo.BgrTypes.Abgr, 4, 2, 16)
+	defer dst.Close()
+	targetCall(dst, src)
+	checkEq(t, ""+
+		"\xFF\xEB\x00\x00\xFF\xEB\x00\x00\xFF\xFF\x00\xFF\xFF\xFF\x00\xFF"+
+		"\xFF\xEB\x00\x00\xFF\xEB\x00\x00\xFF\xFF\x00\xEA\xFF\xFF\x00\xC5",
+		dst)
+}
+
+func yuvPlanarToRgba(t *testing.T, targetCall func(dst ttLibGo.IFrame, src ttLibGo.IFrame) bool) {
+	t.Log("yuvPlanarToRgba")
+	src := ttLibGo.Yuv420.FromBinary([]byte(""+
+		"\x00\x00\x80\x80"+
+		"\x00\x00\x40\x20"+
+		"\xFF\xFF"+
+		"\x80\xF0"),
+		12, 1, 0, 1000, ttLibGo.Yuv420Types.Yuv420, 4, 2)
+	defer src.Close()
+	dst := ttLibGo.Bgr.FromBinary([]byte(""+
+		"\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00"+
+		"\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00"),
+		32, 1, 0, 1000, ttLibGo.BgrTypes.Rgba, 4, 2, 16)
+	defer dst.Close()
+	targetCall(dst, src)
+	checkEq(t, ""+
+		"\x00\x00\xEB\xFF\x00\x00\xEB\xFF\xFF\x00\xFF\xFF\xFF\x00\xFF\xFF"+
+		"\x00\x00\xEB\xFF\x00\x00\xEB\xFF\xEA\x00\xFF\xFF\xC5\x00\xFF\xFF",
+		dst)
+}
+
 func TestSwscale(t *testing.T) {
 	{
 		swscale := ttLibGo.Resamplers.Swscale(ttLibGo.FrameTypes.Yuv420, ttLibGo.Yuv420Types.Yuv420, 4, 2,
@@ -124,4 +187,7 @@ func TestLibyuv(t *testing.T) {
 			return libyuv.Resize(dst, src, ttLibGo.LibyuvModes.Linear, ttLibGo.LibyuvModes.None)
 		})
 	}
+	yuvPlanarToBgra(t, libyuv.ToBgr)
+	yuvPlanarToAbgr(t, libyuv.ToBgr)
+	yuvPlanarToRgba(t, libyuv.ToBgr)
 }
