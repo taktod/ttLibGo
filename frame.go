@@ -4,7 +4,7 @@ package ttLibGo
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
-#include <ttLibC/frame/frame.h>
+#include "ttLibC/ttLibC/frame/frame.h"
 extern void Frame_getFrameType(void *cFrame, char *buffer, size_t buffer_size);
 extern uint64_t Frame_getPts(void *frame);
 extern uint64_t Frame_getDts(void *frame);

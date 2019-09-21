@@ -2,7 +2,6 @@
 #define TTLIBGO_RESAMPLER_SWSCALE_HPP
 
 #include "../resampler.hpp"
-#include <ttLibC/resampler/swscaleResampler.h>
 
 class SwscaleResampler : public Resampler {
 public:

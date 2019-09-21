@@ -1,6 +1,6 @@
 #include <stdio.h>
-#include <ttLibC/allocator.h>
-#include <ttLibC/container/container.h>
+#include "ttLibC/ttLibC/allocator.h"
+#include "ttLibC/ttLibC/container/container.h"
 #include <string>
 
 using namespace std;

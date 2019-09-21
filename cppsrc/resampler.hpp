@@ -2,7 +2,7 @@
 #define TTLIBGO_RESAMPLER_HPP
 
 #include "util.hpp"
-#include <ttLibC/frame/frame.h>
+#include "ttLibC/ttLibC/frame/frame.h"
 #include "frame.hpp"
 
 class Resampler : public FrameProcessor {

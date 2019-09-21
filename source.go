@@ -11,21 +11,21 @@ package ttLibGo
 #include <stdint.h>
 #include <dlfcn.h>
 
-#include <ttLibC/container/container.h>
-#include <ttLibC/encoder/openh264Encoder.h>
-#include <ttLibC/encoder/x264Encoder.h>
-#include <ttLibC/encoder/x265Encoder.h>
-#include <ttLibC/frame/video/bgr.h>
-#include <ttLibC/frame/video/theora.h>
-#include <ttLibC/frame/video/video.h>
-#include <ttLibC/frame/video/yuv420.h>
-#include <ttLibC/resampler/swscaleResampler.h>
-#include <ttLibC/frame/audio/aac.h>
-#include <ttLibC/frame/audio/pcmf32.h>
-#include <ttLibC/frame/audio/pcms16.h>
-#include <ttLibC/frame/audio/speex.h>
-#include <ttLibC/frame/audio/vorbis.h>
-#include <ttLibC/util/byteUtil.h>
+#include "ttLibC/ttLibC/container/container.h"
+#include "ttLibC/ttLibC/encoder/openh264Encoder.h"
+#include "ttLibC/ttLibC/encoder/x264Encoder.h"
+#include "ttLibC/ttLibC/encoder/x265Encoder.h"
+#include "ttLibC/ttLibC/frame/video/bgr.h"
+#include "ttLibC/ttLibC/frame/video/theora.h"
+#include "ttLibC/ttLibC/frame/video/video.h"
+#include "ttLibC/ttLibC/frame/video/yuv420.h"
+#include "ttLibC/ttLibC/frame/audio/aac.h"
+#include "ttLibC/ttLibC/frame/audio/pcmf32.h"
+#include "ttLibC/ttLibC/frame/audio/pcms16.h"
+#include "ttLibC/ttLibC/frame/audio/speex.h"
+#include "ttLibC/ttLibC/frame/audio/vorbis.h"
+#include "ttLibC/ttLibC/resampler/swscaleResampler.h"
+#include "ttLibC/ttLibC/util/byteUtil.h"
 
 typedef void *(* ttLibC_make_func)();
 typedef bool (* ttLibC_ContainerReader_read_func)(void *, void *, size_t, bool(*)(void *, void *), void *);

@@ -1,7 +1,7 @@
 package ttLibGo
 
 /*
-#include <ttLibC/frame/frame.h>
+#include "ttLibC/ttLibC/frame/frame.h"
 */
 import "C"
 import (

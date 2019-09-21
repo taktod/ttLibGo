@@ -2,9 +2,9 @@
 #include "../util.hpp"
 #include <iostream>
 
-#include <ttLibC/frame/video/bgr.h>
-#include <ttLibC/frame/video/yuv420.h>
-#include <ttLibC/resampler/swscaleResampler.h>
+#include "ttLibC/ttLibC/frame/video/bgr.h"
+#include "ttLibC/ttLibC/frame/video/yuv420.h"
+#include "ttLibC/ttLibC/resampler/swscaleResampler.h"
 
 using namespace std;
 

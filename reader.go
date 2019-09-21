@@ -5,7 +5,7 @@ package ttLibGo
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include <ttLibC/container/container.h>
+#include "ttLibC/ttLibC/container/container.h"
 
 extern ttLibC_ContainerReader *ContainerReader_make(const char *format);
 

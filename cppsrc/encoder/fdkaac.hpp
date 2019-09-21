@@ -2,7 +2,7 @@
 #define TTLIBGO_ENCODER_FDKAAC_HPP
 
 #include "../encoder.hpp"
-#include <ttLibC/frame/audio/aac.h>
+#include "ttLibC/ttLibC/frame/audio/aac.h"
 
 class FdkaacEncoder : public Encoder {
 public:
