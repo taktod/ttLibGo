@@ -10,12 +10,12 @@ using namespace std;
 
 extern "C" {
 typedef void *(* ttLibC_SwscaleResampler_make_func)(ttLibC_Frame_Type, uint32_t, uint32_t, uint32_t, ttLibC_Frame_Type, uint32_t, uint32_t, uint32_t, ttLibC_SwscaleResampler_Mode);
-typedef void *(* ttLibC_codec_func)(void *, void *, ttLibC_getFrameFunc, void *);
+typedef void *(* ttLibC_SwscaleResampler_resample_func)(void *, void *, void *);
 typedef void (* ttLibC_close_func)(void **);
 
-extern ttLibC_SwscaleResampler_make_func ttLibGo_SwscaleResampler_make;
-extern ttLibC_codec_func                 ttLibGo_SwscaleResampler_resample;
-extern ttLibC_close_func                 ttLibGo_SwscaleResampler_close;
+extern ttLibC_SwscaleResampler_make_func     ttLibGo_SwscaleResampler_make;
+extern ttLibC_SwscaleResampler_resample_func ttLibGo_SwscaleResampler_resample;
+extern ttLibC_close_func                     ttLibGo_SwscaleResampler_close;
 
 extern bool ttLibGoFrameCallback(void *ptr, ttLibC_Frame *frame);
 }
@@ -100,17 +100,36 @@ SwscaleResampler::~SwscaleResampler() {
     (* ttLibGo_SwscaleResampler_close)(&_resampler);
   }
 }
-
-bool SwscaleResampler::resampleFrame(ttLibC_Frame *cFrame, ttLibGoFrame *goFrame, void *ptr) {
+bool SwscaleResampler::resample(
+    ttLibC_Frame *dstCFrame, ttLibGoFrame *dstGoFrame,
+    ttLibC_Frame *srcCFrame, ttLibGoFrame *srcGoFrame) {
   bool result = false;
-  if(ttLibGo_SwscaleResampler_resample != nullptr) {
-    update(cFrame, goFrame);
-    result = (*ttLibGo_SwscaleResampler_resample)(
-      _resampler,
-      cFrame,
-      ttLibGoFrameCallback,
-      ptr);
-    reset(cFrame, goFrame);
+  if(ttLibGo_SwscaleResampler_resample == nullptr) {
+    return false;
+  }
+  else {
+    update(dstCFrame, dstGoFrame);
+    srcfp.update(srcCFrame, srcGoFrame);
+    result = (*ttLibGo_SwscaleResampler_resample)(_resampler, dstCFrame, srcCFrame);
+    srcfp.reset(srcCFrame, srcGoFrame);
+    reset(dstCFrame, dstGoFrame);
   }
   return result;
+}
+
+extern "C" {
+bool SwscaleResampler_resample(void *resampler,
+    void *dstCFrame, void *dstGoFrame,
+    void *srcCFrame, void *srcGoFrame) {
+  if(resampler == nullptr || dstCFrame == nullptr || dstGoFrame == nullptr
+  || srcCFrame == nullptr || srcGoFrame == nullptr) {
+    return false;
+  }
+  SwscaleResampler *r = reinterpret_cast<SwscaleResampler *>(resampler);
+  ttLibC_Frame *dstCF = reinterpret_cast<ttLibC_Frame *>(dstCFrame);
+  ttLibGoFrame *dstGoF = reinterpret_cast<ttLibGoFrame *>(dstGoFrame);
+  ttLibC_Frame *srcCF = reinterpret_cast<ttLibC_Frame *>(srcCFrame);
+  ttLibGoFrame *srcGoF = reinterpret_cast<ttLibGoFrame *>(srcGoFrame);
+  return r->resample(dstCF, dstGoF, srcCF, srcGoF);
+}
 }

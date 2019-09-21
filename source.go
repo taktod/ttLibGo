@@ -222,10 +222,11 @@ ttLibC_codec_func                    ttLibGo_SwresampleResampler_resample = NULL
 ttLibC_close_func                    ttLibGo_SwresampleResampler_close = NULL;
 
 typedef void *(* ttLibC_SwscaleResampler_make_func)(ttLibC_Frame_Type, uint32_t, uint32_t, uint32_t, ttLibC_Frame_Type, uint32_t, uint32_t, uint32_t, ttLibC_SwscaleResampler_Mode);
+typedef void *(* ttLibC_SwscaleResampler_resample_func)(void *, void *, void *);
 
-ttLibC_SwscaleResampler_make_func ttLibGo_SwscaleResampler_make = NULL;
-ttLibC_codec_func                 ttLibGo_SwscaleResampler_resample = NULL;
-ttLibC_close_func                 ttLibGo_SwscaleResampler_close = NULL;
+ttLibC_SwscaleResampler_make_func     ttLibGo_SwscaleResampler_make = NULL;
+ttLibC_SwscaleResampler_resample_func ttLibGo_SwscaleResampler_resample = NULL;
+ttLibC_close_func                     ttLibGo_SwscaleResampler_close = NULL;
 
 typedef void *(* ttLibC_FlvWriter_make_func)(ttLibC_Frame_Type, ttLibC_Frame_Type);
 typedef void *(* ttLibC_containerWriter_make_func)(ttLibC_Frame_Type *, uint32_t);
@@ -481,9 +482,9 @@ bool setupLibrary(const char *lib_path) {
 	ttLibGo_SwresampleResampler_resample = (ttLibC_codec_func)dlsym(lib_handle,                    "ttLibC_SwresampleResampler_resample");
 	ttLibGo_SwresampleResampler_close    = (ttLibC_close_func)dlsym(lib_handle,                    "ttLibC_SwresampleResampler_close");
 
-	ttLibGo_SwscaleResampler_make     = (ttLibC_SwscaleResampler_make_func)dlsym(lib_handle, "ttLibC_SwscaleResampler_make");
-	ttLibGo_SwscaleResampler_resample = (ttLibC_codec_func)dlsym(lib_handle,                 "ttLibC_SwscaleResampler_resample");
-	ttLibGo_SwscaleResampler_close    = (ttLibC_close_func)dlsym(lib_handle,                 "ttLibC_SwscaleResampler_close");
+	ttLibGo_SwscaleResampler_make     = (ttLibC_SwscaleResampler_make_func)dlsym(lib_handle,     "ttLibC_SwscaleResampler_make");
+	ttLibGo_SwscaleResampler_resample = (ttLibC_SwscaleResampler_resample_func)dlsym(lib_handle, "ttLibC_SwscaleResampler_resample");
+	ttLibGo_SwscaleResampler_close    = (ttLibC_close_func)dlsym(lib_handle,                     "ttLibC_SwscaleResampler_close");
 
 	ttLibGo_FlvWriter_make    = (ttLibC_FlvWriter_make_func)dlsym(lib_handle,       "ttLibC_FlvWriter_make");
 	ttLibGo_Mp4Writer_make    = (ttLibC_containerWriter_make_func)dlsym(lib_handle, "ttLibC_Mp4Writer_make");

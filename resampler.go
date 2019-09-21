@@ -65,7 +65,7 @@ var Resamplers = struct {
 		outType frameType, outSubtype subType, outSampleRate uint32, outChannelNum uint32) *resampler
 	Swscale func(inType frameType, inSubType subType, inWidth uint32, inHeight uint32,
 		outType frameType, outSubType subType, outWidth uint32, outHeight uint32,
-		mode subType) *resampler
+		mode subType) *swscaleResampler
 }{
 	Audio: func(frameType frameType, subType subType) *resampler {
 		resampler := new(resampler)
@@ -161,8 +161,8 @@ var Resamplers = struct {
 	},
 	Swscale: func(inType frameType, inSubType subType, inWidth uint32, inHeight uint32,
 		outType frameType, outSubType subType, outWidth uint32, outHeight uint32,
-		mode subType) *resampler {
-		resampler := new(resampler)
+		mode subType) *swscaleResampler {
+		resampler := new(swscaleResampler)
 		resampler.Type = ResamplerTypes.Swscale
 		params := map[string]interface{}{
 			"resampler":  resampler.Type.value,

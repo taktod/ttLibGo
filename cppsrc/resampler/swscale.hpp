@@ -7,10 +7,13 @@ class SwscaleResampler : public Resampler {
 public:
   SwscaleResampler(maps *mp);
   ~SwscaleResampler();
-  bool resampleFrame(ttLibC_Frame *cFrame, ttLibGoFrame *goFrame, void *ptr);
+  bool resample(
+    ttLibC_Frame *dstCFrame, ttLibGoFrame *dstGoFrame,
+    ttLibC_Frame *srcCFrame, ttLibGoFrame *srcGoFrame);
 private:
   uint32_t getSubType(ttLibC_Frame_Type type, string name);
   void *_resampler;
+  FrameProcessor srcfp;
 };
 
 #endif

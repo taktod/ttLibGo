@@ -7,6 +7,7 @@ import (
 	"github.com/taktod/ttLibGo"
 )
 
+/*
 func TestBgrFromBinary(t *testing.T) {
 	// pngをdecodeして binary化 -> 復元 -> yuvにする -> jpegにする
 	// という流れでいいか・・・
@@ -52,7 +53,7 @@ func TestBgrFromBinary(t *testing.T) {
 						return resampler.ResampleFrame(frame, func(frame *ttLibGo.Frame) bool {
 							return encoder.EncodeFrame(frame, func(frame *ttLibGo.Frame) bool {
 								// 正しく作られていることを確認できた。
-								/*								frame.GetBinaryBuffer(func(buf []byte) bool {
+								/ *								frame.GetBinaryBuffer(func(buf []byte) bool {
 																file := fmt.Sprintf("out%d.jpeg", counter)
 																out, err := os.OpenFile(file, os.O_WRONLY|os.O_CREATE, 0666)
 																if err != nil {
@@ -61,7 +62,7 @@ func TestBgrFromBinary(t *testing.T) {
 																out.Write(buf)
 																counter++
 																return true
-															})*/
+															})* /
 								return true
 							})
 						})
@@ -76,7 +77,7 @@ func TestBgrFromBinary(t *testing.T) {
 		}
 	}
 }
-
+*/
 func TestFlv1FromBinary(t *testing.T) {
 	in, err := os.Open(os.Getenv("HOME") + "/tools/data/source/test.flv1.nellymoser.flv")
 	if err != nil {

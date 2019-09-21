@@ -126,6 +126,7 @@ func TestSwresampleResampler(t *testing.T) {
 			ttLibGo.FrameTypes.PcmS16, ttLibGo.PcmS16Types.LittleEndian, 44100, 2))
 }
 
+/*
 func TestSwscaleResampler(t *testing.T) {
 	resampleBody(t, os.Getenv("HOME")+"/tools/data/source/test.h264.aac.flv", ttLibGo.Readers.Flv(), ttLibGo.FrameTypes.H264, ttLibGo.Decoders.AvcodecVideo(ttLibGo.FrameTypes.H264, 640, 360),
 		ttLibGo.Resamplers.Swscale(ttLibGo.FrameTypes.Yuv420, ttLibGo.Yuv420Types.Yuv420, 640, 360,
@@ -140,3 +141,5 @@ func TestSwscaleResampler(t *testing.T) {
 		ttLibGo.Resamplers.Swscale(ttLibGo.FrameTypes.Yuv420, ttLibGo.Yuv420Types.Yuv420SemiPlanar, 640, 360,
 			ttLibGo.FrameTypes.Yuv420, ttLibGo.Yuv420Types.Yvu420, 320, 180, ttLibGo.SwscaleModes.Lanczos))
 }
+
+*/
