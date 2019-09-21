@@ -30,7 +30,7 @@ public:
 };
 
 class FrameProcessor {
-protected:
+public:
   void update(ttLibC_Frame *cFrame, ttLibGoFrame *goFrame);
   void reset(ttLibC_Frame *cFrame, ttLibGoFrame *goFrame);
 private:
