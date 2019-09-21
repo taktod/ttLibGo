@@ -45,6 +45,10 @@ Resampler::Resampler() {
 Resampler::~Resampler() {
 }
 
+bool Resampler::resampleFrame(ttLibC_Frame *cFrame, ttLibGoFrame *goFrame, void *ptr) {
+  return false;
+}
+
 extern "C" {
 
 void *Resampler_make(void *mp) {

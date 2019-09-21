@@ -10,10 +10,10 @@ public:
   static Resampler *create(maps *m);
   Resampler();
   virtual ~Resampler();
-  virtual bool resampleFrame(
+  bool resampleFrame(
     ttLibC_Frame *cFrame,
     ttLibGoFrame *goFrame,
-    void *ptr) = 0;
+    void *ptr);
 };
 
 #endif
