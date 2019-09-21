@@ -20,7 +20,7 @@ extern void *newGoFrame(uint64_t pts, uint64_t dts, uint32_t timebase, uint32_t 
     uint64_t uDataPos, uint32_t uStride,
     uint64_t vDataPos, uint32_t vStride);
 extern void deleteGoFrame(void *frame);
-extern bool Frame_getBinaryBuffer(uintptr_t ptr, void *frame);
+extern bool Frame_getBinaryBuffer(uintptr_t ptr, void *frame, void *goFrame);
 */
 import "C"
 import (
@@ -177,13 +177,15 @@ func (frame *Frame) deleteGoRefFrame(ptr unsafe.Pointer) {
 }
 
 // getFrameBinaryBuffer frameのbyteデータを参照します
-func getFrameBinaryBuffer(cFrame cttLibCFrame, callback func(data []byte) bool ) bool {
+func getFrameBinaryBuffer(frame IFrame, callback func(data []byte) bool) bool {
 	call := new(dataCall)
 	call.callback = callback
-	return bool(C.Frame_getBinaryBuffer(C.uintptr_t(uintptr(unsafe.Pointer(call))), unsafe.Pointer(cFrame)))
+	goFrame := frame.newGoRefFrame()
+	defer frame.deleteGoRefFrame(goFrame)
+	return bool(C.Frame_getBinaryBuffer(C.uintptr_t(uintptr(unsafe.Pointer(call))), unsafe.Pointer(frame.refCFrame()), goFrame))
 }
 
 // GetBinaryBuffer binaryデータを参照する
 func (frame *Frame) GetBinaryBuffer(callback func(data []byte) bool) bool {
- 	return getFrameBinaryBuffer(frame.cFrame, callback)
+	return getFrameBinaryBuffer(frame, callback)
 }

@@ -141,7 +141,7 @@ func (audio *AudioFrame) deleteGoRefFrame(ptr unsafe.Pointer) {
 
 // GetBinaryBuffer binaryデータを参照する
 func (audio *AudioFrame) GetBinaryBuffer(callback func(data []byte) bool) bool {
-	return getFrameBinaryBuffer(audio.cFrame, callback)
+	return getFrameBinaryBuffer(audio, callback)
 }
 
 // Audio 音声処理
@@ -229,7 +229,7 @@ func (aac *AacFrame) deleteGoRefFrame(ptr unsafe.Pointer) {
 
 // GetBinaryBuffer binaryデータを参照する
 func (aac *AacFrame) GetBinaryBuffer(callback func(data []byte) bool) bool {
-	return getFrameBinaryBuffer(aac.cFrame, callback)
+	return getFrameBinaryBuffer(aac, callback)
 }
 
 // Aac aac処理
@@ -314,7 +314,7 @@ func (adpcmImaWav *AdpcmImaWavFrame) deleteGoRefFrame(ptr unsafe.Pointer) {
 
 // GetBinaryBuffer binaryデータを参照する
 func (adpcmImaWav *AdpcmImaWavFrame) GetBinaryBuffer(callback func(data []byte) bool) bool {
-	return getFrameBinaryBuffer(adpcmImaWav.cFrame, callback)
+	return getFrameBinaryBuffer(adpcmImaWav, callback)
 }
 
 // AdpcmImaWav AdpcmImaWav処理
@@ -413,7 +413,7 @@ func (mp3 *Mp3Frame) deleteGoRefFrame(ptr unsafe.Pointer) {
 
 // GetBinaryBuffer binaryデータを参照する
 func (mp3 *Mp3Frame) GetBinaryBuffer(callback func(data []byte) bool) bool {
-	return getFrameBinaryBuffer(mp3.cFrame, callback)
+	return getFrameBinaryBuffer(mp3, callback)
 }
 
 // Mp3 Mp3処理
@@ -493,7 +493,7 @@ func (nellymoser *NellymoserFrame) deleteGoRefFrame(ptr unsafe.Pointer) {
 
 // GetBinaryBuffer binaryデータを参照する
 func (nellymoser *NellymoserFrame) GetBinaryBuffer(callback func(data []byte) bool) bool {
-	return getFrameBinaryBuffer(nellymoser.cFrame, callback)
+	return getFrameBinaryBuffer(nellymoser, callback)
 }
 
 // Nellymoser Nellymoser処理
@@ -592,7 +592,7 @@ func (opus *OpusFrame) deleteGoRefFrame(ptr unsafe.Pointer) {
 
 // GetBinaryBuffer binaryデータを参照する
 func (opus *OpusFrame) GetBinaryBuffer(callback func(data []byte) bool) bool {
-	return getFrameBinaryBuffer(opus.cFrame, callback)
+	return getFrameBinaryBuffer(opus, callback)
 }
 
 // Opus Opus処理
@@ -672,7 +672,7 @@ func (pcmAlaw *PcmAlawFrame) deleteGoRefFrame(ptr unsafe.Pointer) {
 
 // GetBinaryBuffer binaryデータを参照する
 func (pcmAlaw *PcmAlawFrame) GetBinaryBuffer(callback func(data []byte) bool) bool {
-	return getFrameBinaryBuffer(pcmAlaw.cFrame, callback)
+	return getFrameBinaryBuffer(pcmAlaw, callback)
 }
 
 // PcmAlaw PcmAlaw処理
@@ -773,7 +773,7 @@ func (pcmF32 *PcmF32Frame) deleteGoRefFrame(ptr unsafe.Pointer) {
 
 // GetBinaryBuffer binaryデータを参照する
 func (pcmF32 *PcmF32Frame) GetBinaryBuffer(callback func(data []byte) bool) bool {
-	return getFrameBinaryBuffer(pcmF32.cFrame, callback)
+	return getFrameBinaryBuffer(pcmF32, callback)
 }
 
 // PcmF32 PcmF32処理
@@ -865,7 +865,7 @@ func (pcmMulaw *PcmMulawFrame) deleteGoRefFrame(ptr unsafe.Pointer) {
 
 // GetBinaryBuffer binaryデータを参照する
 func (pcmMulaw *PcmMulawFrame) GetBinaryBuffer(callback func(data []byte) bool) bool {
-	return getFrameBinaryBuffer(pcmMulaw.cFrame, callback)
+	return getFrameBinaryBuffer(pcmMulaw, callback)
 }
 
 // PcmMulaw PcmMulaw処理
@@ -970,7 +970,7 @@ func (pcmS16 *PcmS16Frame) deleteGoRefFrame(ptr unsafe.Pointer) {
 
 // GetBinaryBuffer binaryデータを参照する
 func (pcmS16 *PcmS16Frame) GetBinaryBuffer(callback func(data []byte) bool) bool {
-	return getFrameBinaryBuffer(pcmS16.cFrame, callback)
+	return getFrameBinaryBuffer(pcmS16, callback)
 }
 
 // PcmS16 PcmS16処理
@@ -1085,7 +1085,7 @@ func (speex *SpeexFrame) deleteGoRefFrame(ptr unsafe.Pointer) {
 
 // GetBinaryBuffer binaryデータを参照する
 func (speex *SpeexFrame) GetBinaryBuffer(callback func(data []byte) bool) bool {
-	return getFrameBinaryBuffer(speex.cFrame, callback)
+	return getFrameBinaryBuffer(speex, callback)
 }
 
 // Speex Speex処理
@@ -1192,7 +1192,7 @@ func (vorbis *VorbisFrame) deleteGoRefFrame(ptr unsafe.Pointer) {
 
 // GetBinaryBuffer binaryデータを参照する
 func (vorbis *VorbisFrame) GetBinaryBuffer(callback func(data []byte) bool) bool {
-	return getFrameBinaryBuffer(vorbis.cFrame, callback)
+	return getFrameBinaryBuffer(vorbis, callback)
 }
 
 // Vorbis Vorbis処理

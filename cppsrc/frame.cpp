@@ -834,44 +834,49 @@ void deleteGoFrame(void *frame) {
   delete goFrame;
 }
 
-bool Frame_getBinaryBuffer(uintptr_t ptr, void *frame) {
+bool Frame_getBinaryBuffer(uintptr_t ptr, void *cFrame, void *goFrame) {
   if(ttLibGo_Frame_close == nullptr || ttLibGo_Frame_clone == nullptr
   || ttLibGo_Bgr_getMinimumBinaryBuffer == nullptr
   || ttLibGo_Yuv420_getMinimumBinaryBuffer == nullptr) {
     return false;
   }
-  if(frame == NULL) {
+  if(cFrame == NULL) {
     return false;
   }
-  ttLibC_Frame *f = (ttLibC_Frame *)frame;
-	switch(f->type) {
-	case frameType_bgr:
+  bool result = false;
+  ttLibC_Frame *f = (ttLibC_Frame *)cFrame;
+  FrameProcessor fp;
+  fp.update(f, reinterpret_cast<ttLibGoFrame *>(goFrame));
+  switch(f->type) {
+  case frameType_bgr:
     {
-      return (*ttLibGo_Bgr_getMinimumBinaryBuffer)(f, ttLibGoDataCallback, (void *)ptr);
+      result = (*ttLibGo_Bgr_getMinimumBinaryBuffer)(f, ttLibGoDataCallback, (void *)ptr);
     }
     break;
-	case frameType_yuv420:
+  case frameType_yuv420:
     {
-      return (*ttLibGo_Yuv420_getMinimumBinaryBuffer)(f, ttLibGoDataCallback, (void *)ptr);
+      result = (*ttLibGo_Yuv420_getMinimumBinaryBuffer)(f, ttLibGoDataCallback, (void *)ptr);
     }
-		break;
-	case frameType_pcmS16:
-	case frameType_pcmF32:
-		{
+    break;
+  case frameType_pcmS16:
+  case frameType_pcmF32:
+    {
       ttLibC_Frame *cloned = (ttLibC_Frame *)(*ttLibGo_Frame_clone)(nullptr, f);
       if(cloned == nullptr) {
-        return false;
+        result = false;
       }
-  		bool result = ttLibGoDataCallback((void *)ptr, cloned->data, cloned->buffer_size);
-      (*ttLibGo_Frame_close)((void **)&cloned);
-      return result;
-		}
-		break;
-	default:
-		// とりあえずこれでいいはず。
-		return ttLibGoDataCallback((void *)ptr, f->data, f->buffer_size);
-	}
-  return false;
+      else {
+        result = ttLibGoDataCallback((void *)ptr, cloned->data, cloned->buffer_size);
+        (*ttLibGo_Frame_close)((void **)&cloned);
+      }
+    }
+    break;
+  default:
+    // とりあえずこれでいいはず。
+    result = ttLibGoDataCallback((void *)ptr, f->data, f->buffer_size);
+  }
+  fp.reset(f, reinterpret_cast<ttLibGoFrame *>(goFrame));
+  return result;
 }
 
 void *BgrFrame_fromBinary(void *data, size_t data_size,
@@ -1072,28 +1077,28 @@ void *Vp6Frame_fromBinary(void *data, size_t data_size,
   || ttLibGo_Vp6_make == nullptr) {
     return nullptr;
   }
-	if(data_size <= 1) {
-		return NULL;
-	}
-	bool is_key = (*ttLibGo_Vp6_isKey)(u8data, data_size);
+  if(data_size <= 1) {
+    return NULL;
+  }
+  bool is_key = (*ttLibGo_Vp6_isKey)(u8data, data_size);
   if(width == 0) {
-	  width = (*ttLibGo_Vp6_getWidth)(nullptr, u8data, data_size, adjustment);
+    width = (*ttLibGo_Vp6_getWidth)(nullptr, u8data, data_size, adjustment);
   }
   if(height == 0) {
-	  height = (*ttLibGo_Vp6_getHeight)(nullptr, u8data, data_size, adjustment);
+    height = (*ttLibGo_Vp6_getHeight)(nullptr, u8data, data_size, adjustment);
   }
-	if(width == 0 || height == 0) {
-		return NULL;
-	}
-	ttLibC_Vp6 *vp6 = (ttLibC_Vp6 *)(*ttLibGo_Vp6_make)(
-			nullptr,
-			is_key ? videoType_key : videoType_inner,
-			width,
-			height,
-			u8data, data_size,
-			false,
-			pts,
-			timebase);
+  if(width == 0 || height == 0) {
+    return NULL;
+  }
+  ttLibC_Vp6 *vp6 = (ttLibC_Vp6 *)(*ttLibGo_Vp6_make)(
+      nullptr,
+      is_key ? videoType_key : videoType_inner,
+      width,
+      height,
+      u8data, data_size,
+      false,
+      pts,
+      timebase);
   if(vp6 != nullptr) {
     vp6->inherit_super.inherit_super.id = id;
   }
@@ -1109,28 +1114,28 @@ void *Vp8Frame_fromBinary(void *data, size_t data_size,
     return nullptr;
   }
   uint8_t *u8data = (uint8_t *)data;
-	if(data_size <= 1) {
-		return NULL;
-	}
-	bool is_key = (*ttLibGo_Vp8_isKey)(u8data, data_size);
+  if(data_size <= 1) {
+    return NULL;
+  }
+  bool is_key = (*ttLibGo_Vp8_isKey)(u8data, data_size);
   if(width == 0) {
-	  width = (*ttLibGo_Vp8_getWidth)(nullptr, u8data, data_size);
+    width = (*ttLibGo_Vp8_getWidth)(nullptr, u8data, data_size);
   }
   if(height == 0) {
-	  height = (*ttLibGo_Vp8_getHeight)(nullptr, u8data, data_size);
+    height = (*ttLibGo_Vp8_getHeight)(nullptr, u8data, data_size);
   }
-	if(width == 0 || height == 0) {
-		return NULL;
-	}
-	ttLibC_Vp8 *vp8 = (ttLibC_Vp8 *)(*ttLibGo_Vp8_make)(
-			nullptr,
-			is_key ? videoType_key : videoType_inner,
-			width,
-			height,
-			u8data, data_size,
-			false,
-			pts,
-			timebase);
+  if(width == 0 || height == 0) {
+    return NULL;
+  }
+  ttLibC_Vp8 *vp8 = (ttLibC_Vp8 *)(*ttLibGo_Vp8_make)(
+      nullptr,
+      is_key ? videoType_key : videoType_inner,
+      width,
+      height,
+      u8data, data_size,
+      false,
+      pts,
+      timebase);
   if(vp8 != nullptr) {
     vp8->inherit_super.inherit_super.id = id;
   }
@@ -1146,28 +1151,28 @@ void *Vp9Frame_fromBinary(void *data, size_t data_size,
     return nullptr;
   }
   uint8_t *u8data = (uint8_t *)data;
-	if(data_size <= 1) {
-		return NULL;
-	}
-	bool is_key = (*ttLibGo_Vp9_isKey)(u8data, data_size);
+  if(data_size <= 1) {
+    return NULL;
+  }
+  bool is_key = (*ttLibGo_Vp9_isKey)(u8data, data_size);
   if(width == 0) {
-	  width = (*ttLibGo_Vp9_getWidth)(nullptr, u8data, data_size);
+    width = (*ttLibGo_Vp9_getWidth)(nullptr, u8data, data_size);
   }
   if(height == 0) {
-	  height = (*ttLibGo_Vp9_getHeight)(nullptr, u8data, data_size);
+    height = (*ttLibGo_Vp9_getHeight)(nullptr, u8data, data_size);
   }
-	if(width == 0 || height == 0) {
-		return NULL;
-	}
-	ttLibC_Vp9 *vp9 = (ttLibC_Vp9 *)(*ttLibGo_Vp9_make)(
-			nullptr,
-			is_key ? videoType_key : videoType_inner,
-			width,
-			height,
-			u8data, data_size,
-			false,
-			pts,
-			timebase);
+  if(width == 0 || height == 0) {
+    return NULL;
+  }
+  ttLibC_Vp9 *vp9 = (ttLibC_Vp9 *)(*ttLibGo_Vp9_make)(
+      nullptr,
+      is_key ? videoType_key : videoType_inner,
+      width,
+      height,
+      u8data, data_size,
+      false,
+      pts,
+      timebase);
   if(vp9 != nullptr) {
     vp9->inherit_super.inherit_super.id = id;
   }
@@ -1244,14 +1249,14 @@ void *Yuv420Frame_fromPlaneBinaries(uint32_t id, uint64_t pts, uint32_t timebase
 }
 
 typedef struct {
-	ttLibC_Aac inherit_super;
-	uint64_t dsi_info; // for raw, need to have dsi_information.
+  ttLibC_Aac inherit_super;
+  uint64_t dsi_info; // for raw, need to have dsi_information.
 } ttLibC_Frame_Audio_Aac_;
 
 typedef ttLibC_Frame_Audio_Aac_ ttLibC_Aac_;
 
 static uint32_t aac_sample_rate_table[] = {
-		96000, 88200, 64000, 48000, 44100, 32000, 24000, 22050, 16000, 12000, 11025, 8000
+  96000, 88200, 64000, 48000, 44100, 32000, 24000, 22050, 16000, 12000, 11025, 8000
 };
 
 void *AacFrame_fromBinary(void *data, size_t data_size,
@@ -1298,85 +1303,85 @@ void *AacFrame_fromBinary(void *data, size_t data_size,
   if((*ttLibGo_ByteReader_bit)(reader, 12) != 0xFFF) {
     (*ttLibGo_ByteReader_close)((void **)&reader);
     // dsi情報を取り出し
-		ttLibC_ByteReader *reader = (ttLibC_ByteReader *)(*ttLibGo_ByteReader_make)(data, data_size, ByteUtilType_default);
-		uint64_t dsi_info;
-		uint32_t bit_size = 0;
-		memcpy(&dsi_info, data, data_size);
-		uint32_t object_type = (*ttLibGo_ByteReader_bit)(reader, 5);
-		bit_size += 5;
-		if(object_type == 31) {
-			object_type = (*ttLibGo_ByteReader_bit)(reader, 6);
-			bit_size += 6;
-		}
-		uint32_t sample_rate_index = (*ttLibGo_ByteReader_bit)(reader, 4);
-		bit_size += 4;
-		uint32_t sample_rate = 44100;
-		if(sample_rate_index == 15) {
-			LOG_PRINT("sample_rate is not in index_table.");
-			sample_rate = (*ttLibGo_ByteReader_bit)(reader, 24);
-			bit_size += 24;
-		}
-		else {
-			sample_rate = aac_sample_rate_table[sample_rate_index];
-		}
-		uint32_t channel_num = (*ttLibGo_ByteReader_bit)(reader, 4);
-		bit_size += 4;
-		uint32_t buffer_size = (uint32_t)((bit_size + 7) / 8);
+    ttLibC_ByteReader *reader = (ttLibC_ByteReader *)(*ttLibGo_ByteReader_make)(data, data_size, ByteUtilType_default);
+    uint64_t dsi_info;
+    uint32_t bit_size = 0;
+    memcpy(&dsi_info, data, data_size);
+    uint32_t object_type = (*ttLibGo_ByteReader_bit)(reader, 5);
+    bit_size += 5;
+    if(object_type == 31) {
+      object_type = (*ttLibGo_ByteReader_bit)(reader, 6);
+      bit_size += 6;
+    }
+    uint32_t sample_rate_index = (*ttLibGo_ByteReader_bit)(reader, 4);
+    bit_size += 4;
+    uint32_t sample_rate = 44100;
+    if(sample_rate_index == 15) {
+      LOG_PRINT("sample_rate is not in index_table.");
+      sample_rate = (*ttLibGo_ByteReader_bit)(reader, 24);
+      bit_size += 24;
+    }
+    else {
+      sample_rate = aac_sample_rate_table[sample_rate_index];
+    }
+    uint32_t channel_num = (*ttLibGo_ByteReader_bit)(reader, 4);
+    bit_size += 4;
+    uint32_t buffer_size = (uint32_t)((bit_size + 7) / 8);
     (*ttLibGo_ByteReader_close)((void **)&reader);
-		ttLibC_Aac *aac = (ttLibC_Aac *)(*ttLibGo_Aac_make)(
-				nullptr,
-				AacType_dsi,
-				sample_rate,
-				0,
-				channel_num,
-				data,
-				data_size,
-				false,
-				pts,
-				timebase,
-				dsi_info);
-		if(aac != NULL) {
-			aac->inherit_super.inherit_super.buffer_size = buffer_size;
+    ttLibC_Aac *aac = (ttLibC_Aac *)(*ttLibGo_Aac_make)(
+        nullptr,
+        AacType_dsi,
+        sample_rate,
+        0,
+        channel_num,
+        data,
+        data_size,
+        false,
+        pts,
+        timebase,
+        dsi_info);
+    if(aac != NULL) {
+      aac->inherit_super.inherit_super.buffer_size = buffer_size;
       aac->inherit_super.inherit_super.id = id;
-		}
-		return aac;
+    }
+    return aac;
   }
   // adtsの取り出し
-	(*ttLibGo_ByteReader_bit)(reader, 1);
-	(*ttLibGo_ByteReader_bit)(reader, 2);
-	(*ttLibGo_ByteReader_bit)(reader, 1);
-	(*ttLibGo_ByteReader_bit)(reader, 2);
-	uint32_t sample_rate_index = (*ttLibGo_ByteReader_bit)(reader, 4);
-	uint32_t sample_rate = aac_sample_rate_table[sample_rate_index];
-	(*ttLibGo_ByteReader_bit)(reader, 1);
-	uint32_t channel_num = (*ttLibGo_ByteReader_bit)(reader, 3);
-	(*ttLibGo_ByteReader_bit)(reader, 1);
-	(*ttLibGo_ByteReader_bit)(reader, 1);
-	(*ttLibGo_ByteReader_bit)(reader, 1);
-	(*ttLibGo_ByteReader_bit)(reader, 1);
-	uint32_t frame_size = (*ttLibGo_ByteReader_bit)(reader, 13);
-	(*ttLibGo_ByteReader_bit)(reader, 11);
-	(*ttLibGo_ByteReader_bit)(reader, 2);
-	if(reader->error != Error_noError) {
-		//LOG_ERROR(reader->error); // この動作、ttLibCの内部関数をkickしていたため、buildが失敗してた。
+  (*ttLibGo_ByteReader_bit)(reader, 1);
+  (*ttLibGo_ByteReader_bit)(reader, 2);
+  (*ttLibGo_ByteReader_bit)(reader, 1);
+  (*ttLibGo_ByteReader_bit)(reader, 2);
+  uint32_t sample_rate_index = (*ttLibGo_ByteReader_bit)(reader, 4);
+  uint32_t sample_rate = aac_sample_rate_table[sample_rate_index];
+  (*ttLibGo_ByteReader_bit)(reader, 1);
+  uint32_t channel_num = (*ttLibGo_ByteReader_bit)(reader, 3);
+  (*ttLibGo_ByteReader_bit)(reader, 1);
+  (*ttLibGo_ByteReader_bit)(reader, 1);
+  (*ttLibGo_ByteReader_bit)(reader, 1);
+  (*ttLibGo_ByteReader_bit)(reader, 1);
+  uint32_t frame_size = (*ttLibGo_ByteReader_bit)(reader, 13);
+  (*ttLibGo_ByteReader_bit)(reader, 11);
+  (*ttLibGo_ByteReader_bit)(reader, 2);
+  if(reader->error != Error_noError) {
+    //LOG_ERROR(reader->error); // この動作、ttLibCの内部関数をkickしていたため、buildが失敗してた。
     LOG_PRINT("error:%d", reader->error);
     (*ttLibGo_ByteReader_close)((void **)&reader);
     return nullptr;
-	}
-    (*ttLibGo_ByteReader_close)((void **)&reader);
+  }
+  (*ttLibGo_ByteReader_close)((void **)&reader);
   // fffで始まってたらadtsとして処理
   ttLibC_Aac *aac = (ttLibC_Aac *)(*ttLibGo_Aac_make)(
-			nullptr,
-			AacType_adts,
-			sample_rate,
-			1024,
-			channel_num,
-			data,
-			frame_size,
-			false,
-			pts,
-			timebase,
-			0);
+      nullptr,
+      AacType_adts,
+      sample_rate,
+      1024,
+      channel_num,
+      data,
+      frame_size,
+      false,
+      pts,
+      timebase,
+      0);
   if(aac != nullptr) {
     aac->inherit_super.inherit_super.id = id;
   }
@@ -1696,11 +1701,11 @@ void *VorbisFrame_fromBinary(void *data, size_t data_size,
   ttLibC_Vorbis *vorbis = nullptr;
   if(data_size > 7) {
     if(buf[1] == 'v'
-		&& buf[2] == 'o'
-		&& buf[3] == 'r'
-		&& buf[4] == 'b'
-		&& buf[5] == 'i'
-		&& buf[6] == 's') {
+    && buf[2] == 'o'
+    && buf[3] == 'r'
+    && buf[4] == 'b'
+    && buf[5] == 'i'
+    && buf[6] == 's') {
       switch(buf[0]) {
         case 0x01: // identification
           {
