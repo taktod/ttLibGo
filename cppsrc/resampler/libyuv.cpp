@@ -9,12 +9,12 @@ using namespace std;
 extern "C" {
 typedef bool (* ttLibC_LibyuvResampler_resize_func)(void *, void *, ttLibC_LibyuvFilter_Mode, ttLibC_LibyuvFilter_Mode);
 typedef bool (* ttLibC_LibyuvResampler_rotate_func)(void *, void *, ttLibC_LibyuvRotate_Mode);
-typedef bool (* ttLibC_LibyuvResampler_convert_func)(void *, void *);
+typedef bool (* ttLibC_Resampler_convert_func)(void *, void *);
 
-extern ttLibC_LibyuvResampler_resize_func  ttLibGo_LibyuvResampler_resize;
-extern ttLibC_LibyuvResampler_rotate_func  ttLibGo_LibyuvResampler_rotate;
-extern ttLibC_LibyuvResampler_convert_func ttLibGo_LibyuvResampler_ToBgr;
-extern ttLibC_LibyuvResampler_convert_func ttLibGo_LibyuvResampler_ToYuv420;
+extern ttLibC_LibyuvResampler_resize_func ttLibGo_LibyuvResampler_resize;
+extern ttLibC_LibyuvResampler_rotate_func ttLibGo_LibyuvResampler_rotate;
+extern ttLibC_Resampler_convert_func      ttLibGo_LibyuvResampler_ToBgr;
+extern ttLibC_Resampler_convert_func      ttLibGo_LibyuvResampler_ToYuv420;
 }
 
 LibyuvResampler::LibyuvResampler(maps *mp) {

@@ -76,6 +76,7 @@ func TestAudioResampler(t *testing.T) {
 		ttLibGo.Resamplers.Audio(ttLibGo.FrameTypes.PcmF32, ttLibGo.PcmF32Types.Planar))
 }
 
+/*
 func TestImageResampler(t *testing.T) {
 	resampleBody(t, os.Getenv("HOME")+"/tools/data/source/test.h264.aac.flv", ttLibGo.Readers.Flv(), ttLibGo.FrameTypes.H264, ttLibGo.Decoders.AvcodecVideo(ttLibGo.FrameTypes.H264, 640, 360),
 		ttLibGo.Resamplers.Image(ttLibGo.FrameTypes.Bgr, ttLibGo.BgrTypes.Bgra))
@@ -98,14 +99,15 @@ func TestImageResampler(t *testing.T) {
 	resampleBody(t, os.Getenv("HOME")+"/tools/data/source/test.png.mkv", ttLibGo.Readers.Mkv(), ttLibGo.FrameTypes.Png, ttLibGo.Decoders.Png(),
 		ttLibGo.Resamplers.Image(ttLibGo.FrameTypes.Yuv420, ttLibGo.Yuv420Types.Yvu420SemiPlanar))
 }
-
+*/
+/*
 func TestResizeResampler(t *testing.T) {
 	resampleBody(t, os.Getenv("HOME")+"/tools/data/source/test.h264.aac.flv", ttLibGo.Readers.Flv(), ttLibGo.FrameTypes.H264, ttLibGo.Decoders.AvcodecVideo(ttLibGo.FrameTypes.H264, 640, 360),
 		ttLibGo.Resamplers.Resize(320, 180, false))
 	resampleBody(t, os.Getenv("HOME")+"/tools/data/source/test.png.mkv", ttLibGo.Readers.Mkv(), ttLibGo.FrameTypes.Png, ttLibGo.Decoders.Png(),
 		ttLibGo.Resamplers.Resize(480, 320, false))
 }
-
+*/
 func TestSoundtouchResampler(t *testing.T) {
 	resampleBody(t, os.Getenv("HOME")+"/tools/data/source/test.opus.mkv", ttLibGo.Readers.Mkv(), ttLibGo.FrameTypes.Opus, ttLibGo.Decoders.Opus(48000, 2),
 		ttLibGo.Resamplers.Soundtouch(48000, 2))

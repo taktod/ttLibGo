@@ -7,12 +7,12 @@ class ResizeResampler : public Resampler {
 public:
   ResizeResampler(maps *mp);
   ~ResizeResampler();
-  bool resampleFrame(ttLibC_Frame *cFrame, ttLibGoFrame *goFrame, void *ptr);
+  bool resize(
+    ttLibC_Frame *dstCFrame, ttLibGoFrame *dstGoFrame,
+    ttLibC_Frame *srcCFrame, ttLibGoFrame *srcGoFrame,
+    bool isQuick);
 private:
-  ttLibC_Video *_image;
-  uint32_t _width;
-  uint32_t _height;
-  bool _isQuick;
+  FrameProcessor srcfp;
 };
 
 #endif

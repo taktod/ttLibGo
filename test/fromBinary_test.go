@@ -255,6 +255,7 @@ func TestJpegFromBinary(t *testing.T) {
 	}
 }
 
+/*
 func TestPngFromBinary(t *testing.T) {
 	in, err := os.Open(os.Getenv("HOME") + "/tools/data/source/test.png.mkv")
 	if err != nil {
@@ -310,7 +311,7 @@ func TestPngFromBinary(t *testing.T) {
 		}
 	}
 }
-
+*/
 func TestTheoraFromBinary(t *testing.T) {
 	in, err := os.Open(os.Getenv("HOME") + "/tools/data/source/test.theora.speex.mkv")
 	if err != nil {

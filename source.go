@@ -179,30 +179,26 @@ ttLibC_codec_func                                 ttLibGo_X265Encoder_encode = N
 ttLibC_X265Encoder_forceNextFrameType_func        ttLibGo_X265Encoder_forceNextFrameType = NULL;
 ttLibC_close_func                                 ttLibGo_X265Encoder_close = NULL;
 
+typedef bool (* ttLibC_Resampler_convert_func)(void *, void *);
+
 typedef void *(* ttLibC_AudioResampler_convertFormat_func)(void *, ttLibC_Frame_Type, uint32_t, uint32_t, void *);
 
 ttLibC_AudioResampler_convertFormat_func ttLibGo_AudioResampler_convertFormat = NULL;
 
-typedef void *(* ttLibC_ImageResampler_makeYuv420FromBgr_func)(void *, ttLibC_Yuv420_Type, void *);
-typedef void *(* ttLibC_ImageResampler_makeBgrFromYuv420_func)(void *, ttLibC_Bgr_Type, void *);
+ttLibC_Resampler_convert_func ttLibGo_ImageResampler_ToBgr    = NULL;
+ttLibC_Resampler_convert_func ttLibGo_ImageResampler_ToYuv420 = NULL;
 
-ttLibC_ImageResampler_makeYuv420FromBgr_func ttLibGo_ImageResampler_makeYuv420FromBgr = NULL;
-ttLibC_ImageResampler_makeBgrFromYuv420_func ttLibGo_ImageResampler_makeBgrFromYuv420 = NULL;
+typedef void *(* ttLibC_ImageResizer_resize_func)(void *, void *, bool);
 
-typedef void *(* ttLibC_ImageResizer_resizeBgr_func)(void *, ttLibC_Bgr_Type, uint32_t, uint32_t, void *);
-typedef void *(* ttLibC_ImageResizer_resizeYuv420_func)(void *, ttLibC_Yuv420_Type, uint32_t, uint32_t, void *, bool);
-
-ttLibC_ImageResizer_resizeBgr_func    ttLibGo_ImageResizer_resizeBgr = NULL;
-ttLibC_ImageResizer_resizeYuv420_func ttLibGo_ImageResizer_resizeYuv420 = NULL;
+ttLibC_ImageResizer_resize_func ttLibGo_ImageResizer_resize = NULL;
 
 typedef bool (* ttLibC_LibyuvResampler_resize_func)(void *, void *, ttLibC_LibyuvFilter_Mode, ttLibC_LibyuvFilter_Mode);
 typedef bool (* ttLibC_LibyuvResampler_rotate_func)(void *, void *, ttLibC_LibyuvRotate_Mode);
-typedef bool (* ttLibC_LibyuvResampler_convert_func)(void *, void *);
 
-ttLibC_LibyuvResampler_resize_func  ttLibGo_LibyuvResampler_resize   = NULL;
-ttLibC_LibyuvResampler_rotate_func  ttLibGo_LibyuvResampler_rotate   = NULL;
-ttLibC_LibyuvResampler_convert_func ttLibGo_LibyuvResampler_ToBgr    = NULL;
-ttLibC_LibyuvResampler_convert_func ttLibGo_LibyuvResampler_ToYuv420 = NULL;
+ttLibC_LibyuvResampler_resize_func ttLibGo_LibyuvResampler_resize   = NULL;
+ttLibC_LibyuvResampler_rotate_func ttLibGo_LibyuvResampler_rotate   = NULL;
+ttLibC_Resampler_convert_func      ttLibGo_LibyuvResampler_ToBgr    = NULL;
+ttLibC_Resampler_convert_func      ttLibGo_LibyuvResampler_ToYuv420 = NULL;
 
 typedef void *(* ttLibC_Soundtouch_make_func)(uint32_t, uint32_t);
 typedef void (* ttLibC_soundtouch_set_func)(void *, double);
@@ -467,16 +463,15 @@ bool setupLibrary(const char *lib_path) {
 
 	ttLibGo_AudioResampler_convertFormat = (ttLibC_AudioResampler_convertFormat_func)dlsym(lib_handle, "ttLibC_AudioResampler_convertFormat");
 
-	ttLibGo_ImageResampler_makeYuv420FromBgr = (ttLibC_ImageResampler_makeYuv420FromBgr_func)dlsym(lib_handle, "ttLibC_ImageResampler_makeYuv420FromBgr");
-	ttLibGo_ImageResampler_makeBgrFromYuv420 = (ttLibC_ImageResampler_makeBgrFromYuv420_func)dlsym(lib_handle, "ttLibC_ImageResampler_makeBgrFromYuv420");
+	ttLibGo_ImageResampler_ToBgr    = (ttLibC_Resampler_convert_func)dlsym(lib_handle, "ttLibC_ImageResampler_ToBgr");
+	ttLibGo_ImageResampler_ToYuv420 = (ttLibC_Resampler_convert_func)dlsym(lib_handle, "ttLibC_ImageResampler_ToYuv420");
 
-	ttLibGo_ImageResizer_resizeBgr    = (ttLibC_ImageResizer_resizeBgr_func)dlsym(lib_handle,    "ttLibC_ImageResizer_resizeBgr");
-	ttLibGo_ImageResizer_resizeYuv420 = (ttLibC_ImageResizer_resizeYuv420_func)dlsym(lib_handle, "ttLibC_ImageResizer_resizeYuv420");
+	ttLibGo_ImageResizer_resize    = (ttLibC_ImageResizer_resize_func)dlsym(lib_handle,    "ttLibC_ImageResizer_resize");
 
-	ttLibGo_LibyuvResampler_resize   = (ttLibC_LibyuvResampler_resize_func)dlsym(lib_handle,  "ttLibC_LibyuvResampler_resize");
-	ttLibGo_LibyuvResampler_rotate   = (ttLibC_LibyuvResampler_rotate_func)dlsym(lib_handle,  "ttLibC_LibyuvResampler_rotate");
-	ttLibGo_LibyuvResampler_ToBgr    = (ttLibC_LibyuvResampler_convert_func)dlsym(lib_handle, "ttLibC_LibyuvResampler_ToBgr");
-	ttLibGo_LibyuvResampler_ToYuv420 = (ttLibC_LibyuvResampler_convert_func)dlsym(lib_handle, "ttLibC_LibyuvResampler_ToYuv420");
+	ttLibGo_LibyuvResampler_resize   = (ttLibC_LibyuvResampler_resize_func)dlsym(lib_handle, "ttLibC_LibyuvResampler_resize");
+	ttLibGo_LibyuvResampler_rotate   = (ttLibC_LibyuvResampler_rotate_func)dlsym(lib_handle, "ttLibC_LibyuvResampler_rotate");
+	ttLibGo_LibyuvResampler_ToBgr    = (ttLibC_Resampler_convert_func)dlsym(lib_handle,      "ttLibC_LibyuvResampler_ToBgr");
+	ttLibGo_LibyuvResampler_ToYuv420 = (ttLibC_Resampler_convert_func)dlsym(lib_handle,      "ttLibC_LibyuvResampler_ToYuv420");
 
 	ttLibGo_Soundtouch_make              = (ttLibC_Soundtouch_make_func)dlsym(lib_handle, "ttLibC_Soundtouch_make");
 	ttLibGo_Soundtouch_resample          = (ttLibC_codec_func)dlsym(lib_handle,           "ttLibC_Soundtouch_resample");

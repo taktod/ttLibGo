@@ -191,3 +191,22 @@ func TestLibyuv(t *testing.T) {
 	yuvPlanarToAbgr(t, libyuv.ToBgr)
 	yuvPlanarToRgba(t, libyuv.ToBgr)
 }
+
+func TestImage(t *testing.T) {
+	image := ttLibGo.Resamplers.Image()
+	defer image.Close()
+	yuvPlanarToBgra(t, image.ToBgr)
+	yuvPlanarToAbgr(t, image.ToBgr)
+	yuvPlanarToRgba(t, image.ToBgr)
+}
+
+func TestResize(t *testing.T) {
+	/*	resize := ttLibGo.Resamplers.Resize()
+		defer resize.Close()
+		scaleYuvPlanar(t, func(dst ttLibGo.IFrame, src ttLibGo.IFrame) bool {
+			return resize.Resize(dst, src, false)
+		})
+		scaleYuvPlanarClip(t, func(dst ttLibGo.IFrame, src ttLibGo.IFrame) bool {
+			return resize.Resize(dst, src, false)
+		})*/
+}

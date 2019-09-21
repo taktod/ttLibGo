@@ -59,9 +59,9 @@ var ResamplerTypes = struct {
 // Resamplers Resamplers処理
 var Resamplers = struct {
 	Audio      func(frameType frameType, subType subType) *resampler
-	Image      func(frameType frameType, subType subType) *resampler
+	Image      func() *imageResampler
 	Libyuv     func() *libyuvResampler
-	Resize     func(width uint32, height uint32, isQuick bool) *resampler
+	Resize     func() *resizeResampler
 	Soundtouch func(sampleRate uint32, channelNum uint32) *soundtouchResampler
 	Speexdsp   func(inSampleRate uint32, outSampleRate uint32, channelNum uint32, quality uint32) *resampler
 	Swresample func(inType frameType, inSubType subType, inSampleRate uint32, inChannelNum uint32,
@@ -83,13 +83,11 @@ var Resamplers = struct {
 		mapUtil.close(v)
 		return resampler
 	},
-	Image: func(frameType frameType, subType subType) *resampler {
-		resampler := new(resampler)
+	Image: func() *imageResampler {
+		resampler := new(imageResampler)
 		resampler.Type = ResamplerTypes.Image
 		params := map[string]interface{}{
 			"resampler": resampler.Type.value,
-			"frameType": frameType.value,
-			"subType":   subType.value,
 		}
 		v := mapUtil.fromMap(params)
 		resampler.cResampler = cttlibCResampler(C.Resampler_make(v))
@@ -107,18 +105,11 @@ var Resamplers = struct {
 		mapUtil.close(v)
 		return resampler
 	},
-	Resize: func(width uint32, height uint32, isQuick bool) *resampler {
-		resampler := new(resampler)
+	Resize: func() *resizeResampler {
+		resampler := new(resizeResampler)
 		resampler.Type = ResamplerTypes.Resize
-		_isQuick := uint32(0)
-		if isQuick {
-			_isQuick = uint32(1)
-		}
 		params := map[string]interface{}{
 			"resampler": resampler.Type.value,
-			"width":     width,
-			"height":    height,
-			"isQuick":   _isQuick,
 		}
 		v := mapUtil.fromMap(params)
 		resampler.cResampler = cttlibCResampler(C.Resampler_make(v))
