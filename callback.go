@@ -9,15 +9,15 @@ import (
 )
 
 // FrameCallback フレームが生成されたときのcallback動作
-type FrameCallback func(frame *Frame) bool
+//type FrameCallback func(frame *Frame) bool
 
 // DataCallback binaryデータが生成されたときのcallback動作
-type DataCallback func(data []byte) bool
+//type DataCallback func(data []byte) bool
 
 // frameCall c言語側でのフレーム生成callbackの処理で利用する構造体
 // これを利用してgoの世界に戻す
 type frameCall struct {
-	callback FrameCallback
+	callback func(frame *Frame) bool
 }
 
 //export ttLibGoFrameCallback
@@ -35,7 +35,7 @@ func ttLibGoFrameCallback(any unsafe.Pointer, cFrame *C.ttLibC_Frame) C.bool {
 
 // dataCall c言語側でbinaryデータを取得したときにgoの世界に戻すための構造体
 type dataCall struct {
-	callback DataCallback
+	callback func(data []byte) bool
 }
 
 //export ttLibGoDataCallback

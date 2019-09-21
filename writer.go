@@ -26,7 +26,7 @@ type writerType struct{ value string }
 type IWriter interface {
 	WriteFrame(
 		frame IFrame,
-		callback DataCallback) bool
+		callback func(data []byte) bool) bool
 	Close()
 }
 
@@ -157,7 +157,7 @@ var Writers = struct {
 func writerWriteFrame(
 	writer *writer,
 	frame IFrame,
-	callback DataCallback) bool {
+	callback func(data []byte) bool) bool {
 	if writer.cWriter == nil {
 		return false
 	}
@@ -188,7 +188,7 @@ func writerClose(writer *writer) {
 // WriteFrame Frame書き出し
 func (writer *writer) WriteFrame(
 	frame IFrame,
-	callback DataCallback) bool {
+	callback func(data []byte) bool) bool {
 	return writerWriteFrame(writer, frame, callback)
 }
 

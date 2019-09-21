@@ -92,7 +92,7 @@ var OpusEncoderControls = struct {
 
 func (opusEncoder *opusEncoder) EncodeFrame(
 	frame IFrame,
-	callback FrameCallback) bool {
+	callback func(frame *Frame) bool) bool {
 	return encoderEncodeFrame((*encoder)(opusEncoder), frame, callback)
 }
 

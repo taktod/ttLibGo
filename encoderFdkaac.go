@@ -115,7 +115,7 @@ var FdkAacTypes = struct {
 // EncodeFrame エンコードを実行
 func (fdkaacEncoder *fdkaacEncoder) EncodeFrame(
 	frame IFrame,
-	callback FrameCallback) bool {
+	callback func(frame *Frame) bool) bool {
 	return encoderEncodeFrame((*encoder)(fdkaacEncoder), frame, callback)
 }
 

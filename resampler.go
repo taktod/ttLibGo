@@ -24,7 +24,7 @@ type resamplerType struct{ value string }
 type IResampler interface {
 	ResampleFrame(
 		frame IFrame,
-		callback FrameCallback) bool
+		callback func(frame *Frame) bool) bool
 	Close()
 }
 
@@ -186,7 +186,7 @@ var Resamplers = struct {
 func resamplerResampleFrame(
 	resampler *resampler,
 	frame IFrame,
-	callback FrameCallback) bool {
+	callback func(frame *Frame) bool) bool {
 	if resampler.cResampler == nil {
 		return false
 	}
@@ -211,7 +211,7 @@ func resamplerClose(resampler *resampler) {
 // ResampleFrame リサンプルを実行
 func (resampler *resampler) ResampleFrame(
 	frame IFrame,
-	callback FrameCallback) bool {
+	callback func(frame *Frame) bool) bool {
 	return resamplerResampleFrame(resampler, frame, callback)
 }
 

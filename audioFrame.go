@@ -140,7 +140,7 @@ func (audio *AudioFrame) deleteGoRefFrame(ptr unsafe.Pointer) {
 }
 
 // GetBinaryBuffer binaryデータを参照する
-func (audio *AudioFrame) GetBinaryBuffer(callback DataCallback) bool {
+func (audio *AudioFrame) GetBinaryBuffer(callback func(data []byte) bool) bool {
 	return getFrameBinaryBuffer(audio.cFrame, callback)
 }
 
@@ -228,7 +228,7 @@ func (aac *AacFrame) deleteGoRefFrame(ptr unsafe.Pointer) {
 }
 
 // GetBinaryBuffer binaryデータを参照する
-func (aac *AacFrame) GetBinaryBuffer(callback DataCallback) bool {
+func (aac *AacFrame) GetBinaryBuffer(callback func(data []byte) bool) bool {
 	return getFrameBinaryBuffer(aac.cFrame, callback)
 }
 
@@ -313,7 +313,7 @@ func (adpcmImaWav *AdpcmImaWavFrame) deleteGoRefFrame(ptr unsafe.Pointer) {
 }
 
 // GetBinaryBuffer binaryデータを参照する
-func (adpcmImaWav *AdpcmImaWavFrame) GetBinaryBuffer(callback DataCallback) bool {
+func (adpcmImaWav *AdpcmImaWavFrame) GetBinaryBuffer(callback func(data []byte) bool) bool {
 	return getFrameBinaryBuffer(adpcmImaWav.cFrame, callback)
 }
 
@@ -412,7 +412,7 @@ func (mp3 *Mp3Frame) deleteGoRefFrame(ptr unsafe.Pointer) {
 }
 
 // GetBinaryBuffer binaryデータを参照する
-func (mp3 *Mp3Frame) GetBinaryBuffer(callback DataCallback) bool {
+func (mp3 *Mp3Frame) GetBinaryBuffer(callback func(data []byte) bool) bool {
 	return getFrameBinaryBuffer(mp3.cFrame, callback)
 }
 
@@ -492,7 +492,7 @@ func (nellymoser *NellymoserFrame) deleteGoRefFrame(ptr unsafe.Pointer) {
 }
 
 // GetBinaryBuffer binaryデータを参照する
-func (nellymoser *NellymoserFrame) GetBinaryBuffer(callback DataCallback) bool {
+func (nellymoser *NellymoserFrame) GetBinaryBuffer(callback func(data []byte) bool) bool {
 	return getFrameBinaryBuffer(nellymoser.cFrame, callback)
 }
 
@@ -591,7 +591,7 @@ func (opus *OpusFrame) deleteGoRefFrame(ptr unsafe.Pointer) {
 }
 
 // GetBinaryBuffer binaryデータを参照する
-func (opus *OpusFrame) GetBinaryBuffer(callback DataCallback) bool {
+func (opus *OpusFrame) GetBinaryBuffer(callback func(data []byte) bool) bool {
 	return getFrameBinaryBuffer(opus.cFrame, callback)
 }
 
@@ -671,7 +671,7 @@ func (pcmAlaw *PcmAlawFrame) deleteGoRefFrame(ptr unsafe.Pointer) {
 }
 
 // GetBinaryBuffer binaryデータを参照する
-func (pcmAlaw *PcmAlawFrame) GetBinaryBuffer(callback DataCallback) bool {
+func (pcmAlaw *PcmAlawFrame) GetBinaryBuffer(callback func(data []byte) bool) bool {
 	return getFrameBinaryBuffer(pcmAlaw.cFrame, callback)
 }
 
@@ -772,7 +772,7 @@ func (pcmF32 *PcmF32Frame) deleteGoRefFrame(ptr unsafe.Pointer) {
 }
 
 // GetBinaryBuffer binaryデータを参照する
-func (pcmF32 *PcmF32Frame) GetBinaryBuffer(callback DataCallback) bool {
+func (pcmF32 *PcmF32Frame) GetBinaryBuffer(callback func(data []byte) bool) bool {
 	return getFrameBinaryBuffer(pcmF32.cFrame, callback)
 }
 
@@ -864,7 +864,7 @@ func (pcmMulaw *PcmMulawFrame) deleteGoRefFrame(ptr unsafe.Pointer) {
 }
 
 // GetBinaryBuffer binaryデータを参照する
-func (pcmMulaw *PcmMulawFrame) GetBinaryBuffer(callback DataCallback) bool {
+func (pcmMulaw *PcmMulawFrame) GetBinaryBuffer(callback func(data []byte) bool) bool {
 	return getFrameBinaryBuffer(pcmMulaw.cFrame, callback)
 }
 
@@ -969,7 +969,7 @@ func (pcmS16 *PcmS16Frame) deleteGoRefFrame(ptr unsafe.Pointer) {
 }
 
 // GetBinaryBuffer binaryデータを参照する
-func (pcmS16 *PcmS16Frame) GetBinaryBuffer(callback DataCallback) bool {
+func (pcmS16 *PcmS16Frame) GetBinaryBuffer(callback func(data []byte) bool) bool {
 	return getFrameBinaryBuffer(pcmS16.cFrame, callback)
 }
 
@@ -1084,7 +1084,7 @@ func (speex *SpeexFrame) deleteGoRefFrame(ptr unsafe.Pointer) {
 }
 
 // GetBinaryBuffer binaryデータを参照する
-func (speex *SpeexFrame) GetBinaryBuffer(callback DataCallback) bool {
+func (speex *SpeexFrame) GetBinaryBuffer(callback func(data []byte) bool) bool {
 	return getFrameBinaryBuffer(speex.cFrame, callback)
 }
 
@@ -1191,7 +1191,7 @@ func (vorbis *VorbisFrame) deleteGoRefFrame(ptr unsafe.Pointer) {
 }
 
 // GetBinaryBuffer binaryデータを参照する
-func (vorbis *VorbisFrame) GetBinaryBuffer(callback DataCallback) bool {
+func (vorbis *VorbisFrame) GetBinaryBuffer(callback func(data []byte) bool) bool {
 	return getFrameBinaryBuffer(vorbis.cFrame, callback)
 }
 

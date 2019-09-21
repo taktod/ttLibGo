@@ -23,7 +23,7 @@ type soundtouchResampler resampler
 // ResampleFrame リサンプルを実行
 func (soundtouchResampler *soundtouchResampler) ResampleFrame(
 	frame IFrame,
-	callback FrameCallback) bool {
+	callback func(frame *Frame) bool) bool {
 	return resamplerResampleFrame((*resampler)(soundtouchResampler), frame, callback)
 }
 

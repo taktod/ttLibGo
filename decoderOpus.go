@@ -41,7 +41,7 @@ var OpusDecoderControls = struct {
 // DecodeFrame デコードを実行
 func (opusDecoder *opusDecoder) DecodeFrame(
 	frame IFrame,
-	callback FrameCallback) bool {
+	callback func(frame *Frame) bool) bool {
 	return decoderDecodeFrame((*decoder)(opusDecoder), frame, callback)
 }
 

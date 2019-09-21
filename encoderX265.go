@@ -33,7 +33,7 @@ var X265EncoderFrameTypes = struct {
 // EncodeFrame エンコードを実行
 func (x265Encoder *x265Encoder) EncodeFrame(
 	frame IFrame,
-	callback FrameCallback) bool {
+	callback func(frame *Frame) bool) bool {
 	return encoderEncodeFrame((*encoder)(x265Encoder), frame, callback)
 }
 

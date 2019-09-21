@@ -152,8 +152,8 @@ func (video *VideoFrame) deleteGoRefFrame(ptr unsafe.Pointer) {
 }
 
 // GetBinaryBuffer binaryデータを参照する
-func (video *VideoFrame) GetBinaryBuffer(callback DataCallback) bool {
-	return getFrameBinaryBuffer(video.cFrame, callback)
+func (video *VideoFrame) GetBinaryBuffer(callback func(data []byte) bool) bool {
+ 	return getFrameBinaryBuffer(video.cFrame, callback)
 }
 
 // Video 映像処理
@@ -251,7 +251,7 @@ func (bgr *BgrFrame) deleteGoRefFrame(ptr unsafe.Pointer) {
 }
 
 // GetBinaryBuffer binaryデータを参照する
-func (bgr *BgrFrame) GetBinaryBuffer(callback DataCallback) bool {
+func (bgr *BgrFrame) GetBinaryBuffer(callback func(data []byte) bool) bool {
 	return getFrameBinaryBuffer(bgr.cFrame, callback)
 }
 
@@ -380,7 +380,7 @@ func (flv1 *Flv1Frame) deleteGoRefFrame(ptr unsafe.Pointer) {
 }
 
 // GetBinaryBuffer binaryデータを参照する
-func (flv1 *Flv1Frame) GetBinaryBuffer(callback DataCallback) bool {
+func (flv1 *Flv1Frame) GetBinaryBuffer(callback func(data []byte) bool) bool {
 	return getFrameBinaryBuffer(flv1.cFrame, callback)
 }
 
@@ -504,7 +504,7 @@ func (h264 *H264Frame) deleteGoRefFrame(ptr unsafe.Pointer) {
 }
 
 // GetBinaryBuffer binaryデータを参照する
-func (h264 *H264Frame) GetBinaryBuffer(callback DataCallback) bool {
+func (h264 *H264Frame) GetBinaryBuffer(callback func(data []byte) bool) bool {
 	return getFrameBinaryBuffer(h264.cFrame, callback)
 }
 
@@ -626,7 +626,7 @@ func (h265 *H265Frame) deleteGoRefFrame(ptr unsafe.Pointer) {
 }
 
 // GetBinaryBuffer binaryデータを参照する
-func (h265 *H265Frame) GetBinaryBuffer(callback DataCallback) bool {
+func (h265 *H265Frame) GetBinaryBuffer(callback func(data []byte) bool) bool {
 	return getFrameBinaryBuffer(h265.cFrame, callback)
 }
 
@@ -709,7 +709,7 @@ func (jpeg *JpegFrame) deleteGoRefFrame(ptr unsafe.Pointer) {
 }
 
 // GetBinaryBuffer binaryデータを参照する
-func (jpeg *JpegFrame) GetBinaryBuffer(callback DataCallback) bool {
+func (jpeg *JpegFrame) GetBinaryBuffer(callback func(data []byte) bool) bool {
 	return getFrameBinaryBuffer(jpeg.cFrame, callback)
 }
 
@@ -784,7 +784,7 @@ func (png *PngFrame) deleteGoRefFrame(ptr unsafe.Pointer) {
 }
 
 // GetBinaryBuffer binaryデータを参照する
-func (png *PngFrame) GetBinaryBuffer(callback DataCallback) bool {
+func (png *PngFrame) GetBinaryBuffer(callback func(data []byte) bool) bool {
 	return getFrameBinaryBuffer(png.cFrame, callback)
 }
 
@@ -886,7 +886,7 @@ func (theora *TheoraFrame) deleteGoRefFrame(ptr unsafe.Pointer) {
 }
 
 // GetBinaryBuffer binaryデータを参照する
-func (theora *TheoraFrame) GetBinaryBuffer(callback DataCallback) bool {
+func (theora *TheoraFrame) GetBinaryBuffer(callback func(data []byte) bool) bool {
 	return getFrameBinaryBuffer(theora.cFrame, callback)
 }
 
@@ -969,7 +969,7 @@ func (vp6 *Vp6Frame) deleteGoRefFrame(ptr unsafe.Pointer) {
 }
 
 // GetBinaryBuffer binaryデータを参照する
-func (vp6 *Vp6Frame) GetBinaryBuffer(callback DataCallback) bool {
+func (vp6 *Vp6Frame) GetBinaryBuffer(callback func(data []byte) bool) bool {
 	return getFrameBinaryBuffer(vp6.cFrame, callback)
 }
 
@@ -1045,7 +1045,7 @@ func (vp8 *Vp8Frame) deleteGoRefFrame(ptr unsafe.Pointer) {
 }
 
 // GetBinaryBuffer binaryデータを参照する
-func (vp8 *Vp8Frame) GetBinaryBuffer(callback DataCallback) bool {
+func (vp8 *Vp8Frame) GetBinaryBuffer(callback func(data []byte) bool) bool {
 	return getFrameBinaryBuffer(vp8.cFrame, callback)
 }
 
@@ -1121,7 +1121,7 @@ func (vp9 *Vp9Frame) deleteGoRefFrame(ptr unsafe.Pointer) {
 }
 
 // GetBinaryBuffer binaryデータを参照する
-func (vp9 *Vp9Frame) GetBinaryBuffer(callback DataCallback) bool {
+func (vp9 *Vp9Frame) GetBinaryBuffer(callback func(data []byte) bool) bool {
 	return getFrameBinaryBuffer(vp9.cFrame, callback)
 }
 
@@ -1197,7 +1197,7 @@ func (wmv1 *Wmv1Frame) deleteGoRefFrame(ptr unsafe.Pointer) {
 }
 
 // GetBinaryBuffer binaryデータを参照する
-func (wmv1 *Wmv1Frame) GetBinaryBuffer(callback DataCallback) bool {
+func (wmv1 *Wmv1Frame) GetBinaryBuffer(callback func(data []byte) bool) bool {
 	return getFrameBinaryBuffer(wmv1.cFrame, callback)
 }
 
@@ -1267,7 +1267,7 @@ func (wmv2 *Wmv2Frame) deleteGoRefFrame(ptr unsafe.Pointer) {
 }
 
 // GetBinaryBuffer binaryデータを参照する
-func (wmv2 *Wmv2Frame) GetBinaryBuffer(callback DataCallback) bool {
+func (wmv2 *Wmv2Frame) GetBinaryBuffer(callback func(data []byte) bool) bool {
 	return getFrameBinaryBuffer(wmv2.cFrame, callback)
 }
 
@@ -1367,7 +1367,7 @@ func (yuv420 *Yuv420Frame) deleteGoRefFrame(ptr unsafe.Pointer) {
 }
 
 // GetBinaryBuffer binaryデータを参照する
-func (yuv420 *Yuv420Frame) GetBinaryBuffer(callback DataCallback) bool {
+func (yuv420 *Yuv420Frame) GetBinaryBuffer(callback func(data []byte) bool) bool {
 	return getFrameBinaryBuffer(yuv420.cFrame, callback)
 }
 

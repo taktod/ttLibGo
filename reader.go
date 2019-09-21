@@ -27,7 +27,7 @@ type IReader interface {
 	ReadFrame(
 		binary []byte,
 		length uint64,
-		callback FrameCallback) bool
+		callback func(frame *Frame) bool) bool
 	Close()
 }
 
@@ -96,7 +96,7 @@ var Readers = struct {
 func (reader *reader) ReadFrame(
 	binary []byte,
 	length uint64,
-	callback FrameCallback) bool {
+	callback func(frame *Frame) bool) bool {
 	if reader.cReader == nil {
 		return false
 	}

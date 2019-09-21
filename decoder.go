@@ -24,7 +24,7 @@ type decoderType struct{ value string }
 type IDecoder interface {
 	DecodeFrame(
 		frame IFrame,
-		callback FrameCallback) bool
+		callback func(frame *Frame) bool) bool
 	Close()
 }
 
@@ -184,7 +184,7 @@ var Decoders = struct {
 func decoderDecodeFrame(
 	decoder *decoder,
 	frame IFrame,
-	callback FrameCallback) bool {
+	callback func(frame *Frame) bool) bool {
 	if decoder.cDecoder == nil {
 		return false
 	}
@@ -209,7 +209,7 @@ func decoderClose(decoder *decoder) {
 // DecodeFrame デコードを実行
 func (decoder *decoder) DecodeFrame(
 	frame IFrame,
-	callback FrameCallback) bool {
+	callback func(frame *Frame) bool) bool {
 	return decoderDecodeFrame(decoder, frame, callback)
 }
 

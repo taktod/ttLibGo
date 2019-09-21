@@ -16,7 +16,7 @@ type mpegtsWriter writer
 // WriteFrame Frame書き出し
 func (mpegtsWriter *mpegtsWriter) WriteFrame(
 	frame IFrame,
-	callback DataCallback) bool {
+	callback func(data []byte) bool) bool {
 	return writerWriteFrame((*writer)(mpegtsWriter), frame, callback)
 }
 
@@ -27,7 +27,7 @@ func (mpegtsWriter *mpegtsWriter) Close() {
 
 // WriteInfo 情報タグ書き出し
 func (mpegtsWriter *mpegtsWriter) WriteInfo(
-	callback DataCallback) bool {
+	callback func(data []byte) bool) bool {
 	if mpegtsWriter.cWriter == nil {
 		return false
 	}

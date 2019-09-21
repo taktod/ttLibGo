@@ -468,7 +468,7 @@ var Openh264RCModes = struct {
 // EncodeFrame エンコードを実行
 func (openh264Encoder *openh264Encoder) EncodeFrame(
 	frame IFrame,
-	callback FrameCallback) bool {
+	callback func(frame *Frame) bool) bool {
 	return encoderEncodeFrame((*encoder)(openh264Encoder), frame, callback)
 }
 

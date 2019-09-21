@@ -26,7 +26,7 @@ type encoderType struct{ value string }
 type IEncoder interface {
 	EncodeFrame(
 		frame IFrame,
-		callback FrameCallback) bool
+		callback func(frame *Frame) bool) bool
 	Close()
 }
 
@@ -246,7 +246,7 @@ var Encoders = struct {
 func encoderEncodeFrame(
 	encoder *encoder,
 	frame IFrame,
-	callback FrameCallback) bool {
+	callback func(frame *Frame) bool) bool {
 	if encoder.cEncoder == nil {
 		return false
 	}
@@ -271,7 +271,7 @@ func encoderClose(encoder *encoder) {
 // EncodeFrame エンコードを実行
 func (encoder *encoder) EncodeFrame(
 	frame IFrame,
-	callback FrameCallback) bool {
+	callback func(frame *Frame) bool) bool {
 	return encoderEncodeFrame(encoder, frame, callback)
 }
 

@@ -171,13 +171,13 @@ func (frame *Frame) deleteGoRefFrame(ptr unsafe.Pointer) {
 }
 
 // getFrameBinaryBuffer frameのbyteデータを参照します
-func getFrameBinaryBuffer(cFrame cttLibCFrame, callback DataCallback) bool {
+func getFrameBinaryBuffer(cFrame cttLibCFrame, callback func(data []byte) bool ) bool {
 	call := new(dataCall)
 	call.callback = callback
 	return bool(C.Frame_getBinaryBuffer(C.uintptr_t(uintptr(unsafe.Pointer(call))), unsafe.Pointer(cFrame)))
 }
 
 // GetBinaryBuffer binaryデータを参照する
-func (frame *Frame) GetBinaryBuffer(callback DataCallback) bool {
-	return getFrameBinaryBuffer(frame.cFrame, callback)
+func (frame *Frame) GetBinaryBuffer(callback func(data []byte) bool) bool {
+ 	return getFrameBinaryBuffer(frame.cFrame, callback)
 }
