@@ -12,12 +12,13 @@ extern void Encoder_close(void *encoder);
 import "C"
 import (
 	"fmt"
-	"reflect"
 	"unsafe"
 )
 
 // cttLibCEncoder c言語のencoder
 type cttLibCEncoder unsafe.Pointer
+
+type KeyValue [2]string
 
 // encoderType encoderタイプ
 type encoderType struct{ value string }
@@ -64,13 +65,13 @@ var EncoderTypes = struct {
 var Encoders = struct {
 	Fdkaac   func(aacType subType, sampleRate uint32, channelNum uint32, bitrate uint32) *fdkaacEncoder
 	Jpeg     func(width uint32, height uint32, quality uint32) *jpegEncoder
-	Openh264 func(width uint32, height uint32, param map[interface{}]interface{}, spatialParamArray [](map[interface{}]interface{})) *openh264Encoder
+	Openh264 func(width uint32, height uint32, param []Openh264Data, spatialParamArray []([]Openh264Data)) *openh264Encoder
 	Opus     func(sampleRate uint32, channelNum uint32, unitSampleNum uint32) *opusEncoder
 	Speex    func(sampleRate uint32, channelNum uint32, quality uint32) *encoder
 	Theora   func(width uint32, height uint32, quality uint32, bitrate uint32, keyFrameInterval uint32) *encoder
 	Vorbis   func(sampleRate uint32, channelNum uint32) *encoder
-	X264     func(width uint32, height uint32, preset string, tune string, profile string, param map[string]string) *x264Encoder
-	X265     func(width uint32, height uint32, preset string, tune string, profile string, param map[string]string) *x265Encoder
+	X264     func(width uint32, height uint32, preset string, tune string, profile string, param []KeyValue) *x264Encoder
+	X265     func(width uint32, height uint32, preset string, tune string, profile string, param []KeyValue) *x265Encoder
 }{
 	Fdkaac: func(aacType subType, sampleRate uint32, channelNum uint32, bitrate uint32) *fdkaacEncoder {
 		encoder := new(fdkaacEncoder)
@@ -101,22 +102,20 @@ var Encoders = struct {
 		mapUtil.close(v)
 		return encoder
 	},
-	Openh264: func(width uint32, height uint32, param map[interface{}]interface{}, spatialParamArray [](map[interface{}]interface{})) *openh264Encoder {
+	Openh264: func(width uint32, height uint32, param []Openh264Data, spatialParamArray []([]Openh264Data)) *openh264Encoder {
 		encoder := new(openh264Encoder)
 		encoder.Type = EncoderTypes.Openh264
 		var paramSlices []string
 		if param != nil {
-			for i, v := range param {
-				ii := reflect.ValueOf(i)
-				paramSlices = append(paramSlices, fmt.Sprintf("%v:%v", ii.FieldByName("value"), v))
+			for _, v := range param {
+				paramSlices = append(paramSlices, fmt.Sprintf("%s:%v", v.key, v.val))
 			}
 		}
 		var spatialParamArrays []string
 		if spatialParamArray != nil {
 			for i, v := range spatialParamArray {
-				for ii, vv := range v {
-					iii := reflect.ValueOf(ii)
-					spatialParamArrays = append(spatialParamArrays, fmt.Sprintf("%d:%v:%v", i, iii.FieldByName("value"), vv))
+				for _, vv := range v {
+					spatialParamArrays = append(spatialParamArrays, fmt.Sprintf("%d:%v:%v", i, vv.key, vv.val))
 				}
 			}
 		}
@@ -189,13 +188,13 @@ var Encoders = struct {
 		mapUtil.close(v)
 		return encoder
 	},
-	X264: func(width uint32, height uint32, preset string, tune string, profile string, param map[string]string) *x264Encoder {
+	X264: func(width uint32, height uint32, preset string, tune string, profile string, param []KeyValue) *x264Encoder {
 		encoder := new(x264Encoder)
 		encoder.Type = EncoderTypes.X264
 		var params []string
 		if param != nil {
-			for i, v := range param {
-				params = append(params, fmt.Sprintf("%s:%s", i, v))
+			for _, v := range param {
+				params = append(params, fmt.Sprintf("%s:%s", v[0], v[1]))
 			}
 		}
 		if profile == "" {
@@ -215,13 +214,13 @@ var Encoders = struct {
 		mapUtil.close(v)
 		return encoder
 	},
-	X265: func(width uint32, height uint32, preset string, tune string, profile string, param map[string]string) *x265Encoder {
+	X265: func(width uint32, height uint32, preset string, tune string, profile string, param []KeyValue) *x265Encoder {
 		encoder := new(x265Encoder)
 		encoder.Type = EncoderTypes.X265
 		var params []string
 		if param != nil {
-			for i, v := range param {
-				params = append(params, fmt.Sprintf("%s:%s", i, v))
+			for _, v := range param {
+				params = append(params, fmt.Sprintf("%s:%s", v[0], v[1]))
 			}
 		}
 		if profile == "" {

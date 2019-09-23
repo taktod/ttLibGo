@@ -15,184 +15,183 @@ import (
 
 type openh264Encoder encoder
 
+type Openh264Data struct {
+	key string
+	val interface{}
+}
+
 type eoh264UsageType struct {
-	value                  string
-	CameraVideoRealTime    string
-	ScreenContentRealTime  string
-	CameraVideoNonRealTime string
+	CameraVideoRealTime    Openh264Data
+	ScreenContentRealTime  Openh264Data
+	CameraVideoNonRealTime Openh264Data
 }
 
 type eoh264RCModeType struct {
-	value                 string
-	RcQualityMode         string
-	RcBitrateMode         string
-	RcBufferbasedMode     string
-	RcTimestampMode       string
-	RcBitrateModePostSkip string
-	RcOffMode             string
+	RcQualityMode         Openh264Data
+	RcBitrateMode         Openh264Data
+	RcBufferbasedMode     Openh264Data
+	RcTimestampMode       Openh264Data
+	RcBitrateModePostSkip Openh264Data
+	RcOffMode             Openh264Data
 }
 
 type eoh264ComplexityMode struct {
-	value            string
-	LowComplexity    string
-	MediumComplexity string
-	HighComplexity   string
+	LowComplexity    Openh264Data
+	MediumComplexity Openh264Data
+	HighComplexity   Openh264Data
 }
 
 type eoh264SpsPpsIDStrategy struct {
-	value                      string
-	ConstantID                 string
-	IncreasingID               string
-	SPSListing                 string
-	SPSListingAndPPSIncreasing string
-	SPSPPSListing              string
+	ConstantID                 Openh264Data
+	IncreasingID               Openh264Data
+	SPSListing                 Openh264Data
+	SPSListingAndPPSIncreasing Openh264Data
+	SPSPPSListing              Openh264Data
 }
 
 // Openh264Params openh264Encoderで利用するParam設定項目
 var Openh264Params = struct {
 	UsageType                  eoh264UsageType
-	ITargetBitrate             subType
+	ITargetBitrate             func(int) Openh264Data
 	RCMode                     eoh264RCModeType
-	FMaxFrameRate              subType
-	ITemporalLayerNum          subType
-	ISpatialLayerNum           subType
+	FMaxFrameRate              func(float32) Openh264Data
+	ITemporalLayerNum          func(int) Openh264Data
+	ISpatialLayerNum           func(int) Openh264Data
 	ComplexityMode             eoh264ComplexityMode
-	UIIntraPeriod              subType
-	INumRefFrame               subType
+	UIIntraPeriod              func(uint) Openh264Data
+	INumRefFrame               func(int) Openh264Data
 	SpsPpsIDStrategy           eoh264SpsPpsIDStrategy
-	BPrefixNalAddingCtrl       subType
-	BEnableSSEI                subType
-	BSimulcastAVC              subType
-	IPaddingFlag               subType
-	IEntropyCodingModeFlag     subType
-	BEnableFrameSkip           subType
-	IMaxBitrate                subType
-	IMaxQp                     subType
-	IMinQp                     subType
-	UIMaxNalSize               subType
-	BEnableLongTermReference   subType
-	ILTRRefNum                 subType
-	ILtrMarkPeriod             subType
-	IMultipleThreadIdc         subType
-	BUseLoadBalancing          subType
-	ILoopFilterDisableIdc      subType
-	ILoopFilterAlphaC0Offset   subType
-	ILoopFilterBetaOffset      subType
-	BEnableDenoise             subType
-	BEnableBackgroundDetection subType
-	BEnableAdaptiveQuant       subType
-	BEnableFrameCroppingFlag   subType
-	BEnableSceneChangeDetect   subType
-	BIsLosslessLink            subType
+	BPrefixNalAddingCtrl       func(bool) Openh264Data
+	BEnableSSEI                func(bool) Openh264Data
+	BSimulcastAVC              func(bool) Openh264Data
+	IPaddingFlag               func(int) Openh264Data
+	IEntropyCodingModeFlag     func(int) Openh264Data
+	BEnableFrameSkip           func(bool) Openh264Data
+	IMaxBitrate                func(int) Openh264Data
+	IMaxQp                     func(int) Openh264Data
+	IMinQp                     func(int) Openh264Data
+	UIMaxNalSize               func(uint) Openh264Data
+	BEnableLongTermReference   func(bool) Openh264Data
+	ILTRRefNum                 func(int) Openh264Data
+	ILtrMarkPeriod             func(int) Openh264Data
+	IMultipleThreadIdc         func(int) Openh264Data
+	BUseLoadBalancing          func(bool) Openh264Data
+	ILoopFilterDisableIdc      func(int) Openh264Data
+	ILoopFilterAlphaC0Offset   func(int) Openh264Data
+	ILoopFilterBetaOffset      func(int) Openh264Data
+	BEnableDenoise             func(bool) Openh264Data
+	BEnableBackgroundDetection func(bool) Openh264Data
+	BEnableAdaptiveQuant       func(bool) Openh264Data
+	BEnableFrameCroppingFlag   func(bool) Openh264Data
+	BEnableSceneChangeDetect   func(bool) Openh264Data
+	BIsLosslessLink            func(bool) Openh264Data
 }{
 	UsageType: eoh264UsageType{
-		"iUsageType",
-		"CAMERA_VIDEO_REAL_TIME",
-		"SCREEN_CONTENT_REAL_TIME",
-		"CAMERA_VIDEO_NON_REAL_TIME",
+		Openh264Data{key: "iUsageType", val: "CAMERA_VIDEO_REAL_TIME"},
+		Openh264Data{key: "iUsageType", val: "SCREEN_CONTENT_REAL_TIME"},
+		Openh264Data{key: "iUsageType", val: "CAMERA_VIDEO_NON_REAL_TIME"},
 	},
-	ITargetBitrate: subType{"iTargetBitrate"},
+	ITargetBitrate: func(value int) Openh264Data { return Openh264Data{key: "iTargetBitrate", val: value} },
 	RCMode: eoh264RCModeType{
-		"iRCMode",
-		"RC_QUALITY_MODE",
-		"RC_BITRATE_MODE",
-		"RC_BUFFERBASED_MODE",
-		"RC_TIMESTAMP_MODE",
-		"RC_BITRATE_MODE_POST_SKIP",
-		"RC_OFF_MODE",
+		Openh264Data{key: "iRCMode", val: "RC_QUALITY_MODE"},
+		Openh264Data{key: "iRCMode", val: "RC_BITRATE_MODE"},
+		Openh264Data{key: "iRCMode", val: "RC_BUFFERBASED_MODE"},
+		Openh264Data{key: "iRCMode", val: "RC_TIMESTAMP_MODE"},
+		Openh264Data{key: "iRCMode", val: "RC_BITRATE_MODE_POST_SKIP"},
+		Openh264Data{key: "iRCMode", val: "RC_OFF_MODE"},
 	},
-	FMaxFrameRate:     subType{"fMaxFrameRate"},
-	ITemporalLayerNum: subType{"iTemporalLayerNum"},
-	ISpatialLayerNum:  subType{"iSpatialLayerNum"},
+	FMaxFrameRate:     func(value float32) Openh264Data { return Openh264Data{key: "fMaxFrameRate", val: value} },
+	ITemporalLayerNum: func(value int) Openh264Data { return Openh264Data{key: "iTemporalLayerNum", val: value} },
+	ISpatialLayerNum:  func(value int) Openh264Data { return Openh264Data{key: "iSpatialLayerNum", val: value} },
 	ComplexityMode: eoh264ComplexityMode{
-		"iComplexityMode",
-		"LOW_COMPLEXITY",
-		"MEDIUM_COMPLEXITY",
-		"HIGH_COMPLEXITY",
+		Openh264Data{key: "iComplexityMode", val: "LOW_COMPLEXITY"},
+		Openh264Data{key: "iComplexityMode", val: "MEDIUM_COMPLEXITY"},
+		Openh264Data{key: "iComplexityMode", val: "HIGH_COMPLEXITY"},
 	},
-	UIIntraPeriod: subType{"uiIntraPeriod"},
-	INumRefFrame:  subType{"iNumRefFrame"},
+	UIIntraPeriod: func(value uint) Openh264Data { return Openh264Data{key: "uiIntraPeriod", val: value} },
+	INumRefFrame:  func(value int) Openh264Data { return Openh264Data{key: "iNumRefFrames", val: value} },
 	SpsPpsIDStrategy: eoh264SpsPpsIDStrategy{
-		"eSpsPpsIdStrategy",
-		"CONSTANT_ID",
-		"INCREASING_ID",
-		"SPS_LISTING",
-		"SPS_LISTING_AND_PPS_INCREASING",
-		"SPS_PPS_LISTING",
+		Openh264Data{key: "eSpsPpsIdStrategy", val: "CONSTANT_ID"},
+		Openh264Data{key: "eSpsPpsIdStrategy", val: "INCREASING_ID"},
+		Openh264Data{key: "eSpsPpsIdStrategy", val: "SPS_LISTING"},
+		Openh264Data{key: "eSpsPpsIdStrategy", val: "SPS_LISTING_AND_PPS_INCREASING"},
+		Openh264Data{key: "eSpsPpsIdStrategy", val: "SPS_PPS_LISTING"},
 	},
-	BPrefixNalAddingCtrl:       subType{"bPrefixNalAddingCtrl"},
-	BEnableSSEI:                subType{"bEnableSSEI"},
-	BSimulcastAVC:              subType{"bSimulcastAVC"},
-	IPaddingFlag:               subType{"iPaddingFlag"},
-	IEntropyCodingModeFlag:     subType{"iEntropyCodingModeFlag"},
-	BEnableFrameSkip:           subType{"bEnableFrameSkip"},
-	IMaxBitrate:                subType{"iMaxBitrate"},
-	IMaxQp:                     subType{"iMaxQp"},
-	IMinQp:                     subType{"iMinQp"},
-	UIMaxNalSize:               subType{"uiMaxNalSize"},
-	BEnableLongTermReference:   subType{"bEnableLongTermReference"},
-	ILTRRefNum:                 subType{"iLTRRefNum"},
-	ILtrMarkPeriod:             subType{"iLtrMarkPeriod"},
-	IMultipleThreadIdc:         subType{"iMultipleThreadIdc"},
-	BUseLoadBalancing:          subType{"bUseLoadBalancing"},
-	ILoopFilterDisableIdc:      subType{"iLoopFilterDisableIdc"},
-	ILoopFilterAlphaC0Offset:   subType{"iLoopFilterAlphaC0Offset"},
-	ILoopFilterBetaOffset:      subType{"iLoopFilterBetaOffset"},
-	BEnableDenoise:             subType{"bEnableDenoise"},
-	BEnableBackgroundDetection: subType{"bEnableBackgroundDetection"},
-	BEnableAdaptiveQuant:       subType{"bEnableAdaptiveQuant"},
-	BEnableFrameCroppingFlag:   subType{"bEnableFrameCroppingFlag"},
-	BEnableSceneChangeDetect:   subType{"bEnableSceneChangeDetect"},
-	BIsLosslessLink:            subType{"bIsLosslessLink"},
+	BPrefixNalAddingCtrl:       func(value bool) Openh264Data { return Openh264Data{key: "bPrefixNalAddingCtrl", val: value} },
+	BEnableSSEI:                func(value bool) Openh264Data { return Openh264Data{key: "bEnableSSEI", val: value} },
+	BSimulcastAVC:              func(value bool) Openh264Data { return Openh264Data{key: "bSimulcastAVC", val: value} },
+	IPaddingFlag:               func(value int) Openh264Data { return Openh264Data{key: "iPaddingFlag", val: value} },
+	IEntropyCodingModeFlag:     func(value int) Openh264Data { return Openh264Data{key: "iEntropyCodingModeFlag", val: value} },
+	BEnableFrameSkip:           func(value bool) Openh264Data { return Openh264Data{key: "bEnableFrameSkip", val: value} },
+	IMaxBitrate:                func(value int) Openh264Data { return Openh264Data{key: "iMaxBitrate", val: value} },
+	IMaxQp:                     func(value int) Openh264Data { return Openh264Data{key: "iMaxQp", val: value} },
+	IMinQp:                     func(value int) Openh264Data { return Openh264Data{key: "iMinQp", val: value} },
+	UIMaxNalSize:               func(value uint) Openh264Data { return Openh264Data{key: "uiMaxNalSize", val: value} },
+	BEnableLongTermReference:   func(value bool) Openh264Data { return Openh264Data{key: "bEnableLongTermReference", val: value} },
+	ILTRRefNum:                 func(value int) Openh264Data { return Openh264Data{key: "iLTRRefNum", val: value} },
+	ILtrMarkPeriod:             func(value int) Openh264Data { return Openh264Data{key: "iLtrMarkPeriod", val: value} },
+	IMultipleThreadIdc:         func(value int) Openh264Data { return Openh264Data{key: "iMultipleThreadIdc", val: value} },
+	BUseLoadBalancing:          func(value bool) Openh264Data { return Openh264Data{key: "bUseLoadBalancing", val: value} },
+	ILoopFilterDisableIdc:      func(value int) Openh264Data { return Openh264Data{key: "iLoopFilterDisableIdc", val: value} },
+	ILoopFilterAlphaC0Offset:   func(value int) Openh264Data { return Openh264Data{key: "iLoopFilterAlphaC0Offset", val: value} },
+	ILoopFilterBetaOffset:      func(value int) Openh264Data { return Openh264Data{key: "iLoopFilterBetaOffset", val: value} },
+	BEnableDenoise:             func(value bool) Openh264Data { return Openh264Data{key: "bEnableDenoise", val: value} },
+	BEnableBackgroundDetection: func(value bool) Openh264Data { return Openh264Data{key: "bEnableBackgroundDetection", val: value} },
+	BEnableAdaptiveQuant:       func(value bool) Openh264Data { return Openh264Data{key: "bEnableAdaptiveQuant", val: value} },
+	BEnableFrameCroppingFlag:   func(value bool) Openh264Data { return Openh264Data{key: "bEnableFrameCroppingFlag", val: value} },
+	BEnableSceneChangeDetect:   func(value bool) Openh264Data { return Openh264Data{key: "bEnableSceneChangeDetect", val: value} },
+	BIsLosslessLink:            func(value bool) Openh264Data { return Openh264Data{key: "bIsLosslessLink", val: value} },
 }
 
 type eoh264ProfileIdc struct {
-	value               string
-	ProUNKNOWN          string
-	ProBASELINE         string
-	ProMAIN             string
-	ProEXTENDED         string
-	ProHIGH             string
-	ProHIGH10           string
-	ProHIGH422          string
-	ProHIGH444          string
-	ProCAVLC444         string
-	ProScalableBASELINE string
-	ProScalableHIGH     string
+	ProUNKNOWN          Openh264Data
+	ProBASELINE         Openh264Data
+	ProMAIN             Openh264Data
+	ProEXTENDED         Openh264Data
+	ProHIGH             Openh264Data
+	ProHIGH10           Openh264Data
+	ProHIGH422          Openh264Data
+	ProHIGH444          Openh264Data
+	ProCAVLC444         Openh264Data
+	ProScalableBASELINE Openh264Data
+	ProScalableHIGH     Openh264Data
 }
 
 type eoh264LevelIdc struct {
-	value        string
-	LevelUNKNOWN string
-	Level1_0     string
-	Level1_B     string
-	Level1_1     string
-	Level1_2     string
-	Level1_3     string
-	Level2_0     string
-	Level2_1     string
-	Level2_2     string
-	Level3_0     string
-	Level3_1     string
-	Level3_2     string
-	Level4_0     string
-	Level4_1     string
-	Level4_2     string
-	Level5_0     string
-	Level5_1     string
-	Level5_2     string
+	LevelUNKNOWN Openh264Data
+	Level1_0     Openh264Data
+	Level1_B     Openh264Data
+	Level1_1     Openh264Data
+	Level1_2     Openh264Data
+	Level1_3     Openh264Data
+	Level2_0     Openh264Data
+	Level2_1     Openh264Data
+	Level2_2     Openh264Data
+	Level3_0     Openh264Data
+	Level3_1     Openh264Data
+	Level3_2     Openh264Data
+	Level4_0     Openh264Data
+	Level4_1     Openh264Data
+	Level4_2     Openh264Data
+	Level5_0     Openh264Data
+	Level5_1     Openh264Data
+	Level5_2     Openh264Data
 }
 
-// openh264 1 5以下
+// 1.5.0以下用
 type eoh264SliceCfgSliceMode struct {
-	value              string
-	SmSingleSLICE      string
-	SmFixedslcnumSLICE string
-	SmRasterSLICE      string
-	SmRowmbSLICE       string
-	SmDynSLICE         string
-	SmAutoSLICE        string
-	SmRESERVED         string
+	SmSingleSLICE      Openh264Data
+	SmFixedslcnumSLICE Openh264Data
+	SmRasterSLICE      Openh264Data
+	SmRowmbSLICE       Openh264Data
+	SmDynSLICE         Openh264Data
+	SmAutoSLICE        Openh264Data
+	SmRESERVED         Openh264Data
+}
+
+type eoh264SliceCfgSliceArgument struct {
+	UISliceNum            func(uint) Openh264Data
+	UISliceSizeConstraint func(uint) Openh264Data
 }
 
 type eoh264SliceCfg struct {
@@ -200,252 +199,280 @@ type eoh264SliceCfg struct {
 	SliceArgument eoh264SliceCfgSliceArgument
 }
 
-type eoh264SliceCfgSliceArgument struct {
-	UISliceNum            subType
-	UISliceSizeConstraint subType
+// 1.5.0以下用ここまで
+
+var Openh264SpatialParams_Before15 = struct {
+	IVideoWidth        func(int) Openh264Data
+	IVideoHeight       func(int) Openh264Data
+	FFrameRate         func(float32) Openh264Data
+	ISpatialBitrate    func(int) Openh264Data
+	IMaxSpatialBitrate func(int) Openh264Data
+	ProfileIdc         eoh264ProfileIdc
+	LevelIdc           eoh264LevelIdc
+	IDLayerQp          func(int) Openh264Data
+	SliceCfg           eoh264SliceCfg
+}{
+	IVideoWidth:        func(value int) Openh264Data { return Openh264Data{key: "iVideoWidth", val: value} },
+	IVideoHeight:       func(value int) Openh264Data { return Openh264Data{key: "iVideoHeight", val: value} },
+	FFrameRate:         func(value float32) Openh264Data { return Openh264Data{key: "fFrameRate", val: value} },
+	ISpatialBitrate:    func(value int) Openh264Data { return Openh264Data{key: "iSpatialBitrate", val: value} },
+	IMaxSpatialBitrate: func(value int) Openh264Data { return Openh264Data{key: "iMaxSpatialBitrate", val: value} },
+	ProfileIdc: eoh264ProfileIdc{
+		Openh264Data{key: "uiProfileIdc", val: "PRO_UNKNOWN"},
+		Openh264Data{key: "uiProfileIdc", val: "PRO_BASELINE"},
+		Openh264Data{key: "uiProfileIdc", val: "PRO_MAIN"},
+		Openh264Data{key: "uiProfileIdc", val: "PRO_EXTENDED"},
+		Openh264Data{key: "uiProfileIdc", val: "PRO_HIGH"},
+		Openh264Data{key: "uiProfileIdc", val: "PRO_HIGH10"},
+		Openh264Data{key: "uiProfileIdc", val: "PRO_HIGH422"},
+		Openh264Data{key: "uiProfileIdc", val: "PRO_HIGH444"},
+		Openh264Data{key: "uiProfileIdc", val: "PRO_CAVLC444"},
+		Openh264Data{key: "uiProfileIdc", val: "PRO_SCALABLE_BASELINE"},
+		Openh264Data{key: "uiProfileIdc", val: "PRO_SCALABLE_HIGH"},
+	},
+	LevelIdc: eoh264LevelIdc{
+		Openh264Data{key: "uiLevelIdc", val: "LEVEL_UNKNOWN"},
+		Openh264Data{key: "uiLevelIdc", val: "LEVEL_1_0"},
+		Openh264Data{key: "uiLevelIdc", val: "LEVEL_1_B"},
+		Openh264Data{key: "uiLevelIdc", val: "LEVEL_1_1"},
+		Openh264Data{key: "uiLevelIdc", val: "LEVEL_1_2"},
+		Openh264Data{key: "uiLevelIdc", val: "LEVEL_1_3"},
+		Openh264Data{key: "uiLevelIdc", val: "LEVEL_2_0"},
+		Openh264Data{key: "uiLevelIdc", val: "LEVEL_2_1"},
+		Openh264Data{key: "uiLevelIdc", val: "LEVEL_2_2"},
+		Openh264Data{key: "uiLevelIdc", val: "LEVEL_3_0"},
+		Openh264Data{key: "uiLevelIdc", val: "LEVEL_3_1"},
+		Openh264Data{key: "uiLevelIdc", val: "LEVEL_3_2"},
+		Openh264Data{key: "uiLevelIdc", val: "LEVEL_4_0"},
+		Openh264Data{key: "uiLevelIdc", val: "LEVEL_4_1"},
+		Openh264Data{key: "uiLevelIdc", val: "LEVEL_4_2"},
+		Openh264Data{key: "uiLevelIdc", val: "LEVEL_5_0"},
+		Openh264Data{key: "uiLevelIdc", val: "LEVEL_5_1"},
+		Openh264Data{key: "uiLevelIdc", val: "LEVEL_5_2"},
+	},
+	IDLayerQp: func(value int) Openh264Data { return Openh264Data{key: "iDLayerQp", val: value} },
+	SliceCfg: eoh264SliceCfg{
+		SliceMode: eoh264SliceCfgSliceMode{
+			Openh264Data{key: "sSliceCfg.uiSliceMode", val: "SM_SINGLE_SLICE"},
+			Openh264Data{key: "sSliceCfg.uiSliceMode", val: "SM_FIXEDSLCNUM_SLICE"},
+			Openh264Data{key: "sSliceCfg.uiSliceMode", val: "SM_RASTER_SLICE"},
+			Openh264Data{key: "sSliceCfg.uiSliceMode", val: "SM_ROWMB_SLICE"},
+			Openh264Data{key: "sSliceCfg.uiSliceMode", val: "SM_DYN_SLICE"},
+			Openh264Data{key: "sSliceCfg.uiSliceMode", val: "SM_AUTO_SLICE"},
+			Openh264Data{key: "sSliceCfg.uiSliceMode", val: "SM_RESERVEDs"},
+		},
+		SliceArgument: eoh264SliceCfgSliceArgument{
+			UISliceNum: func(value uint) Openh264Data {
+				return Openh264Data{key: "sSliceCfg.sSliceArgument.uiSliceNum", val: value}
+			},
+			UISliceSizeConstraint: func(value uint) Openh264Data {
+				return Openh264Data{key: "sSliceCfg.sSliceArgument.uiSliceSizeConstraint", val: value}
+			},
+		},
+	},
 }
 
-// openh264 1 5以下、ここまで
-
-// openh264 1 6以上
-
 type eoh264SliceArgumentSliceMode struct {
-	value              string
-	SmSingleSLICE      string
-	SmFixedslcnumSLICE string
-	SmRasterSLICE      string
-	SmSizelimitedSLICE string
-	SmRESERVED         string
+	SmSingleSLICE      Openh264Data
+	SmFixedslcnumSLICE Openh264Data
+	SmRasterSLICE      Openh264Data
+	SmSizelimitedSLICE Openh264Data
+	SmRESERVED         Openh264Data
 }
 
 type eoh264SliceArgument struct {
 	SliceMode             eoh264SliceArgumentSliceMode
-	UISliceNum            subType
-	UISliceSizeConstraint subType
+	UISliceNum            func(uint) Openh264Data
+	UISliceSizeConstraint func(uint) Openh264Data
 }
 
 type eoh264VideoFormat struct {
-	value       string
-	VfCOMPONENT string
-	VfPAL       string
-	VfNTSC      string
-	VfSECAM     string
-	VfMAC       string
-	VfUNDEF     string
-	VfNumENUM   string
+	VfCOMPONENT Openh264Data
+	VfPAL       Openh264Data
+	VfNTSC      Openh264Data
+	VfSECAM     Openh264Data
+	VfMAC       Openh264Data
+	VfUNDEF     Openh264Data
+	VfNumENUM   Openh264Data
 }
 
 type eoh264ColorPrimaries struct {
-	value       string
-	CpRESERVED0 string
-	CpBT709     string
-	CpUNDEF     string
-	CpRESERVED3 string
-	CpBT470M    string
-	CpBT470BG   string
-	CpSMPTE170M string
-	CpSMPTE240M string
-	CpFILM      string
-	CpBT2020    string
-	CpNumENUM   string
+	CpRESERVED0 Openh264Data
+	CpBT709     Openh264Data
+	CpUNDEF     Openh264Data
+	CpRESERVED3 Openh264Data
+	CpBT470M    Openh264Data
+	CpBT470BG   Openh264Data
+	CpSMPTE170M Openh264Data
+	CpSMPTE240M Openh264Data
+	CpFILM      Openh264Data
+	CpBT2020    Openh264Data
+	CpNumENUM   Openh264Data
 }
 
 type eoh264TransferCharacteristics struct {
-	value           string
-	TrcRESERVED0    string
-	TrcBT709        string
-	TrcUNDEF        string
-	TrcRESERVED3    string
-	TrcBT470M       string
-	TrcBT470BG      string
-	TrcSMPTE170M    string
-	TrcSMPTE240M    string
-	TrcLINEAR       string
-	TrcLOG100       string
-	TrcLOG316       string
-	TrcIEC61966_2_4 string
-	TrcBT1361E      string
-	TrcIEC61966_2_1 string
-	TrcBT2020_10    string
-	TrcBT2020_12    string
-	TrcNumENUM      string
+	TrcRESERVED0    Openh264Data
+	TrcBT709        Openh264Data
+	TrcUNDEF        Openh264Data
+	TrcRESERVED3    Openh264Data
+	TrcBT470M       Openh264Data
+	TrcBT470BG      Openh264Data
+	TrcSMPTE170M    Openh264Data
+	TrcSMPTE240M    Openh264Data
+	TrcLINEAR       Openh264Data
+	TrcLOG100       Openh264Data
+	TrcLOG316       Openh264Data
+	TrcIEC61966_2_4 Openh264Data
+	TrcBT1361E      Openh264Data
+	TrcIEC61966_2_1 Openh264Data
+	TrcBT2020_10    Openh264Data
+	TrcBT2020_12    Openh264Data
+	TrcNumENUM      Openh264Data
 }
 
 type eoh264ColorMatrix struct {
-	value       string
-	CmGBR       string
-	CmBT709     string
-	CmUNDEF     string
-	CmRESERVED3 string
-	CmFCC       string
-	CmBT470BG   string
-	CmSMPTE170M string
-	CmSMPTE240M string
-	CmYCGCO     string
-	CmBT2020NC  string
-	CmBT2020C   string
-	CmNumENUM   string
+	CmGBR       Openh264Data
+	CmBT709     Openh264Data
+	CmUNDEF     Openh264Data
+	CmRESERVED3 Openh264Data
+	CmFCC       Openh264Data
+	CmBT470BG   Openh264Data
+	CmSMPTE170M Openh264Data
+	CmSMPTE240M Openh264Data
+	CmYCGCO     Openh264Data
+	CmBT2020NC  Openh264Data
+	CmBT2020C   Openh264Data
+	CmNumENUM   Openh264Data
 }
 
-// openh264 1 6以上、ここまで
-
-// Openh264SpatialParams openh264Encoderで利用するspatial paramの設定項目
 var Openh264SpatialParams = struct {
-	IVideoWidth        subType
-	IVideoHeight       subType
-	FFrameRate         subType
-	ISpatialBitrate    subType
-	IMaxSpatialBitrate subType
-	ProfileIdc         eoh264ProfileIdc
-	LevelIdc           eoh264LevelIdc
-	IDLayerQp          subType
-	// 古いopenh264用 1.5以下
-	SliceCfg eoh264SliceCfg
-	// 新しいopenh264用
+	IVideoWidth              func(int) Openh264Data
+	IVideoHeight             func(int) Openh264Data
+	FFrameRate               func(float32) Openh264Data
+	ISpatialBitrate          func(int) Openh264Data
+	IMaxSpatialBitrate       func(int) Openh264Data
+	ProfileIdc               eoh264ProfileIdc
+	LevelIdc                 eoh264LevelIdc
+	IDLayerQp                func(int) Openh264Data
 	SliceArgument            eoh264SliceArgument
-	BVideoSignalTypePresent  subType
+	BVideoSignalTypePresent  func(bool) Openh264Data
 	VideoFormat              eoh264VideoFormat
-	BFullRange               subType
-	BColorDescriptionPresent subType
+	BFullRange               func(bool) Openh264Data
+	BColorDescriptionPresent func(bool) Openh264Data
 	ColorPrimaries           eoh264ColorPrimaries
 	TransferCharacteristics  eoh264TransferCharacteristics
 	ColorMatrix              eoh264ColorMatrix
 }{
-	IVideoWidth:        subType{"iVideoWidth"},
-	IVideoHeight:       subType{"iVideoHeight"},
-	FFrameRate:         subType{"fFrameRate"},
-	ISpatialBitrate:    subType{"iSpatialBitrate"},
-	IMaxSpatialBitrate: subType{"iMaxSpatialBitrate"},
+	IVideoWidth:        func(value int) Openh264Data { return Openh264Data{key: "iVideoWidth", val: value} },
+	IVideoHeight:       func(value int) Openh264Data { return Openh264Data{key: "iVideoHeight", val: value} },
+	FFrameRate:         func(value float32) Openh264Data { return Openh264Data{key: "fFrameRate", val: value} },
+	ISpatialBitrate:    func(value int) Openh264Data { return Openh264Data{key: "iSpatialBitrate", val: value} },
+	IMaxSpatialBitrate: func(value int) Openh264Data { return Openh264Data{key: "iMaxSpatialBitrate", val: value} },
 	ProfileIdc: eoh264ProfileIdc{
-		"uiProfileIdc",
-		"PRO_UNKNOWN",
-		"PRO_BASELINE",
-		"PRO_MAIN",
-		"PRO_EXTENDED",
-		"PRO_HIGH",
-		"PRO_HIGH10",
-		"PRO_HIGH422",
-		"PRO_HIGH444",
-		"PRO_CAVLC444",
-		"PRO_SCALABLE_BASELINE",
-		"PRO_SCALABLE_HIGH",
+		Openh264Data{key: "uiProfileIdc", val: "PRO_UNKNOWN"},
+		Openh264Data{key: "uiProfileIdc", val: "PRO_BASELINE"},
+		Openh264Data{key: "uiProfileIdc", val: "PRO_MAIN"},
+		Openh264Data{key: "uiProfileIdc", val: "PRO_EXTENDED"},
+		Openh264Data{key: "uiProfileIdc", val: "PRO_HIGH"},
+		Openh264Data{key: "uiProfileIdc", val: "PRO_HIGH10"},
+		Openh264Data{key: "uiProfileIdc", val: "PRO_HIGH422"},
+		Openh264Data{key: "uiProfileIdc", val: "PRO_HIGH444"},
+		Openh264Data{key: "uiProfileIdc", val: "PRO_CAVLC444"},
+		Openh264Data{key: "uiProfileIdc", val: "PRO_SCALABLE_BASELINE"},
+		Openh264Data{key: "uiProfileIdc", val: "PRO_SCALABLE_HIGH"},
 	},
 	LevelIdc: eoh264LevelIdc{
-		"uiLevelIdc",
-		"LEVEL_UNKNOWN",
-		"LEVEL_1_0",
-		"LEVEL_1_B",
-		"LEVEL_1_1",
-		"LEVEL_1_2",
-		"LEVEL_1_3",
-		"LEVEL_2_0",
-		"LEVEL_2_1",
-		"LEVEL_2_2",
-		"LEVEL_3_0",
-		"LEVEL_3_1",
-		"LEVEL_3_2",
-		"LEVEL_4_0",
-		"LEVEL_4_1",
-		"LEVEL_4_2",
-		"LEVEL_5_0",
-		"LEVEL_5_1",
-		"LEVEL_5_2",
+		Openh264Data{key: "uiLevelIdc", val: "LEVEL_UNKNOWN"},
+		Openh264Data{key: "uiLevelIdc", val: "LEVEL_1_0"},
+		Openh264Data{key: "uiLevelIdc", val: "LEVEL_1_B"},
+		Openh264Data{key: "uiLevelIdc", val: "LEVEL_1_1"},
+		Openh264Data{key: "uiLevelIdc", val: "LEVEL_1_2"},
+		Openh264Data{key: "uiLevelIdc", val: "LEVEL_1_3"},
+		Openh264Data{key: "uiLevelIdc", val: "LEVEL_2_0"},
+		Openh264Data{key: "uiLevelIdc", val: "LEVEL_2_1"},
+		Openh264Data{key: "uiLevelIdc", val: "LEVEL_2_2"},
+		Openh264Data{key: "uiLevelIdc", val: "LEVEL_3_0"},
+		Openh264Data{key: "uiLevelIdc", val: "LEVEL_3_1"},
+		Openh264Data{key: "uiLevelIdc", val: "LEVEL_3_2"},
+		Openh264Data{key: "uiLevelIdc", val: "LEVEL_4_0"},
+		Openh264Data{key: "uiLevelIdc", val: "LEVEL_4_1"},
+		Openh264Data{key: "uiLevelIdc", val: "LEVEL_4_2"},
+		Openh264Data{key: "uiLevelIdc", val: "LEVEL_5_0"},
+		Openh264Data{key: "uiLevelIdc", val: "LEVEL_5_1"},
+		Openh264Data{key: "uiLevelIdc", val: "LEVEL_5_2"},
 	},
-	IDLayerQp: subType{"iDLayerQp"},
-	// これは古い設定openh264 1.5以下
-	SliceCfg: eoh264SliceCfg{
-		SliceMode: eoh264SliceCfgSliceMode{
-			"sSliceCfg.uiSliceMode",
-			"SM_SINGLE_SLICE",
-			"SM_FIXEDSLCNUM_SLICE",
-			"SM_RASTER_SLICE",
-			"SM_ROWMB_SLICE",
-			"SM_DYN_SLICE",
-			"SM_AUTO_SLICE",
-			"SM_RESERVEDs",
-		},
-		SliceArgument: eoh264SliceCfgSliceArgument{
-			UISliceNum:            subType{"sSliceCfg.sSliceArgument.uiSliceNum"},
-			UISliceSizeConstraint: subType{"sSliceCfg.sSliceArgument.uiSliceSizeConstraint"},
-		},
-	},
-	// --------
-	// こっちは新しい設定openh264 1.6以上
+	IDLayerQp: func(value int) Openh264Data { return Openh264Data{key: "iDLayerQp", val: value} },
 	SliceArgument: eoh264SliceArgument{
 		SliceMode: eoh264SliceArgumentSliceMode{
-			"sSliceArgument.uiSliceMode",
-			"SM_SINGLE_SLICE",
-			"SM_FIXEDSLCNUM_SLICE",
-			"SM_RASTER_SLICE",
-			"SM_SIZELIMITED_SLICE",
-			"SM_RESERVED",
+			SmSingleSLICE:      Openh264Data{key: "sSliceArgument.uiSliceMode", val: "SM_SINGLE_SLICE"},
+			SmFixedslcnumSLICE: Openh264Data{key: "sSliceArgument.uiSliceMode", val: "SM_FIXEDSLCNUM_SLICE"},
+			SmRasterSLICE:      Openh264Data{key: "sSliceArgument.uiSliceMode", val: "SM_RASTER_SLICE"},
+			SmSizelimitedSLICE: Openh264Data{key: "sSliceArgument.uiSliceMode", val: "SM_SIZELIMITED_SLICE"},
+			SmRESERVED:         Openh264Data{key: "sSliceArgument.uiSliceMode", val: "SM_RESERVED"},
 		},
-		UISliceNum:            subType{"sSliceArgument.uiSliceNum"},
-		UISliceSizeConstraint: subType{"sSliceArgument.uiSliceSizeConstraint"},
+		UISliceNum: func(value uint) Openh264Data { return Openh264Data{key: "sSliceArgument.uiSliceNum", val: value} },
+		UISliceSizeConstraint: func(value uint) Openh264Data {
+			return Openh264Data{key: "sSliceArgument.uiSliceSizeConstraint", val: value}
+		},
 	},
-	BVideoSignalTypePresent: subType{"bVideoSignalTypePresent"},
+	BVideoSignalTypePresent: func(value bool) Openh264Data { return Openh264Data{key: "bVideoSignalTypePresent", val: value} },
 	VideoFormat: eoh264VideoFormat{
-		"uiVideoFormat",
-		"VF_COMPONENT",
-		"VF_PAL",
-		"VF_NTSC",
-		"VF_SECAM",
-		"VF_MAC",
-		"VF_UNDEF",
-		"VF_NUM_ENUM",
+		VfCOMPONENT: Openh264Data{key: "uiVideoFormat", val: "VF_COMPONENT"},
+		VfPAL:       Openh264Data{key: "uiVideoFormat", val: "VF_PAL"},
+		VfNTSC:      Openh264Data{key: "uiVideoFormat", val: "VF_NTSC"},
+		VfSECAM:     Openh264Data{key: "uiVideoFormat", val: "VF_SECAM"},
+		VfMAC:       Openh264Data{key: "uiVideoFormat", val: "VF_MAC"},
+		VfUNDEF:     Openh264Data{key: "uiVideoFormat", val: "VF_UNDEF"},
+		VfNumENUM:   Openh264Data{key: "uiVideoFormat", val: "VF_NUM_ENUM"},
 	},
-	BFullRange:               subType{"bFullRange"},
-	BColorDescriptionPresent: subType{"bColorDescriptionPresent"},
+	BFullRange:               func(value bool) Openh264Data { return Openh264Data{key: "bFullRange", val: value} },
+	BColorDescriptionPresent: func(value bool) Openh264Data { return Openh264Data{key: "bColorDescriptionPresent", val: value} },
 	ColorPrimaries: eoh264ColorPrimaries{
-		"uiColorPrimaries",
-		"CP_RESERVED0",
-		"CP_BT709",
-		"CP_UNDEF",
-		"CP_RESERVED3",
-		"CP_BT470M",
-		"CP_BT470BG",
-		"CP_SMPTE170M",
-		"CP_SMPTE240M",
-		"CP_FILM",
-		"CP_BT2020",
-		"CP_NUM_ENUM",
+		CpRESERVED0: Openh264Data{key: "uiColorPrimaries", val: "CP_RESERVED0"},
+		CpBT709:     Openh264Data{key: "uiColorPrimaries", val: "CP_BT709"},
+		CpUNDEF:     Openh264Data{key: "uiColorPrimaries", val: "CP_UNDEF"},
+		CpRESERVED3: Openh264Data{key: "uiColorPrimaries", val: "CP_RESERVED3"},
+		CpBT470M:    Openh264Data{key: "uiColorPrimaries", val: "CP_BT470M"},
+		CpBT470BG:   Openh264Data{key: "uiColorPrimaries", val: "CP_BT470BG"},
+		CpSMPTE170M: Openh264Data{key: "uiColorPrimaries", val: "CP_SMPTE170M"},
+		CpSMPTE240M: Openh264Data{key: "uiColorPrimaries", val: "CP_SMPTE240M"},
+		CpFILM:      Openh264Data{key: "uiColorPrimaries", val: "CP_FILM"},
+		CpBT2020:    Openh264Data{key: "uiColorPrimaries", val: "CP_BT2020"},
+		CpNumENUM:   Openh264Data{key: "uiColorPrimaries", val: "CP_NUM_ENUM"},
 	},
 	TransferCharacteristics: eoh264TransferCharacteristics{
-		"uiTransferCharacteristics",
-		"TRC_RESERVED0",
-		"TRC_BT709",
-		"TRC_UNDEF",
-		"TRC_RESERVED3",
-		"TRC_BT470M",
-		"TRC_BT470BG",
-		"TRC_SMPTE170M",
-		"TRC_SMPTE240M",
-		"TRC_LINEAR",
-		"TRC_LOG100",
-		"TRC_LOG316",
-		"TRC_IEC61966_2_4",
-		"TRC_BT1361E",
-		"TRC_IEC61966_2_1",
-		"TRC_BT2020_10",
-		"TRC_BT2020_12",
-		"TRC_NUM_ENUM",
+		TrcRESERVED0:    Openh264Data{key: "uiTransferCharacteristics", val: "TRC_RESERVED0"},
+		TrcBT709:        Openh264Data{key: "uiTransferCharacteristics", val: "TRC_BT709"},
+		TrcUNDEF:        Openh264Data{key: "uiTransferCharacteristics", val: "TRC_UNDEF"},
+		TrcRESERVED3:    Openh264Data{key: "uiTransferCharacteristics", val: "TRC_RESERVED3"},
+		TrcBT470M:       Openh264Data{key: "uiTransferCharacteristics", val: "TRC_BT470M"},
+		TrcBT470BG:      Openh264Data{key: "uiTransferCharacteristics", val: "TRC_BT470BG"},
+		TrcSMPTE170M:    Openh264Data{key: "uiTransferCharacteristics", val: "TRC_SMPTE170M"},
+		TrcSMPTE240M:    Openh264Data{key: "uiTransferCharacteristics", val: "TRC_SMPTE240M"},
+		TrcLINEAR:       Openh264Data{key: "uiTransferCharacteristics", val: "TRC_LINEAR"},
+		TrcLOG100:       Openh264Data{key: "uiTransferCharacteristics", val: "TRC_LOG100"},
+		TrcLOG316:       Openh264Data{key: "uiTransferCharacteristics", val: "TRC_LOG316"},
+		TrcIEC61966_2_4: Openh264Data{key: "uiTransferCharacteristics", val: "TRC_IEC61966_2_4"},
+		TrcBT1361E:      Openh264Data{key: "uiTransferCharacteristics", val: "TRC_BT1361E"},
+		TrcIEC61966_2_1: Openh264Data{key: "uiTransferCharacteristics", val: "TRC_IEC61966_2_1"},
+		TrcBT2020_10:    Openh264Data{key: "uiTransferCharacteristics", val: "TRC_BT2020_10"},
+		TrcBT2020_12:    Openh264Data{key: "uiTransferCharacteristics", val: "TRC_BT2020_12"},
+		TrcNumENUM:      Openh264Data{key: "uiTransferCharacteristics", val: "TRC_NUM_ENUM"},
 	},
 	ColorMatrix: eoh264ColorMatrix{
-		"uiColorMatrix",
-		"CM_GBR",
-		"CM_BT709",
-		"CM_UNDEF",
-		"CM_RESERVED3",
-		"CM_FCC",
-		"CM_BT470BG",
-		"CM_SMPTE170M",
-		"CM_SMPTE240M",
-		"CM_YCGCO",
-		"CM_BT2020NC",
-		"CM_BT2020C",
-		"CM_NUM_ENUM",
+		CmGBR:       Openh264Data{key: "uiColorMatrix", val: "CM_GBR"},
+		CmBT709:     Openh264Data{key: "uiColorMatrix", val: "CM_BT709"},
+		CmUNDEF:     Openh264Data{key: "uiColorMatrix", val: "CM_UNDEF"},
+		CmRESERVED3: Openh264Data{key: "uiColorMatrix", val: "CM_RESERVED3"},
+		CmFCC:       Openh264Data{key: "uiColorMatrix", val: "CM_FCC"},
+		CmBT470BG:   Openh264Data{key: "uiColorMatrix", val: "CM_BT470BG"},
+		CmSMPTE170M: Openh264Data{key: "uiColorMatrix", val: "CM_SMPTE170M"},
+		CmSMPTE240M: Openh264Data{key: "uiColorMatrix", val: "CM_SMPTE240M"},
+		CmYCGCO:     Openh264Data{key: "uiColorMatrix", val: "CM_YCGCO"},
+		CmBT2020NC:  Openh264Data{key: "uiColorMatrix", val: "CM_BT2020NC"},
+		CmBT2020C:   Openh264Data{key: "uiColorMatrix", val: "CM_BT2020C"},
+		CmNumENUM:   Openh264Data{key: "uiColorMatrix", val: "CM_NUM_ENUM"},
 	},
-	// こっちは新しい設定openh264 1.6以上 ここまで
 }
 
 // Openh264RCModes rcModeで設定できる値

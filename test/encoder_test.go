@@ -70,9 +70,6 @@ func TestJpegEncoder(t *testing.T) {
 }
 
 func TestOpenh264Encoder(t *testing.T) {
-	type miia []map[interface{}]interface{}
-	type mii map[interface{}]interface{}
-
 	encodeBody(t, os.Getenv("HOME")+"/tools/data/source/test.h264.aac.flv", ttLibGo.Readers.Flv(), ttLibGo.FrameTypes.H264, ttLibGo.Decoders.AvcodecVideo(ttLibGo.FrameTypes.H264, 640, 360),
 		func() ttLibGo.IEncoder {
 			o := ttLibGo.Encoders.Openh264(640, 360, nil, nil)
@@ -80,21 +77,21 @@ func TestOpenh264Encoder(t *testing.T) {
 			return o
 		}())
 	encodeBody(t, os.Getenv("HOME")+"/tools/data/source/test.h264.aac.flv", ttLibGo.Readers.Flv(), ttLibGo.FrameTypes.H264, ttLibGo.Decoders.AvcodecVideo(ttLibGo.FrameTypes.H264, 640, 360),
-		ttLibGo.Encoders.Openh264(640, 360, mii{
-			ttLibGo.Openh264Params.IMinQp: 4,
-			ttLibGo.Openh264Params.IMaxQp: 51,
+		ttLibGo.Encoders.Openh264(640, 360, []ttLibGo.Openh264Data{
+			ttLibGo.Openh264Params.IMinQp(4),
+			ttLibGo.Openh264Params.IMaxQp(51),
 		}, nil))
 	encodeBody(t, os.Getenv("HOME")+"/tools/data/source/test.h264.aac.flv", ttLibGo.Readers.Flv(), ttLibGo.FrameTypes.H264, ttLibGo.Decoders.AvcodecVideo(ttLibGo.FrameTypes.H264, 640, 360),
-		ttLibGo.Encoders.Openh264(640, 360, mii{
-			ttLibGo.Openh264Params.IMinQp:         4,
-			ttLibGo.Openh264Params.IMaxQp:         51,
-			ttLibGo.Openh264Params.ITargetBitrate: 300000,
-			ttLibGo.Openh264Params.IMaxBitrate:    310000,
-		}, miia{
-			mii{
-				ttLibGo.Openh264SpatialParams.ISpatialBitrate:         300000,
-				ttLibGo.Openh264SpatialParams.IMaxSpatialBitrate:      310000,
-				ttLibGo.Openh264SpatialParams.SliceArgument.SliceMode: ttLibGo.Openh264SpatialParams.SliceArgument.SliceMode.SmSingleSLICE,
+		ttLibGo.Encoders.Openh264(640, 360, []ttLibGo.Openh264Data{
+			ttLibGo.Openh264Params.IMinQp(4),
+			ttLibGo.Openh264Params.IMaxQp(51),
+			ttLibGo.Openh264Params.ITargetBitrate(300000),
+			ttLibGo.Openh264Params.IMaxBitrate(310000),
+		}, [][]ttLibGo.Openh264Data{
+			[]ttLibGo.Openh264Data{
+				ttLibGo.Openh264SpatialParams.ISpatialBitrate(300000),
+				ttLibGo.Openh264SpatialParams.IMaxSpatialBitrate(310000),
+				ttLibGo.Openh264SpatialParams.SliceArgument.SliceMode.SmSingleSLICE,
 			},
 		}))
 }
@@ -131,25 +128,25 @@ func TestX264Encoder(t *testing.T) {
 	encodeBody(t, os.Getenv("HOME")+"/tools/data/source/test.h264.aac.flv", ttLibGo.Readers.Flv(), ttLibGo.FrameTypes.H264, ttLibGo.Decoders.AvcodecVideo(ttLibGo.FrameTypes.H264, 640, 360),
 		ttLibGo.Encoders.X264(640, 360, "veryfast", "zerolatency", "main", nil))
 	encodeBody(t, os.Getenv("HOME")+"/tools/data/source/test.h264.aac.flv", ttLibGo.Readers.Flv(), ttLibGo.FrameTypes.H264, ttLibGo.Decoders.AvcodecVideo(ttLibGo.FrameTypes.H264, 640, 360),
-		ttLibGo.Encoders.X264(640, 360, "veryfast", "zerolatency", "main", map[string]string{
-			"open-gop":    "1",
-			"threads":     "1",
-			"merange":     "16",
-			"qcomp":       "0.6",
-			"ip-factor":   "0.71",
-			"bitrate":     "300",
-			"qp":          "21",
-			"crf":         "23",
-			"crf-max":     "23",
-			"fps":         "30/1",
-			"keyint":      "150",
-			"keyint-min":  "150",
-			"bframes":     "3",
-			"vbv-maxrate": "0",
-			"vbv-bufsize": "1024",
-			"qp-max":      "40",
-			"qp-min":      "21",
-			"qp-step":     "4",
+		ttLibGo.Encoders.X264(640, 360, "veryfast", "zerolatency", "main", []ttLibGo.KeyValue{
+			{"open-gop", "1"},
+			{"threads", "1"},
+			{"merange", "16"},
+			{"qcomp", "0.6"},
+			{"ip-factor", "0.71"},
+			{"bitrate", "300"},
+			{"qp", "21"},
+			{"crf", "23"},
+			{"crf-max", "23"},
+			{"fps", "30/1"},
+			{"keyint", "150"},
+			{"keyint-min", "150"},
+			{"bframes", "3"},
+			{"vbv-maxrate", "0"},
+			{"vbv-bufsize", "1024"},
+			{"qp-max", "40"},
+			{"qp-min", "21"},
+			{"qp-step", "4"},
 		}))
 }
 
@@ -159,9 +156,9 @@ func TestX265Encoder(t *testing.T) {
 	encodeBody(t, os.Getenv("HOME")+"/tools/data/source/test.h264.aac.flv", ttLibGo.Readers.Flv(), ttLibGo.FrameTypes.H264, ttLibGo.Decoders.AvcodecVideo(ttLibGo.FrameTypes.H264, 640, 360),
 		ttLibGo.Encoders.X265(640, 360, "veryfast", "zerolatency", "main", nil))
 	encodeBody(t, os.Getenv("HOME")+"/tools/data/source/test.h264.aac.flv", ttLibGo.Readers.Flv(), ttLibGo.FrameTypes.H264, ttLibGo.Decoders.AvcodecVideo(ttLibGo.FrameTypes.H264, 640, 360),
-		ttLibGo.Encoders.X265(640, 360, "veryfast", "zerolatency", "main", map[string]string{
-			"bitrate": "300",
-			"qpmax":   "40",
-			"qpmin":   "21",
+		ttLibGo.Encoders.X265(640, 360, "veryfast", "zerolatency", "main", []ttLibGo.KeyValue{
+			{"bitrate", "300"},
+			{"qpmax", "40"},
+			{"qpmin", "21"},
 		}))
 }
